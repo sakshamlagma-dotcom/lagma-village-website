@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lagma Notification Board</title>
+
+<style>
+  body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f2f2f2;
+  }
+
+  /* TOP CENTER BOARD */
+  .board{
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 700px;
+
+    background: linear-gradient(90deg, #ff512f, #f09819, #24c6dc);
+    color: white;
+
+    padding: 14px 20px;
+    border-radius: 12px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    animation: glow 2s infinite alternate;
+  }
+
+  /* TITLE STYLE */
+  .title{
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+
+  /* MESSAGE STYLE */
+  .msg{
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: 10px;
+  }
+
+  /* CLOSE BUTTON */
+  .close{
+    background: white;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* GLOW ANIMATION */
+  @keyframes glow{
+    0%{ box-shadow: 0 0 10px #ff512f; }
+    100%{ box-shadow: 0 0 25px #24c6dc; }
+  }
+
+</style>
+</head>
+
+<body>
+
+<!-- 🌈 SCHOOL STYLE NOTIFICATION -->
+<div class="board" id="board">
+
+  <div>
+    <span class="title">📢 LAGMA NOTIFICATION</span>
+    <span class="msg">➡ Welcome to Lagma Village Website! Latest updates here.</span>
+  </div>
+
+  <button class="close" onclick="document.getElementById('board').style.display='none'">
+    X
+  </button>
+
+</div>
+
+</body>
+</html>
