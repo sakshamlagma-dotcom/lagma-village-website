@@ -1,0 +1,396 @@
+/* ==========================================
+   LAGMA VILLAGE - PREMIUM STYLE.CSS
+   ========================================== */
+
+/* ---------- RESET ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+  line-height: 1.7;
+}
+
+/* ---------- GLOBAL ---------- */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+section,
+.stats {
+  padding: 80px 20px;
+}
+
+.section {
+  padding: 80px 20px;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2.4rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0f172a;
+}
+
+section > p,
+.section > p {
+  max-width: 850px;
+  margin: 0 auto 25px;
+  text-align: center;
+  color: #475569;
+  font-size: 1.05rem;
+}
+
+.center {
+  text-align: center;
+}
+
+/* ---------- BUTTON ---------- */
+.btn {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+  color: #ffffff;
+  text-decoration: none;
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.25);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 35px rgba(14, 165, 233, 0.35);
+}
+
+/* ==========================================
+   HERO SECTION
+   ========================================== */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 700px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Fullscreen Image Slider */
+.hero-slider {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-slider img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  animation: heroFade 15s infinite;
+  transform: scale(1.05);
+}
+
+/* First Image Alignment Fix */
+.hero-slider img:nth-child(1) {
+  animation-delay: 0s;
+  object-position: center;
+}
+
+.hero-slider img:nth-child(2) {
+  animation-delay: 5s;
+  object-position: center;
+}
+
+.hero-slider img:nth-child(3) {
+  animation-delay: 10s;
+  object-position: center;
+}
+
+/* Dark Overlay */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.60)
+  );
+  z-index: 1;
+}
+
+/* Hero Content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 950px;
+  padding: 20px;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  margin-bottom: 15px;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.hero p {
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  margin-bottom: 30px;
+  opacity: 0.95;
+}
+
+/* Navigation */
+.hero nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hero nav a {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  transition: all 0.3s ease;
+}
+
+.hero nav a:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+
+/* Slider Animation */
+@keyframes heroFade {
+  0%, 100% {
+    opacity: 0;
+  }
+  6%, 28% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 0;
+  }
+}
+
+/* ---------- STATS ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  background: #ffffff;
+  padding: 32px 20px;
+  text-align: center;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+}
+
+.stat-card h3 {
+  font-size: 2.2rem;
+  color: #0ea5e9;
+  margin-bottom: 8px;
+}
+
+.stat-card p {
+  color: #475569;
+}
+
+/* ---------- GALLERY ---------- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.gallery-grid img:hover {
+  transform: scale(1.03);
+}
+
+/* ---------- SERVICE / ACHIEVEMENTS ---------- */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.service-card {
+  background: #ffffff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+}
+
+.service-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.service-card h3 {
+  margin: 20px 20px 10px;
+  color: #0f172a;
+}
+
+.service-card p {
+  margin: 0 20px 24px;
+  color: #475569;
+}
+
+/* ---------- NEWS ---------- */
+.news-list {
+  display: grid;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.news-item {
+  background: #ffffff;
+  padding: 28px;
+  border-left: 5px solid #14b8a6;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.news-item h3 {
+  margin: 8px 0;
+}
+
+.news-item p {
+  color: #475569;
+}
+
+.news-date {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #0f766e;
+  font-weight: 700;
+}
+
+/* ---------- GOOGLE MAP ---------- */
+.map-frame {
+  width: 100%;
+  height: 420px;
+  border: 0;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+/* ---------- CONTACT INFO ---------- */
+#contact {
+  text-align: center;
+}
+
+#contact p {
+  margin: 10px 0;
+  font-size: 1.05rem;
+  color: #334155;
+}
+
+/* ---------- FOOTER ---------- */
+footer {
+  background: #0f172a;
+  color: #ffffff;
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 40px;
+}
+
+footer p {
+  opacity: 0.9;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  section,
+  .stats,
+  .section {
+    padding: 60px 16px;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .hero {
+    min-height: 620px;
+    padding: 20px;
+  }
+
+  .hero-content {
+    padding: 15px;
+  }
+
+  .hero nav a {
+    padding: 10px 18px;
+    font-size: 0.95rem;
+  }
+
+  .gallery-grid img,
+  .service-card img {
+    height: 220px;
+  }
+
+  .map-frame {
+    height: 320px;
+  }
+}
