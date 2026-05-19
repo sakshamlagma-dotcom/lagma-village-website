@@ -3,92 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lagma Village Services</title>
+  <meta name="description" content="Facilities and services available in Lagma Village, including school, temples, ponds, farming, health, market, banking, and Panchayat support.">
+  <title>Services | Lagma Village</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Lagma Village</a>
+    <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html" aria-current="page">Services</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="notification.html">Notices</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
 
-  <section id="services-page">
-    <h2>Village Facilities & Services</h2>
-    <p class="gallery-subtitle">Important facilities available in Lagma Village</p>
+  <main>
+    <section class="page-hero services-hero">
+      <div>
+        <p class="eyebrow">Village facilities</p>
+        <h1>Services that support everyday life</h1>
+        <p>Education, agriculture, local governance, markets, and community institutions help Lagma stay connected and active.</p>
+      </div>
+    </section>
 
-    <div class="service-grid">
+    <section class="section">
+      <div class="card-grid services-grid">
+        <article class="feature-card">
+          <img src="school-service.jpeg" alt="Middle school in Lagma">
+          <div>
+            <h3>Middle School</h3>
+            <p>Established in 1956 and located in Ward No. 7, Lagma.</p>
+            <p><strong>Contact:</strong> Headmaster Office</p>
+          </div>
+        </article>
 
-      <div class="service-card">
-        <img src="school-service.jpeg" alt="Middle School">
-        <h3>Middle School</h3>
-        <p>Established in 1956. The school has educated generations of students.</p>
-        <p><strong>Location:</strong> Ward No. 7, Lagma</p>
-        <p><strong>Contact:</strong> Headmaster Office</p>
+        <article class="feature-card">
+          <img src="temple.jpeg" alt="Temple in Lagma">
+          <div>
+            <h3>Village Temples</h3>
+            <p>Temples and Brahm Sthan are central to spiritual and cultural life.</p>
+            <p><strong>Contact:</strong> Temple Committee</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <img src="pond-service.jpeg" alt="Fish farming pond">
+          <div>
+            <h3>Fish Farming Ponds</h3>
+            <p>Village ponds support fish farming, irrigation, and local livelihoods.</p>
+            <p><strong>Contact:</strong> Local pond management groups</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <img src="agriculture-service.jpeg" alt="Agricultural land">
+          <div>
+            <h3>Agriculture and Irrigation</h3>
+            <p>Farmers cultivate paddy, wheat, maize, mustard, and seasonal crops.</p>
+            <p><strong>Contact:</strong> Local farmers</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <img src="health-service.jpeg" alt="Health service location">
+          <div>
+            <h3>Health Services</h3>
+            <p>Primary medical support and nearby healthcare facilities are available.</p>
+            <p><strong>Contact:</strong> ASHA / ANM workers</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <img src="gas-service.jpeg" alt="Local gas and market service">
+          <div>
+            <h3>Local Market</h3>
+            <p>Local shops provide gas service and essential daily items.</p>
+            <p><strong>Contact:</strong> 8877109792</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <img src="bank-service.jpeg" alt="Banking service">
+          <div>
+            <h3>Banking</h3>
+            <p>Banking facilities are available through nearby branches and centers.</p>
+            <p><strong>Contact:</strong> Concerned bank branch</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <img src="panchayat-service.jpeg" alt="Panchayat office service">
+          <div>
+            <h3>Panchayat Services</h3>
+            <p>Support for certificates, public schemes, and local governance.</p>
+            <p><strong>Mukhiya:</strong> Priya Singh</p>
+            <p><strong>Contact:</strong> 7762058999, avinashkumarsingh8575@gmail.com</p>
+          </div>
+        </article>
       </div>
 
-      <div class="service-card">
-        <img src="temple.jpeg" alt="Temple">
-        <h3>Village Temples</h3>
-        <p>Temples and Brahm Sthan are central to village spiritual life.</p>
-        <p><strong>Location:</strong> Various locations in the village</p>
-        <p><strong>Contact:</strong> Temple Committee</p>
+      <div class="center">
+        <a class="btn" href="index.html">Back to Home</a>
       </div>
+    </section>
+  </main>
 
-      <div class="service-card">
-        <img src="pond-service.jpeg" alt="Fish Farming Ponds">
-        <h3>Fish Farming Ponds</h3>
-        <p>Numerous ponds support fish farming and local livelihoods.</p>
-        <p><strong>Location:</strong> Across the village</p>
-        <p><strong>Contact:</strong> Local Pond Management Groups</p>
-      </div>
+  <footer class="site-footer">
+    <p>&copy; <span id="year">2026</span> Lagma Village. All rights reserved.</p>
+  </footer>
 
-      <div class="service-card">
-        <img src="agriculture-service.jpeg" alt="Agriculture">
-        <h3>Agriculture & Irrigation</h3>
-        <p>Farmers cultivate paddy, wheat, maize and mustard using fertile land.</p>
-        <p><strong>Location:</strong> Agricultural fields surrounding Lagma</p>
-        <p><strong>Contact:</strong> Local Farmers</p>
-      </div>
-
-      <div class="service-card">
-        <img src="health-service.jpeg" alt="Health Services">
-        <h3>Health Services</h3>
-        <p>Primary medical services and nearby healthcare facilities are available.</p>
-        <p><strong>Location:</strong> Nearby health centers</p>
-        <p><strong>Contact:</strong> ASHA / ANM Workers</p>
-      </div>
-
-      <div class="service-card">
-        <img src="gas-service.jpeg" alt="maa durga jyoti idian gas">
-        <h3>Local Market</h3>
-        <p>Shops provide gas and essential daly.</p>
-        <p><strong>Location:</strong> Nearby market area</p>
-        <p><strong>Contact:</strong> 8877109792</p>
-      </div>
-
-      <div class="service-card">
-        <img src="bank-service.jpeg" alt="Banking Services">
-        <h3>Banking</h3>
-        <p>Bank branches facilities are available in nearby towns.</p>
-        <p><strong>Location:</strong> Nearby banking centers</p>
-        <p><strong>Contact:</strong> Concerned Bank Branch</p>
-      </div>
-
-      <div class="service-card">
-        <img src="panchayat-service.jpeg" alt="Panchayat Office">
-        <h3>Panchayat Services</h3>
-        <p>Support for certificates, schemes and local governance.</p>
-        <p><strong>Location:</strong> Panchayat Office</p>
-        <p><strong>Contact:7762058999 avinashkumarsingh8575@gamil.com </strong> Mukhiya priya singh</p>
-       
-
-    </div>
-
-
-    <div style="text-align:center; margin-top: 40px;">
-      <a href="index.html" class="back-btn">← Back to Home</a>
-    </div>
-  </section>
-
+  <script src="web.js"></script>
 </body>
 </html>
-```
-
----
-
