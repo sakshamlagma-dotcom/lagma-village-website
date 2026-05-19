@@ -1,89 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Lagma Notification Board</title>
-
-<style>
-  body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#f2f2f2;
-  }
-
-  /* TOP CENTER BOARD */
-  .board{
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 700px;
-
-    background: linear-gradient(90deg, #ff512f, #f09819, #24c6dc);
-    color: white;
-
-    padding: 14px 20px;
-    border-radius: 12px;
-
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    animation: glow 2s infinite alternate;
-  }
-
-  /* TITLE STYLE */
-  .title{
-    font-weight: 900;
-    font-size: 18px;
-    letter-spacing: 1px;
-  }
-
-  /* MESSAGE STYLE */
-  .msg{
-    font-size: 16px;
-    font-weight: 600;
-    margin-left: 10px;
-  }
-
-  /* CLOSE BUTTON */
-  .close{
-    background: white;
-    color: black;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  /* GLOW ANIMATION */
-  @keyframes glow{
-    0%{ box-shadow: 0 0 10px #ff512f; }
-    100%{ box-shadow: 0 0 25px #24c6dc; }
-  }
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Latest notices and announcements from Lagma Village.">
+  <title>Notices | Lagma Village</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Lagma Village</a>
+    <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="notification.html" aria-current="page">Notices</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
 
-<!-- 🌈 SCHOOL STYLE NOTIFICATION -->
-<div class="board" id="board">
+  <main>
+    <section class="page-hero notice-hero">
+      <div>
+        <p class="eyebrow">Notice board</p>
+        <h1>Latest village updates</h1>
+        <p>Important announcements, public information, and community updates for residents and visitors.</p>
+      </div>
+    </section>
 
-  <div>
-    <span class="title">📢 LAGMA NOTIFICATION</span>
-    <span class="msg">➡ Welcome to Lagma Village Website! Latest updates here.</span>
-  </div>
+    <section class="section">
+      <div class="notice-list">
+        <article class="notice-card highlight-notice">
+          <span>Welcome</span>
+          <h2>Lagma Village website is live</h2>
+          <p>Residents can use this website to learn about village history, services, gallery updates, and contact information.</p>
+        </article>
+        <article class="notice-card">
+          <span>May 2026</span>
+          <h3>Development meeting</h3>
+          <p>Discussion planned around roads, drainage, education, and village cleanliness.</p>
+        </article>
+        <article class="notice-card">
+          <span>April 2026</span>
+          <h3>Festival preparation</h3>
+          <p>Community cleaning and decoration activities were completed with local participation.</p>
+        </article>
+      </div>
 
-  <button class="close" onclick="document.getElementById('board').style.display='none'">
-    X
-  </button>
+      <div class="center">
+        <a class="btn" href="index.html">Back to Home</a>
+      </div>
+    </section>
+  </main>
 
-</div>
+  <footer class="site-footer">
+    <p>&copy; <span id="year">2026</span> Lagma Village. All rights reserved.</p>
+  </footer>
 
+  <script src="web.js"></script>
 </body>
 </html>
