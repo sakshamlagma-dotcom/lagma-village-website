@@ -250,7 +250,111 @@ document.addEventListener("DOMContentLoaded", () => {
     const limit = Number(dynamicGallery.getAttribute("data-gallery-limit")) || 100;
     const extension = dynamicGallery.getAttribute("data-gallery-extension") || "jpeg";
     const loadedCount = document.querySelector("#gallery-loaded-count");
+    const uploadInput = document.querySelector("#gallery-photo-upload");
+    const uploadStatus = document.querySelector("#gallery-upload-status");
+    const clearUploadsButton = document.querySelector("#clear-uploaded-photos");
+    const uploadedStorageKey = "lagma-uploaded-gallery-photos";
+    const uploadedLimit = 30;
     let foundPhotos = 0;
+    let uploadedPhotos = [];
+
+    const updateGalleryCount = () => {
+      if (loadedCount) loadedCount.textContent = foundPhotos + uploadedPhotos.length;
+    };
+
+    const updateUploadStatus = () => {
+      if (!uploadStatus) return;
+      uploadStatus.textContent = uploadedPhotos.length
+        ? `${uploadedPhotos.length} uploaded photo${uploadedPhotos.length === 1 ? "" : "s"} saved in this browser.`
+        : "No uploaded photos yet.";
+    };
+
+    const saveUploadedPhotos = () => {
+      try {
+        localStorage.setItem(uploadedStorageKey, JSON.stringify(uploadedPhotos));
+      } catch (error) {
+        uploadedPhotos = uploadedPhotos.slice(0, Math.max(0, uploadedPhotos.length - 1));
+        try {
+          localStorage.setItem(uploadedStorageKey, JSON.stringify(uploadedPhotos));
+        } catch (storageError) {
+          localStorage.removeItem(uploadedStorageKey);
+          uploadedPhotos = [];
+        }
+        if (uploadStatus) uploadStatus.textContent = "Storage full. Please upload smaller photos or clear old uploads.";
+      }
+    };
+
+    const createUploadedPhoto = (photo, index) => {
+      const slot = document.createElement("figure");
+      slot.className = "gallery-slot uploaded-gallery-slot has-photo";
+      slot.dataset.uploadedPhoto = "true";
+
+      const badge = document.createElement("span");
+      badge.className = "uploaded-photo-badge";
+      badge.textContent = "Uploaded";
+
+      const image = document.createElement("img");
+      image.src = photo.src;
+      image.alt = photo.name || `Uploaded Lagma village photo ${index + 1}`;
+      image.loading = "lazy";
+
+      const caption = document.createElement("figcaption");
+      caption.className = "gallery-placeholder";
+      caption.innerHTML = `<strong>Uploaded Photo</strong><span>${photo.name || "Device photo"}</span>`;
+
+      slot.append(badge, image, caption);
+      return slot;
+    };
+
+    const renderUploadedPhotos = () => {
+      dynamicGallery.querySelectorAll("[data-uploaded-photo]").forEach((slot) => slot.remove());
+      const uploadedFragment = document.createDocumentFragment();
+      uploadedPhotos.forEach((photo, index) => {
+        uploadedFragment.appendChild(createUploadedPhoto(photo, index));
+      });
+      dynamicGallery.insertBefore(uploadedFragment, dynamicGallery.firstChild);
+      updateGalleryCount();
+      updateUploadStatus();
+    };
+
+    const loadUploadedPhotos = () => {
+      try {
+        const savedPhotos = JSON.parse(localStorage.getItem(uploadedStorageKey) || "[]");
+        uploadedPhotos = Array.isArray(savedPhotos) ? savedPhotos.filter((photo) => photo && photo.src).slice(0, uploadedLimit) : [];
+      } catch (error) {
+        uploadedPhotos = [];
+      }
+      renderUploadedPhotos();
+    };
+
+    const resizePhoto = (file) => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.addEventListener("load", () => {
+        const image = new Image();
+        image.addEventListener("load", () => {
+          const maxSize = 1400;
+          const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(image.width * scale));
+          canvas.height = Math.max(1, Math.round(image.height * scale));
+
+          const context = canvas.getContext("2d");
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+          resolve({
+            name: file.name,
+            src: canvas.toDataURL("image/jpeg", 0.82)
+          });
+        });
+        image.addEventListener("error", reject);
+        image.src = reader.result;
+      });
+
+      reader.addEventListener("error", reject);
+      reader.readAsDataURL(file);
+    });
+
+    loadUploadedPhotos();
 
     for (let index = 1; index <= limit; index++) {
       const slot = document.createElement("figure");
@@ -268,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
       image.addEventListener("load", () => {
         foundPhotos += 1;
         slot.classList.add("has-photo");
-        if (loadedCount) loadedCount.textContent = foundPhotos;
+        updateGalleryCount();
       });
 
       image.addEventListener("error", () => {
@@ -279,10 +383,47 @@ document.addEventListener("DOMContentLoaded", () => {
       slot.append(image, placeholder);
       dynamicGallery.appendChild(slot);
     }
+
+    if (uploadInput) {
+      uploadInput.addEventListener("change", async () => {
+        const files = Array.from(uploadInput.files || []).filter((file) => file.type.startsWith("image/"));
+        if (!files.length) return;
+
+        const remainingSlots = uploadedLimit - uploadedPhotos.length;
+        const selectedFiles = files.slice(0, remainingSlots);
+
+        if (!selectedFiles.length) {
+          if (uploadStatus) uploadStatus.textContent = `Upload limit reached. Clear old uploads to add more.`;
+          uploadInput.value = "";
+          return;
+        }
+
+        if (uploadStatus) uploadStatus.textContent = "Uploading photos...";
+
+        try {
+          const resizedPhotos = await Promise.all(selectedFiles.map(resizePhoto));
+          uploadedPhotos = [...resizedPhotos, ...uploadedPhotos].slice(0, uploadedLimit);
+          saveUploadedPhotos();
+          renderUploadedPhotos();
+        } catch (error) {
+          if (uploadStatus) uploadStatus.textContent = "Some photos could not be uploaded. Please try another image.";
+        } finally {
+          uploadInput.value = "";
+        }
+      });
+    }
+
+    if (clearUploadsButton) {
+      clearUploadsButton.addEventListener("click", () => {
+        uploadedPhotos = [];
+        localStorage.removeItem(uploadedStorageKey);
+        renderUploadedPhotos();
+      });
+    }
   }
 
-  const galleryImages = document.querySelectorAll(".gallery-grid img");
-  if (galleryImages.length) {
+  const galleryGrids = document.querySelectorAll(".gallery-grid");
+  if (galleryGrids.length) {
     const lightbox = document.createElement("div");
     lightbox.className = "lightbox";
     lightbox.innerHTML = `
@@ -299,8 +440,11 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.style.overflow = "";
     };
 
-    galleryImages.forEach((image) => {
-      image.addEventListener("click", () => {
+    galleryGrids.forEach((grid) => {
+      grid.addEventListener("click", (event) => {
+        const image = event.target.closest("img");
+        if (!image) return;
+
         previewImage.src = image.src;
         previewImage.alt = image.alt;
         lightbox.classList.add("show");
