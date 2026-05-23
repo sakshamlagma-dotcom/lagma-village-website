@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const translations = {
     en: {
       label: "Language",
+      menu: "Menu",
+      close: "Close",
       hero_location: "Saharsa, Bihar",
       hero_title: "Welcome to Lagma Village",
       hero_text: "A historic and vibrant village shaped by agriculture, education, temples, ponds, and community spirit.",
@@ -20,176 +22,272 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     hi: {
       label: "भाषा",
+      menu: "मेनू",
+      close: "बंद करें",
       hero_location: "सहरसा, बिहार",
       hero_title: "लगमा गांव में आपका स्वागत है",
-      hero_text: "खेती, शिक्षा, मंदिर, तालाब और सामुदायिक भावना से जुड़ा एक ऐतिहासिक और जीवंत गांव।",
+      hero_text: "खेती, शिक्षा, मंदिर, तालाब और सामुदायिक भावना से जुड़ा एक ऐतिहासिक गांव।",
       hero_primary: "लगमा देखें",
       hero_secondary: "गांव की सेवाएं",
       achievements_label: "उपलब्धियां",
-      achievements_title: "गांव की गर्व भरी कहानियां",
-      achievements_text: "लगमा की ताकत उसके छात्रों, जनसेवा, किसान परिवारों और गांव से जुड़े रहने वाले लोगों में दिखती है।",
+      achievements_title: "गांव की गौरव भरी कहानियां",
+      achievements_text: "लगमा की ताकत उसके विद्यार्थियों, जनसेवा, किसान परिवारों और गांव से जुड़े लोगों में दिखती है।",
       gold_badge: "स्वर्ण पदक | श्रुति कुमारी | वेटलिफ्टिंग",
       achievement_medal: "<strong>वेटलिफ्टिंग:</strong> श्रुति कुमारी ने स्वर्ण पदक जीतकर लगमा का नाम रोशन किया।",
-      achievement_education: "<strong>शिक्षा:</strong> छात्र परीक्षा और करियर में लगातार अच्छा प्रदर्शन कर रहे हैं।",
-      achievement_service: "<strong>सेवा:</strong> कई ग्रामीण सरकारी और निजी क्षेत्रों में योगदान देते हैं।",
+      achievement_education: "<strong>शिक्षा:</strong> विद्यार्थी परीक्षा और करियर में अच्छा प्रदर्शन कर रहे हैं।",
+      achievement_service: "<strong>सेवा:</strong> कई ग्रामीण सरकारी और निजी कार्यों से योगदान देते हैं।",
       achievement_community: "<strong>समुदाय:</strong> लोग त्योहार, विकास और सहयोग के लिए साथ आते हैं।"
     },
     mai: {
       label: "भाषा",
+      menu: "मेनू",
+      close: "बंद करू",
       hero_location: "सहरसा, बिहार",
-      hero_title: "लगमा गाम मे अहां के स्वागत अछि",
-      hero_text: "खेती, शिक्षा, मंदिर, पोखरि आ सामुदायिक भावनासं जुड़ल ऐतिहासिक आ जीवंत गाम।",
+      hero_title: "लगमा गाम में अहां के स्वागत अछि",
+      hero_text: "खेती, शिक्षा, मंदिर, पोखरि आ सामुदायिक भावना सँ जुड़ल एक ऐतिहासिक गाम।",
       hero_primary: "लगमा देखू",
       hero_secondary: "गामक सेवा",
       achievements_label: "उपलब्धि",
-      achievements_title: "गामक गर्वक कहानी",
-      achievements_text: "लगमा केर ताकत ओकर छात्र, जनसेवा, किसान परिवार आ गाम सं जुड़ल लोकनि मे देखाइत अछि।",
+      achievements_title: "गामक गौरवक कहानी",
+      achievements_text: "लगमाक ताकत ओकर विद्यार्थी, जनसेवा, किसान परिवार आ गाम सँ जुड़ल लोक मे देखाइत अछि।",
       gold_badge: "स्वर्ण पदक | श्रुति कुमारी | वेटलिफ्टिंग",
-      achievement_medal: "<strong>वेटलिफ्टिंग:</strong> श्रुति कुमारी स्वर्ण पदक जीत कए लगमा के गौरवान्वित केलनि।",
-      achievement_education: "<strong>शिक्षा:</strong> छात्र परीक्षा आ करियर मे नीक प्रदर्शन कए रहल छथि।",
-      achievement_service: "<strong>सेवा:</strong> बहुत ग्रामीण सरकारी आ निजी क्षेत्र मे योगदान दैत छथि।",
-      achievement_community: "<strong>समुदाय:</strong> लोकनि पर्व, विकास आ सहयोग लेल संग अबैत छथि।"
-    },
-    bn: {
-      label: "ভাষা",
-      hero_location: "সহরসা, বিহার",
-      hero_title: "লাগমা গ্রামে স্বাগতম",
-      hero_text: "কৃষি, শিক্ষা, মন্দির, পুকুর এবং সাম্প্রদায়িক চেতনায় গড়া একটি ঐতিহাসিক ও প্রাণবন্ত গ্রাম।",
-      hero_primary: "লাগমা দেখুন",
-      hero_secondary: "গ্রামের পরিষেবা",
-      achievements_label: "অর্জন",
-      achievements_title: "গ্রামের গর্বের গল্প",
-      achievements_text: "লাগমার শক্তি তার ছাত্রছাত্রী, জনসেবা, কৃষক পরিবার এবং গ্রামের সঙ্গে যুক্ত মানুষের মধ্যে দেখা যায়।",
-      gold_badge: "স্বর্ণপদক | শ্রুতি কুমারী | ভারোত্তোলন",
-      achievement_medal: "<strong>ভারোত্তোলন:</strong> শ্রুতি কুমারী স্বর্ণপদক জিতে লাগমাকে গর্বিত করেছেন।",
-      achievement_education: "<strong>শিক্ষা:</strong> ছাত্রছাত্রীরা পরীক্ষা ও কর্মজীবনে ভালো ফল করছে।",
-      achievement_service: "<strong>সেবা:</strong> অনেক গ্রামবাসী সরকারি ও বেসরকারি কাজে অবদান রাখছেন।",
-      achievement_community: "<strong>সমাজ:</strong> উৎসব, উন্নয়ন ও সহযোগিতায় মানুষ একসঙ্গে আসে।"
-    },
-    ur: {
-      label: "زبان",
-      hero_location: "سہرسہ، بہار",
-      hero_title: "لگما گاؤں میں خوش آمدید",
-      hero_text: "زراعت، تعلیم، مندروں، تالابوں اور اجتماعی جذبے سے جڑا ایک تاریخی اور زندہ دل گاؤں۔",
-      hero_primary: "لگما دیکھیں",
-      hero_secondary: "گاؤں کی خدمات",
-      achievements_label: "کامیابیاں",
-      achievements_title: "گاؤں کی فخر بھری کہانیاں",
-      achievements_text: "لگما کی طاقت اس کے طلبہ، عوامی خدمت، کسان خاندانوں اور گاؤں سے جڑے لوگوں میں نظر آتی ہے۔",
-      gold_badge: "سونے کا تمغہ | شروتی کماری | ویٹ لفٹنگ",
-      achievement_medal: "<strong>ویٹ لفٹنگ:</strong> شروتی کماری نے سونے کا تمغہ جیت کر لگما کا نام روشن کیا۔",
-      achievement_education: "<strong>تعلیم:</strong> طلبہ امتحانات اور کیریئر میں اچھی کارکردگی دکھا رہے ہیں۔",
-      achievement_service: "<strong>خدمت:</strong> کئی دیہاتی سرکاری اور نجی شعبوں میں حصہ ڈال رہے ہیں۔",
-      achievement_community: "<strong>برادری:</strong> لوگ تہوار، ترقی اور مدد کے لیے اکٹھے ہوتے ہیں۔"
-    },
-    ta: {
-      label: "மொழி",
-      hero_location: "சஹர்சா, பீகார்",
-      hero_title: "லக்மா கிராமத்திற்கு வரவேற்கிறோம்",
-      hero_text: "விவசாயம், கல்வி, கோவில்கள், குளங்கள் மற்றும் சமூக உணர்வால் உருவான வரலாற்றுச் சிறப்புமிக்க கிராமம்.",
-      hero_primary: "லக்மாவை அறிக",
-      hero_secondary: "கிராம சேவைகள்",
-      achievements_label: "சாதனைகள்",
-      achievements_title: "கிராமத்தின் பெருமைக் கதைகள்",
-      achievements_text: "லக்மாவின் வலிமை அதன் மாணவர்கள், பொதுச் சேவை, விவசாயக் குடும்பங்கள் மற்றும் கிராமத்துடன் இணைந்த மக்களில் தெரிகிறது.",
-      gold_badge: "தங்கப் பதக்கம் | ஸ்ருதி குமாரி | பளுதூக்குதல்",
-      achievement_medal: "<strong>பளுதூக்குதல்:</strong> ஸ்ருதி குமாரி தங்கப் பதக்கம் வென்று லக்மாவை பெருமைப்படுத்தினார்.",
-      achievement_education: "<strong>கல்வி:</strong> மாணவர்கள் தேர்வுகளிலும் தொழிலிலும் சிறப்பாக செயல்படுகின்றனர்.",
-      achievement_service: "<strong>சேவை:</strong> பலர் அரசு மற்றும் தனியார் துறைகளில் பங்களிக்கின்றனர்.",
-      achievement_community: "<strong>சமூகம்:</strong> திருவிழா, வளர்ச்சி மற்றும் உதவிக்கு மக்கள் ஒன்றிணைகின்றனர்."
-    },
-    te: {
-      label: "భాష",
-      hero_location: "సహర్సా, బీహార్",
-      hero_title: "లగ్మా గ్రామానికి స్వాగతం",
-      hero_text: "వ్యవసాయం, విద్య, దేవాలయాలు, చెరువులు మరియు సమాజ భావనతో తీర్చిదిద్దిన చారిత్రక గ్రామం.",
-      hero_primary: "లగ్మాను చూడండి",
-      hero_secondary: "గ్రామ సేవలు",
-      achievements_label: "సాధనలు",
-      achievements_title: "గ్రామ గర్వ కథలు",
-      achievements_text: "లగ్మా బలం దాని విద్యార్థులు, ప్రజాసేవ, రైతు కుటుంబాలు మరియు గ్రామంతో అనుబంధం ఉన్న ప్రజల్లో కనిపిస్తుంది.",
-      gold_badge: "బంగారు పతకం | శృతి కుమారి | వెయిట్ లిఫ్టింగ్",
-      achievement_medal: "<strong>వెయిట్ లిఫ్టింగ్:</strong> శృతి కుమారి బంగారు పతకం గెలిచి లగ్మాకు గర్వకారణమయ్యారు.",
-      achievement_education: "<strong>విద్య:</strong> విద్యార్థులు పరీక్షలు మరియు వృత్తిలో మంచి ప్రదర్శన చేస్తున్నారు.",
-      achievement_service: "<strong>సేవ:</strong> అనేక మంది గ్రామస్తులు ప్రభుత్వ మరియు ప్రైవేట్ రంగాల్లో సేవలందిస్తున్నారు.",
-      achievement_community: "<strong>సమాజం:</strong> పండుగలు, అభివృద్ధి, సహాయానికి ప్రజలు కలిసివస్తారు."
-    },
-    mr: {
-      label: "भाषा",
-      hero_location: "सहरसा, बिहार",
-      hero_title: "लगमा गावात आपले स्वागत आहे",
-      hero_text: "शेती, शिक्षण, मंदिरे, तलाव आणि सामुदायिक भावनेने घडलेले ऐतिहासिक आणि जिवंत गाव.",
-      hero_primary: "लगमा पाहा",
-      hero_secondary: "गाव सेवा",
-      achievements_label: "यश",
-      achievements_title: "गावाच्या अभिमानाच्या गोष्टी",
-      achievements_text: "लगमाची ताकद त्याच्या विद्यार्थ्यांमध्ये, सार्वजनिक सेवेत, शेतकरी कुटुंबांत आणि गावाशी जोडलेल्या लोकांत दिसते.",
-      gold_badge: "सुवर्ण पदक | श्रुती कुमारी | वेटलिफ्टिंग",
-      achievement_medal: "<strong>वेटलिफ्टिंग:</strong> श्रुती कुमारीने सुवर्ण पदक जिंकून लगमाचा मान वाढवला.",
-      achievement_education: "<strong>शिक्षण:</strong> विद्यार्थी परीक्षा आणि करिअरमध्ये चांगली कामगिरी करत आहेत.",
-      achievement_service: "<strong>सेवा:</strong> अनेक गावकरी सरकारी आणि खासगी क्षेत्रात योगदान देतात.",
-      achievement_community: "<strong>समुदाय:</strong> लोक सण, विकास आणि मदतीसाठी एकत्र येतात."
-    },
-    gu: {
-      label: "ભાષા",
-      hero_location: "સહરસા, બિહાર",
-      hero_title: "લગ્મા ગામમાં આપનું સ્વાગત છે",
-      hero_text: "ખેતી, શિક્ષણ, મંદિરો, તળાવો અને સામૂહિક ભાવનાથી ઘડાયેલું ઐતિહાસિક અને જીવંત ગામ.",
-      hero_primary: "લગ્મા જુઓ",
-      hero_secondary: "ગામની સેવાઓ",
-      achievements_label: "સિદ્ધિઓ",
-      achievements_title: "ગામની ગૌરવભરી વાતો",
-      achievements_text: "લગ્માની શક્તિ તેના વિદ્યાર્થીઓ, જાહેર સેવા, ખેડૂત પરિવારો અને ગામ સાથે જોડાયેલા લોકોમાં દેખાય છે.",
-      gold_badge: "સુવર્ણ પદક | શ્રુતિ કુમારી | વેઇટલિફ્ટિંગ",
-      achievement_medal: "<strong>વેઇટલિફ્ટિંગ:</strong> શ્રુતિ કુમારીએ સુવર્ણ પદક જીતીને લગ્માને ગૌરવ અપાવ્યું.",
-      achievement_education: "<strong>શિક્ષણ:</strong> વિદ્યાર્થીઓ પરીક્ષાઓ અને કારકિર્દીમાં સારું પ્રદર્શન કરે છે.",
-      achievement_service: "<strong>સેવા:</strong> ઘણા ગ્રામજનો સરકારી અને ખાનગી ક્ષેત્રમાં યોગદાન આપે છે.",
-      achievement_community: "<strong>સમુદાય:</strong> લોકો તહેવારો, વિકાસ અને મદદ માટે સાથે આવે છે."
-    },
-    pa: {
-      label: "ਭਾਸ਼ਾ",
-      hero_location: "ਸਹਰਸਾ, ਬਿਹਾਰ",
-      hero_title: "ਲਗਮਾ ਪਿੰਡ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ",
-      hero_text: "ਖੇਤੀ, ਸਿੱਖਿਆ, ਮੰਦਰਾਂ, ਤਲਾਬਾਂ ਅਤੇ ਸਮੂਹਕ ਭਾਵਨਾ ਨਾਲ ਬਣਿਆ ਇੱਕ ਇਤਿਹਾਸਕ ਅਤੇ ਜੀਵੰਤ ਪਿੰਡ।",
-      hero_primary: "ਲਗਮਾ ਵੇਖੋ",
-      hero_secondary: "ਪਿੰਡ ਸੇਵਾਵਾਂ",
-      achievements_label: "ਉਪਲਬਧੀਆਂ",
-      achievements_title: "ਪਿੰਡ ਦੀਆਂ ਮਾਣ ਵਾਲੀਆਂ ਕਹਾਣੀਆਂ",
-      achievements_text: "ਲਗਮਾ ਦੀ ਤਾਕਤ ਇਸਦੇ ਵਿਦਿਆਰਥੀਆਂ, ਜਨਸੇਵਾ, ਕਿਸਾਨ ਪਰਿਵਾਰਾਂ ਅਤੇ ਪਿੰਡ ਨਾਲ ਜੁੜੇ ਲੋਕਾਂ ਵਿੱਚ ਦਿਖਦੀ ਹੈ।",
-      gold_badge: "ਸੋਨੇ ਦਾ ਤਮਗਾ | ਸ਼੍ਰੁਤੀ ਕੁਮਾਰੀ | ਵੇਟਲਿਫਟਿੰਗ",
-      achievement_medal: "<strong>ਵੇਟਲਿਫਟਿੰਗ:</strong> ਸ਼੍ਰੁਤੀ ਕੁਮਾਰੀ ਨੇ ਸੋਨੇ ਦਾ ਤਮਗਾ ਜਿੱਤ ਕੇ ਲਗਮਾ ਦਾ ਮਾਣ ਵਧਾਇਆ।",
-      achievement_education: "<strong>ਸਿੱਖਿਆ:</strong> ਵਿਦਿਆਰਥੀ ਇਮਤਿਹਾਨਾਂ ਅਤੇ ਕਰੀਅਰ ਵਿੱਚ ਚੰਗਾ ਪ੍ਰਦਰਸ਼ਨ ਕਰ ਰਹੇ ਹਨ।",
-      achievement_service: "<strong>ਸੇਵਾ:</strong> ਕਈ ਪਿੰਡ ਵਾਸੀ ਸਰਕਾਰੀ ਅਤੇ ਨਿੱਜੀ ਖੇਤਰਾਂ ਵਿੱਚ ਯੋਗਦਾਨ ਪਾਉਂਦੇ ਹਨ।",
-      achievement_community: "<strong>ਸਮੂਹ:</strong> ਲੋਕ ਤਿਉਹਾਰਾਂ, ਵਿਕਾਸ ਅਤੇ ਮਦਦ ਲਈ ਇਕੱਠੇ ਹੁੰਦੇ ਹਨ।"
+      achievement_medal: "<strong>वेटलिफ्टिंग:</strong> श्रुति कुमारी स्वर्ण पदक जीत लगमाक गौरव बढ़ौलनि।",
+      achievement_education: "<strong>शिक्षा:</strong> विद्यार्थी परीक्षा आ करियर मे नीक प्रदर्शन कए रहल छथि।",
+      achievement_service: "<strong>सेवा:</strong> बहुत ग्रामीण सरकारी आ निजी काज सँ योगदान दैत छथि।",
+      achievement_community: "<strong>समुदाय:</strong> लोक पर्व, विकास आ सहयोग लेल संग अबैत छथि।"
     }
   };
   const languageNames = {
-    en: "English",
-    hi: "Hindi",
-    mai: "Maithili",
-    bn: "Bengali",
-    ur: "Urdu",
-    ta: "Tamil",
-    te: "Telugu",
-    mr: "Marathi",
-    gu: "Gujarati",
-    pa: "Punjabi"
+    en: "अंग्रेजी",
+    hi: "हिंदी",
+    mai: "मैथिली"
   };
+  const staticTranslations = {
+    "Lagma Village": { hi: "लगमा गांव", mai: "लगमा गाम" },
+    "Lagma Village. All rights reserved.": { hi: "लगमा गांव। सर्वाधिकार सुरक्षित।", mai: "लगमा गाम। सभ अधिकार सुरक्षित।" },
+    "English": { hi: "अंग्रेजी", mai: "अंग्रेजी" },
+    "Home": { hi: "होम", mai: "मुख्य पृष्ठ" },
+    "About": { hi: "परिचय", mai: "परिचय" },
+    "Services": { hi: "सेवाएं", mai: "सेवा" },
+    "Online Services": { hi: "ऑनलाइन सेवाएं", mai: "ऑनलाइन सेवा" },
+    "Gallery": { hi: "गैलरी", mai: "गैलरी" },
+    "Notices": { hi: "सूचनाएं", mai: "सूचना" },
+    "Contact": { hi: "संपर्क", mai: "संपर्क" },
+    "Back to Home": { hi: "होम पर वापस जाएं", mai: "मुख्य पृष्ठ पर वापस जाउ" },
+    "Back to Services": { hi: "सेवाओं पर वापस जाएं", mai: "सेवा पर वापस जाउ" },
+    "Latest Update": { hi: "ताजा अपडेट", mai: "नवीन अपडेट" },
+    "Village information, facilities, photos, and notices are now available in one place.": { hi: "गांव की जानकारी, सुविधाएं, फोटो और सूचनाएं अब एक ही जगह उपलब्ध हैं।", mai: "गामक जानकारी, सुविधा, फोटो आ सूचना आब एकहि ठाम उपलब्ध अछि।" },
+    "View notices": { hi: "सूचनाएं देखें", mai: "सूचना देखू" },
+    "Quick access": { hi: "त्वरित पहुंच", mai: "जल्दी पहुंच" },
+    "Find what you need faster": { hi: "जरूरी जानकारी जल्दी पाएं", mai: "जरूरी जानकारी जल्दी पाउ" },
+    "Public Services": { hi: "सार्वजनिक सेवाएं", mai: "सार्वजनिक सेवा" },
+    "Village Gallery": { hi: "गांव की गैलरी", mai: "गामक गैलरी" },
+    "Notice Board": { hi: "सूचना पट्ट", mai: "सूचना पट्ट" },
+    "Contact Info": { hi: "संपर्क जानकारी", mai: "संपर्क जानकारी" },
+    "Service finder": { hi: "सेवा खोज", mai: "सेवा खोज" },
+    "Search village services": { hi: "गांव की सेवाएं खोजें", mai: "गामक सेवा खोजू" },
+    "School, Panchayat, Vasudha Kendra, farming, health, banking, and market details quickly find karein.": { hi: "स्कूल, पंचायत, वसुधा केंद्र, खेती, स्वास्थ्य, बैंकिंग और बाजार की जानकारी जल्दी खोजें।", mai: "स्कूल, पंचायत, वसुधा केंद्र, खेती, स्वास्थ्य, बैंकिंग आ बाजारक जानकारी जल्दी खोजू।" },
+    "Search": { hi: "खोजें", mai: "खोजू" },
+    "Type: Aadhaar, school, bank, panchayat...": { hi: "लिखें: आधार, स्कूल, बैंक, पंचायत...", mai: "लिखू: आधार, स्कूल, बैंक, पंचायत..." },
+    "Select language": { hi: "भाषा चुनें", mai: "भाषा चुनू" },
+    "Facilities": { hi: "सुविधाएं", mai: "सुविधा" },
+    "Important village services": { hi: "गांव की महत्वपूर्ण सेवाएं", mai: "गामक महत्वपूर्ण सेवा" },
+    "View All Services": { hi: "सभी सेवाएं देखें", mai: "सभ सेवा देखू" },
+    "Open Gallery": { hi: "गैलरी खोलें", mai: "गैलरी खोलू" },
+    "Online services": { hi: "ऑनलाइन सेवाएं", mai: "ऑनलाइन सेवा" },
+    "Vasudha Kendra digital services": { hi: "वसुधा केंद्र डिजिटल सेवाएं", mai: "वसुधा केंद्र डिजिटल सेवा" },
+    "Gaon ke logon ke liye Aadhaar, PAN, certificates, bill payment, tickets, banking support, aur sarkari yojana registration ek hi jagah.": { hi: "गांव के लोगों के लिए आधार, पैन, प्रमाण पत्र, बिल भुगतान, टिकट, बैंकिंग सहायता और सरकारी योजना पंजीकरण एक ही जगह।", mai: "गामक लोक लेल आधार, पैन, प्रमाण पत्र, बिल भुगतान, टिकट, बैंकिंग सहायता आ सरकारी योजना पंजीकरण एकहि ठाम।" },
+    "Vasudha Kendra": { hi: "वसुधा केंद्र", mai: "वसुधा केंद्र" },
+    "Vasudha Kendra par uplabdh sabhi digital aur sarkari online sevaayein.": { hi: "वसुधा केंद्र पर उपलब्ध सभी डिजिटल और सरकारी ऑनलाइन सेवाएं।", mai: "वसुधा केंद्र पर उपलब्ध सभ डिजिटल आ सरकारी ऑनलाइन सेवा।" },
+    "Bihar RTPS": { hi: "बिहार आरटीपीएस", mai: "बिहार आरटीपीएस" },
+    "RTPS Bihar": { hi: "बिहार आरटीपीएस", mai: "बिहार आरटीपीएस" },
+    "Caste, income, residence certificate portal": { hi: "जाति, आय, निवास प्रमाण पत्र पोर्टल", mai: "जाति, आय, निवास प्रमाण पत्र पोर्टल" },
+    "Bihar Government ke official ServicePlus portal par caste, income, residence, NCL, EWS aur anya RTPS services ke liye online apply, status track aur certificate download ki suvidha milti hai.": { hi: "बिहार सरकार के आधिकारिक सर्विसप्लस पोर्टल पर जाति, आय, निवास, एनसीएल, ईडब्ल्यूएस और अन्य आरटीपीएस सेवाओं के लिए ऑनलाइन आवेदन, स्थिति जांच और प्रमाण पत्र डाउनलोड की सुविधा मिलती है।", mai: "बिहार सरकारक आधिकारिक सर्विसप्लस पोर्टल पर जाति, आय, निवास, एनसीएल, ईडब्ल्यूएस आ आन आरटीपीएस सेवा लेल ऑनलाइन आवेदन, स्थिति जांच आ प्रमाण पत्र डाउनलोडक सुविधा भेटैत अछि।" },
+    "Open RTPS Portal": { hi: "आरटीपीएस पोर्टल खोलें", mai: "आरटीपीएस पोर्टल खोलू" },
+    "Old RTPS Site": { hi: "पुरानी आरटीपीएस साइट", mai: "पुरान आरटीपीएस साइट" },
+    "Bihar Bhumi": { hi: "बिहार भूमि", mai: "बिहार भूमि" },
+    "Land records, Jamabandi, mutation, and Bhu-Lagaan": { hi: "भूमि रिकॉर्ड, जमाबंदी, दाखिल-खारिज और भू-लगान", mai: "भूमि अभिलेख, जमाबंदी, दाखिल-खारिज आ भू-लगान" },
+    "Bihar Government ke official Bihar Bhumi portal par land records, Jamabandi register, mutation application/status, Bhu-Lagaan payment, Bhu-Manchitra, e-Mapi aur Bhu-Abhilekh services milti hain.": { hi: "बिहार सरकार के आधिकारिक बिहार भूमि पोर्टल पर भूमि रिकॉर्ड, जमाबंदी पंजी, दाखिल-खारिज आवेदन/स्थिति, भू-लगान भुगतान, भू-मानचित्र, ई-मापी और भू-अभिलेख सेवाएं मिलती हैं।", mai: "बिहार सरकारक आधिकारिक बिहार भूमि पोर्टल पर भूमि अभिलेख, जमाबंदी पंजी, दाखिल-खारिज आवेदन/स्थिति, भू-लगान भुगतान, भू-मानचित्र, ई-मापी आ भू-अभिलेख सेवा भेटैत अछि।" },
+    "Open Bihar Bhumi": { hi: "बिहार भूमि खोलें", mai: "बिहार भूमि खोलू" },
+    "Bhu-Abhilekh": { hi: "भू-अभिलेख", mai: "भू-अभिलेख" },
+    "Caste certificate": { hi: "जाति प्रमाण पत्र", mai: "जाति प्रमाण पत्र" },
+    "Income certificate": { hi: "आय प्रमाण पत्र", mai: "आय प्रमाण पत्र" },
+    "Residence certificate": { hi: "निवास प्रमाण पत्र", mai: "निवास प्रमाण पत्र" },
+    "Application status": { hi: "आवेदन स्थिति", mai: "आवेदन स्थिति" },
+    "Certificate download": { hi: "प्रमाण पत्र डाउनलोड", mai: "प्रमाण पत्र डाउनलोड" },
+    "Jamabandi register": { hi: "जमाबंदी पंजी", mai: "जमाबंदी पंजी" },
+    "Mutation apply/status": { hi: "दाखिल-खारिज आवेदन/स्थिति", mai: "दाखिल-खारिज आवेदन/स्थिति" },
+    "Bhu-Lagaan payment": { hi: "भू-लगान भुगतान", mai: "भू-लगान भुगतान" },
+    "Bhu-Manchitra": { hi: "भू-मानचित्र", mai: "भू-मानचित्र" },
+    "Rural Digital Service Centre": { hi: "ग्रामीण डिजिटल सेवा केंद्र", mai: "ग्रामीण डिजिटल सेवा केंद्र" },
+    "Digital support for Lagma": { hi: "लगमा के लिए डिजिटल सहायता", mai: "लगमा लेल डिजिटल सहायता" },
+    "Vasudha Kendra Lagma": { hi: "वसुधा केंद्र लगमा", mai: "वसुधा केंद्र लगमा" },
+    "Operator: Prince Mishra": { hi: "संचालक: प्रिंस मिश्रा", mai: "संचालक: प्रिंस मिश्रा" },
+    "Prince Mishra": { hi: "प्रिंस मिश्रा", mai: "प्रिंस मिश्रा" },
+    "Mobile: 7677773236": { hi: "मोबाइल: 7677773236", mai: "मोबाइल: 7677773236" },
+    "Gaon ke logon ke liye ek hi jagah par sabhi online aur digital sevaayein.": { hi: "गांव के लोगों के लिए एक ही जगह पर सभी ऑनलाइन और डिजिटल सेवाएं।", mai: "गामक लोक लेल एकहि ठाम सभ ऑनलाइन आ डिजिटल सेवा।" },
+    "Service provider": { hi: "सेवा प्रदाता", mai: "सेवा प्रदाता" },
+    "Online form, certificate, recharge, bill payment, ticket booking, banking support, aur digital services ke liye sampark karein.": { hi: "ऑनलाइन फॉर्म, प्रमाण पत्र, रिचार्ज, बिल भुगतान, टिकट बुकिंग, बैंकिंग सहायता और डिजिटल सेवाओं के लिए संपर्क करें।", mai: "ऑनलाइन फॉर्म, प्रमाण पत्र, रिचार्ज, बिल भुगतान, टिकट बुकिंग, बैंकिंग सहायता आ डिजिटल सेवा लेल संपर्क करू।" },
+    "Get Directions": { hi: "दिशा देखें", mai: "दिशा देखू" },
+    "Location": { hi: "स्थान", mai: "स्थान" },
+    "Vasudha Kendra direction": { hi: "वसुधा केंद्र का रास्ता", mai: "वसुधा केंद्रक रास्ता" },
+    "Map se Vasudha Kendra Lagma ke liye direction dekh sakte hain.": { hi: "मैप से वसुधा केंद्र लगमा के लिए दिशा देख सकते हैं।", mai: "मैप सँ वसुधा केंद्र लगमा लेल दिशा देखि सकैत छी।" },
+    "Education": { hi: "शिक्षा", mai: "शिक्षा" },
+    "Digital": { hi: "डिजिटल", mai: "डिजिटल" },
+    "Governance": { hi: "शासन", mai: "शासन" },
+    "Health": { hi: "स्वास्थ्य", mai: "स्वास्थ्य" },
+    "Agriculture": { hi: "कृषि", mai: "कृषि" },
+    "Banking": { hi: "बैंकिंग", mai: "बैंकिंग" },
+    "Land Records": { hi: "भूमि रिकॉर्ड", mai: "भूमि अभिलेख" },
+    "Market": { hi: "बाजार", mai: "बाजार" },
+    "Community": { hi: "समुदाय", mai: "समुदाय" },
+    "Middle School": { hi: "मध्य विद्यालय", mai: "मध्य विद्यालय" },
+    "Bihar Bhumi Portal": { hi: "बिहार भूमि पोर्टल", mai: "बिहार भूमि पोर्टल" },
+    "Ward No. 7 me established school, students aur local education support.": { hi: "वार्ड नंबर 7 में स्थित विद्यालय, विद्यार्थियों और स्थानीय शिक्षा सहायता की जानकारी।", mai: "वार्ड नंबर 7 मे स्थित विद्यालय, विद्यार्थी आ स्थानीय शिक्षा सहायता केर जानकारी।" },
+    "Aadhaar, PAN, certificate, bill payment, ticket booking, form fill-up.": { hi: "आधार, पैन, प्रमाण पत्र, बिल भुगतान, टिकट बुकिंग और फॉर्म भराई।", mai: "आधार, पैन, प्रमाण पत्र, बिल भुगतान, टिकट बुकिंग आ फॉर्म भराई।" },
+    "ServicePlus Certificate Portal": { hi: "सर्विसप्लस प्रमाण पत्र पोर्टल", mai: "सर्विसप्लस प्रमाण पत्र पोर्टल" },
+    "Caste, income, residence, NCL, EWS certificate apply, status and download.": { hi: "जाति, आय, निवास, एनसीएल, ईडब्ल्यूएस प्रमाण पत्र आवेदन, स्थिति और डाउनलोड।", mai: "जाति, आय, निवास, एनसीएल, ईडब्ल्यूएस प्रमाण पत्र आवेदन, स्थिति आ डाउनलोड।" },
+    "Panchayat Services": { hi: "पंचायत सेवाएं", mai: "पंचायत सेवा" },
+    "Certificates, public schemes, local development aur governance support.": { hi: "प्रमाण पत्र, सार्वजनिक योजनाएं, स्थानीय विकास और शासन सहायता।", mai: "प्रमाण पत्र, सार्वजनिक योजना, स्थानीय विकास आ शासन सहायता।" },
+    "Health Support": { hi: "स्वास्थ्य सहायता", mai: "स्वास्थ्य सहायता" },
+    "ASHA, ANM aur nearby healthcare facilities ki jankari.": { hi: "आशा, एएनएम और नजदीकी स्वास्थ्य सुविधाओं की जानकारी।", mai: "आशा, एएनएम आ नजदीकी स्वास्थ्य सुविधाक जानकारी।" },
+    "Farming and Irrigation": { hi: "खेती और सिंचाई", mai: "खेती आ सिंचाई" },
+    "Paddy, wheat, maize, mustard, irrigation aur seasonal crop information.": { hi: "धान, गेहूं, मक्का, सरसों, सिंचाई और मौसमी फसल की जानकारी।", mai: "धान, गहूम, मकई, सरिसों, सिंचाई आ मौसमी फसलक जानकारी।" },
+    "Bank and KYC": { hi: "बैंक और केवाईसी", mai: "बैंक आ केवाईसी" },
+    "Banking support, KYC update, account opening aur money transfer.": { hi: "बैंकिंग सहायता, केवाईसी अपडेट, खाता खोलना और मनी ट्रांसफर।", mai: "बैंकिंग सहायता, केवाईसी अपडेट, खाता खोलब आ मनी ट्रांसफर।" },
+    "Jamabandi, mutation, Bhu-Lagaan, Bhu-Manchitra aur Bhu-Abhilekh services.": { hi: "जमाबंदी, दाखिल-खारिज, भू-लगान, भू-मानचित्र और भू-अभिलेख सेवाएं।", mai: "जमाबंदी, दाखिल-खारिज, भू-लगान, भू-मानचित्र आ भू-अभिलेख सेवा।" },
+    "Local Market and Gas": { hi: "स्थानीय बाजार और गैस", mai: "स्थानीय बाजार आ गैस" },
+    "Daily essentials, gas service aur local shop contact.": { hi: "दैनिक जरूरतें, गैस सेवा और स्थानीय दुकान संपर्क।", mai: "दैनिक जरूरत, गैस सेवा आ स्थानीय दोकान संपर्क।" },
+    "Village announcements, meeting updates aur public messages.": { hi: "गांव की घोषणाएं, बैठक अपडेट और सार्वजनिक संदेश।", mai: "गामक घोषणा, बैठक अपडेट आ सार्वजनिक संदेश।" },
+    "No matching service found. Try Aadhaar, school, bank, health, panchayat, or market.": { hi: "मिलती-जुलती सेवा नहीं मिली। आधार, स्कूल, बैंक, स्वास्थ्य, पंचायत या बाजार खोजें।", mai: "मिलैत-जुलैत सेवा नहि भेटल। आधार, स्कूल, बैंक, स्वास्थ्य, पंचायत वा बाजार खोजू।" },
+    "Aadhaar": { hi: "आधार", mai: "आधार" },
+    "PAN Card": { hi: "पैन कार्ड", mai: "पैन कार्ड" },
+    "Certificates": { hi: "प्रमाण पत्र", mai: "प्रमाण पत्र" },
+    "Bill Payment": { hi: "बिल भुगतान", mai: "बिल भुगतान" },
+    "Ticket Booking": { hi: "टिकट बुकिंग", mai: "टिकट बुकिंग" },
+    "Form Fill-up": { hi: "फॉर्म भराई", mai: "फॉर्म भराई" },
+    "Aadhaar Update & Correction": { hi: "आधार अपडेट और सुधार", mai: "आधार अपडेट आ सुधार" },
+    "PAN Card Apply & Correction": { hi: "पैन कार्ड आवेदन और सुधार", mai: "पैन कार्ड आवेदन आ सुधार" },
+    "Bank KYC Update": { hi: "बैंक केवाईसी अपडेट", mai: "बैंक केवाईसी अपडेट" },
+    "New Bank Account Opening": { hi: "नया बैंक खाता खोलना", mai: "नव बैंक खाता खोलब" },
+    "Mobile Number Linking": { hi: "मोबाइल नंबर लिंकिंग", mai: "मोबाइल नंबर लिंकिंग" },
+    "Birth Certificate Apply": { hi: "जन्म प्रमाण पत्र आवेदन", mai: "जन्म प्रमाण पत्र आवेदन" },
+    "Caste Certificate": { hi: "जाति प्रमाण पत्र", mai: "जाति प्रमाण पत्र" },
+    "Income Certificate": { hi: "आय प्रमाण पत्र", mai: "आय प्रमाण पत्र" },
+    "Residence Certificate": { hi: "निवास प्रमाण पत्र", mai: "निवास प्रमाण पत्र" },
+    "Voter ID Services": { hi: "वोटर आईडी सेवाएं", mai: "वोटर आईडी सेवा" },
+    "Ration Card Apply": { hi: "राशन कार्ड आवेदन", mai: "राशन कार्ड आवेदन" },
+    "Pension Application": { hi: "पेंशन आवेदन", mai: "पेंशन आवेदन" },
+    "Scholarship Form Fill-up": { hi: "छात्रवृत्ति फॉर्म भराई", mai: "छात्रवृत्ति फॉर्म भराई" },
+    "PM Kisan Registration": { hi: "पीएम किसान पंजीकरण", mai: "पीएम किसान पंजीकरण" },
+    "Government Scheme Registration": { hi: "सरकारी योजना पंजीकरण", mai: "सरकारी योजना पंजीकरण" },
+    "Land Records: Bhumi, Lagaan, Mutation": { hi: "भूमि रिकॉर्ड: भूमि, लगान, दाखिल-खारिज", mai: "भूमि अभिलेख: भूमि, लगान, दाखिल-खारिज" },
+    "Jamabandi and Bhu-Lagaan": { hi: "जमाबंदी और भू-लगान", mai: "जमाबंदी आ भू-लगान" },
+    "Electricity Bill Payment": { hi: "बिजली बिल भुगतान", mai: "बिजली बिल भुगतान" },
+    "Water Bill Payment": { hi: "पानी बिल भुगतान", mai: "पानि बिल भुगतान" },
+    "Mobile Recharge": { hi: "मोबाइल रिचार्ज", mai: "मोबाइल रिचार्ज" },
+    "DTH Recharge": { hi: "डीटीएच रिचार्ज", mai: "डीटीएच रिचार्ज" },
+    "Online Form Filling": { hi: "ऑनलाइन फॉर्म भरना", mai: "ऑनलाइन फॉर्म भरब" },
+    "Print, Scan & Photocopy": { hi: "प्रिंट, स्कैन और फोटोकॉपी", mai: "प्रिंट, स्कैन आ फोटोकॉपी" },
+    "Email Services": { hi: "ईमेल सेवाएं", mai: "ईमेल सेवा" },
+    "Train Ticket Booking": { hi: "ट्रेन टिकट बुकिंग", mai: "ट्रेन टिकट बुकिंग" },
+    "Flight Ticket Booking": { hi: "फ्लाइट टिकट बुकिंग", mai: "फ्लाइट टिकट बुकिंग" },
+    "Bus Ticket Booking": { hi: "बस टिकट बुकिंग", mai: "बस टिकट बुकिंग" },
+    "Insurance Services": { hi: "बीमा सेवाएं", mai: "बीमा सेवा" },
+    "Money Transfer": { hi: "मनी ट्रांसफर", mai: "मनी ट्रांसफर" },
+    "Resume & Document Preparation": { hi: "रिज्यूमे और दस्तावेज तैयारी", mai: "रिज्यूमे आ दस्तावेज तैयारी" },
+    "Call: 7677773236": { hi: "कॉल: 7677773236", mai: "कॉल: 7677773236" },
+    "Open details": { hi: "विवरण खोलें", mai: "विवरण खोलू" }
+  };
+  const textSources = [];
+  const attrSources = [];
+  const seenTextNodes = new WeakSet();
+  const seenAttrElements = new WeakSet();
+
+  function getActiveTranslation(language) {
+    return translations[language] || translations.en;
+  }
+
+  function translateValue(value, language) {
+    if (language === "en") return value;
+    return staticTranslations[value]?.[language] || value;
+  }
+
+  function collectTextSources(root = document.body) {
+    if (!root) return;
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (!parent || ["SCRIPT", "STYLE", "OPTION"].includes(parent.tagName)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (parent.closest("[data-i18n], [data-i18n-html]")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+
+    let node = walker.nextNode();
+    while (node) {
+      if (!seenTextNodes.has(node)) {
+        seenTextNodes.add(node);
+        textSources.push({ node, original: node.nodeValue.trim() });
+      }
+      node = walker.nextNode();
+    }
+
+    root.querySelectorAll?.("[placeholder], [aria-label], [title]").forEach((element) => {
+      if (seenAttrElements.has(element)) return;
+      seenAttrElements.add(element);
+      attrSources.push({
+        element,
+        placeholder: element.getAttribute("placeholder"),
+        ariaLabel: element.getAttribute("aria-label"),
+        title: element.getAttribute("title")
+      });
+    });
+  }
+
+  function translateStaticText(language) {
+    textSources.forEach(({ node, original }) => {
+      const translated = translateValue(original, language);
+      const leading = node.nodeValue.match(/^\s*/)[0];
+      const trailing = node.nodeValue.match(/\s*$/)[0];
+      node.nodeValue = `${leading}${translated}${trailing}`;
+    });
+
+    attrSources.forEach(({ element, placeholder, ariaLabel, title }) => {
+      if (placeholder !== null) element.setAttribute("placeholder", translateValue(placeholder, language));
+      if (ariaLabel !== null) element.setAttribute("aria-label", translateValue(ariaLabel, language));
+      if (title !== null) element.setAttribute("title", translateValue(title, language));
+    });
+  }
 
   function applyLanguage(language) {
     const active = translations[language] ? language : "en";
+    const copy = getActiveTranslation(active);
+
     document.documentElement.lang = active;
-    document.documentElement.dir = active === "ur" ? "rtl" : "ltr";
 
     document.querySelectorAll("[data-i18n]").forEach((element) => {
       const key = element.getAttribute("data-i18n");
-      if (translations[active][key]) element.textContent = translations[active][key];
+      if (copy[key]) element.textContent = copy[key];
     });
 
     document.querySelectorAll("[data-i18n-html]").forEach((element) => {
       const key = element.getAttribute("data-i18n-html");
-      if (translations[active][key]) element.innerHTML = translations[active][key];
+      if (copy[key]) element.innerHTML = copy[key];
     });
+
+    collectTextSources();
+    translateStaticText(active);
+
+    if (menuButton) {
+      const isOpen = nav && nav.classList.contains("open");
+      menuButton.textContent = isOpen ? copy.close : copy.menu;
+    }
 
     localStorage.setItem("lagma-language", active);
   }
@@ -209,28 +307,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const languageSelect = languageWrap.querySelector("select");
     const savedLanguage = localStorage.getItem("lagma-language") || "en";
     languageSelect.value = translations[savedLanguage] ? savedLanguage : "en";
+    collectTextSources();
     applyLanguage(languageSelect.value);
+    languageWrap.querySelector("span").textContent = getActiveTranslation(languageSelect.value).label;
 
     languageSelect.addEventListener("change", () => {
       applyLanguage(languageSelect.value);
-      const active = translations[languageSelect.value] || translations.en;
-      languageWrap.querySelector("span").textContent = active.label;
+      languageWrap.querySelector("span").textContent = getActiveTranslation(languageSelect.value).label;
     });
-    languageWrap.querySelector("span").textContent = translations[languageSelect.value].label;
   }
 
   if (menuButton && nav) {
     menuButton.addEventListener("click", () => {
       const isOpen = nav.classList.toggle("open");
+      const language = localStorage.getItem("lagma-language") || "en";
+      const copy = getActiveTranslation(language);
       menuButton.setAttribute("aria-expanded", String(isOpen));
-      menuButton.textContent = isOpen ? "Close" : "Menu";
+      menuButton.textContent = isOpen ? copy.close : copy.menu;
     });
 
     nav.addEventListener("click", (event) => {
       if (event.target instanceof HTMLAnchorElement) {
+        const language = localStorage.getItem("lagma-language") || "en";
         nav.classList.remove("open");
         menuButton.setAttribute("aria-expanded", "false");
-        menuButton.textContent = "Menu";
+        menuButton.textContent = getActiveTranslation(language).menu;
       }
     });
   }
@@ -241,185 +342,120 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!target) return;
 
       event.preventDefault();
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      target.scrollIntoView({ block: "start" });
     });
   });
 
-  const dynamicGallery = document.querySelector("[data-gallery-limit]");
-  if (dynamicGallery) {
-    const limit = Number(dynamicGallery.getAttribute("data-gallery-limit")) || 100;
-    const extension = dynamicGallery.getAttribute("data-gallery-extension") || "jpeg";
-    const loadedCount = document.querySelector("#gallery-loaded-count");
-    const uploadInput = document.querySelector("#gallery-photo-upload");
-    const uploadStatus = document.querySelector("#gallery-upload-status");
-    const clearUploadsButton = document.querySelector("#clear-uploaded-photos");
-    const uploadedStorageKey = "lagma-uploaded-gallery-photos";
-    const uploadedLimit = 30;
-    let foundPhotos = 0;
-    let uploadedPhotos = [];
-
-    const updateGalleryCount = () => {
-      if (loadedCount) loadedCount.textContent = foundPhotos + uploadedPhotos.length;
-    };
-
-    const updateUploadStatus = () => {
-      if (!uploadStatus) return;
-      uploadStatus.textContent = uploadedPhotos.length
-        ? `${uploadedPhotos.length} uploaded photo${uploadedPhotos.length === 1 ? "" : "s"} saved in this browser.`
-        : "No uploaded photos yet.";
-    };
-
-    const saveUploadedPhotos = () => {
-      try {
-        localStorage.setItem(uploadedStorageKey, JSON.stringify(uploadedPhotos));
-      } catch (error) {
-        uploadedPhotos = uploadedPhotos.slice(0, Math.max(0, uploadedPhotos.length - 1));
-        try {
-          localStorage.setItem(uploadedStorageKey, JSON.stringify(uploadedPhotos));
-        } catch (storageError) {
-          localStorage.removeItem(uploadedStorageKey);
-          uploadedPhotos = [];
-        }
-        if (uploadStatus) uploadStatus.textContent = "Storage full. Please upload smaller photos or clear old uploads.";
+  const serviceSearch = document.querySelector("#service-search");
+  const serviceResults = document.querySelector("#service-results");
+  if (serviceSearch && serviceResults) {
+    const services = [
+      {
+        category: "Education",
+        title: "Middle School",
+        text: "Ward No. 7 me established school, students aur local education support.",
+        link: "services.html"
+      },
+      {
+        category: "Digital",
+        title: "Vasudha Kendra",
+        text: "Aadhaar, PAN, certificate, bill payment, ticket booking, form fill-up.",
+        link: "online-services.html"
+      },
+      {
+        category: "RTPS Bihar",
+        title: "ServicePlus Certificate Portal",
+        text: "Caste, income, residence, NCL, EWS certificate apply, status and download.",
+        link: "https://serviceonline.bihar.gov.in/"
+      },
+      {
+        category: "Governance",
+        title: "Panchayat Services",
+        text: "Certificates, public schemes, local development aur governance support.",
+        link: "services.html"
+      },
+      {
+        category: "Health",
+        title: "Health Support",
+        text: "ASHA, ANM aur nearby healthcare facilities ki jankari.",
+        link: "services.html"
+      },
+      {
+        category: "Agriculture",
+        title: "Farming and Irrigation",
+        text: "Paddy, wheat, maize, mustard, irrigation aur seasonal crop information.",
+        link: "services.html"
+      },
+      {
+        category: "Banking",
+        title: "Bank and KYC",
+        text: "Banking support, KYC update, account opening aur money transfer.",
+        link: "online-services.html"
+      },
+      {
+        category: "Land Records",
+        title: "Bihar Bhumi Portal",
+        text: "Jamabandi, mutation, Bhu-Lagaan, Bhu-Manchitra aur Bhu-Abhilekh services.",
+        link: "https://biharbhumi.bihar.gov.in/Biharbhumi/"
+      },
+      {
+        category: "Market",
+        title: "Local Market and Gas",
+        text: "Daily essentials, gas service aur local shop contact.",
+        link: "services.html"
+      },
+      {
+        category: "Community",
+        title: "Notice Board",
+        text: "Village announcements, meeting updates aur public messages.",
+        link: "notification.html"
       }
-    };
+    ];
 
-    const createUploadedPhoto = (photo, index) => {
-      const slot = document.createElement("figure");
-      slot.className = "gallery-slot uploaded-gallery-slot has-photo";
-      slot.dataset.uploadedPhoto = "true";
-
-      const badge = document.createElement("span");
-      badge.className = "uploaded-photo-badge";
-      badge.textContent = "Uploaded";
-
-      const image = document.createElement("img");
-      image.src = photo.src;
-      image.alt = photo.name || `Uploaded Lagma village photo ${index + 1}`;
-      image.loading = "lazy";
-
-      const caption = document.createElement("figcaption");
-      caption.className = "gallery-placeholder";
-      caption.innerHTML = `<strong>Uploaded Photo</strong><span>${photo.name || "Device photo"}</span>`;
-
-      slot.append(badge, image, caption);
-      return slot;
-    };
-
-    const renderUploadedPhotos = () => {
-      dynamicGallery.querySelectorAll("[data-uploaded-photo]").forEach((slot) => slot.remove());
-      const uploadedFragment = document.createDocumentFragment();
-      uploadedPhotos.forEach((photo, index) => {
-        uploadedFragment.appendChild(createUploadedPhoto(photo, index));
+    const renderServices = (query = "") => {
+      const normalizedQuery = query.trim().toLowerCase();
+      const matches = services.filter((service) => {
+        const searchable = `${service.category} ${service.title} ${service.text}`.toLowerCase();
+        return !normalizedQuery || searchable.includes(normalizedQuery);
       });
-      dynamicGallery.insertBefore(uploadedFragment, dynamicGallery.firstChild);
-      updateGalleryCount();
-      updateUploadStatus();
-    };
 
-    const loadUploadedPhotos = () => {
-      try {
-        const savedPhotos = JSON.parse(localStorage.getItem(uploadedStorageKey) || "[]");
-        uploadedPhotos = Array.isArray(savedPhotos) ? savedPhotos.filter((photo) => photo && photo.src).slice(0, uploadedLimit) : [];
-      } catch (error) {
-        uploadedPhotos = [];
+      serviceResults.innerHTML = "";
+
+      if (!matches.length) {
+        serviceResults.innerHTML = '<p class="service-empty">No matching service found. Try Aadhaar, school, bank, health, panchayat, or market.</p>';
+        collectTextSources(serviceResults);
+        translateStaticText(localStorage.getItem("lagma-language") || "en");
+        return;
       }
-      renderUploadedPhotos();
+
+      const fragment = document.createDocumentFragment();
+      matches.forEach((service) => {
+        const card = document.createElement("article");
+        card.className = "service-result-card";
+        card.innerHTML = `
+          <span></span>
+          <h3></h3>
+          <p></p>
+          <a class="text-link" href=""></a>
+        `;
+        card.querySelector("span").textContent = service.category;
+        card.querySelector("h3").textContent = service.title;
+        card.querySelector("p").textContent = service.text;
+        card.querySelector("a").href = service.link;
+        if (service.link.startsWith("http")) {
+          card.querySelector("a").target = "_blank";
+          card.querySelector("a").rel = "noopener";
+        }
+        card.querySelector("a").textContent = "Open details";
+        fragment.appendChild(card);
+      });
+      serviceResults.appendChild(fragment);
+      collectTextSources(serviceResults);
+      translateStaticText(localStorage.getItem("lagma-language") || "en");
     };
 
-    const resizePhoto = (file) => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.addEventListener("load", () => {
-        const image = new Image();
-        image.addEventListener("load", () => {
-          const maxSize = 1400;
-          const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.max(1, Math.round(image.width * scale));
-          canvas.height = Math.max(1, Math.round(image.height * scale));
-
-          const context = canvas.getContext("2d");
-          context.drawImage(image, 0, 0, canvas.width, canvas.height);
-          resolve({
-            name: file.name,
-            src: canvas.toDataURL("image/jpeg", 0.82)
-          });
-        });
-        image.addEventListener("error", reject);
-        image.src = reader.result;
-      });
-
-      reader.addEventListener("error", reject);
-      reader.readAsDataURL(file);
-    });
-
-    loadUploadedPhotos();
-
-    for (let index = 1; index <= limit; index++) {
-      const slot = document.createElement("figure");
-      slot.className = "gallery-slot";
-
-      const image = document.createElement("img");
-      image.src = `${index}.${extension}`;
-      image.alt = `Lagma village photo ${index}`;
-      image.loading = "lazy";
-
-      const placeholder = document.createElement("figcaption");
-      placeholder.className = "gallery-placeholder";
-      placeholder.innerHTML = `<strong>Photo ${index}</strong><span>Add ${index}.${extension}</span>`;
-
-      image.addEventListener("load", () => {
-        foundPhotos += 1;
-        slot.classList.add("has-photo");
-        updateGalleryCount();
-      });
-
-      image.addEventListener("error", () => {
-        image.remove();
-        slot.classList.add("is-empty");
-      });
-
-      slot.append(image, placeholder);
-      dynamicGallery.appendChild(slot);
-    }
-
-    if (uploadInput) {
-      uploadInput.addEventListener("change", async () => {
-        const files = Array.from(uploadInput.files || []).filter((file) => file.type.startsWith("image/"));
-        if (!files.length) return;
-
-        const remainingSlots = uploadedLimit - uploadedPhotos.length;
-        const selectedFiles = files.slice(0, remainingSlots);
-
-        if (!selectedFiles.length) {
-          if (uploadStatus) uploadStatus.textContent = `Upload limit reached. Clear old uploads to add more.`;
-          uploadInput.value = "";
-          return;
-        }
-
-        if (uploadStatus) uploadStatus.textContent = "Uploading photos...";
-
-        try {
-          const resizedPhotos = await Promise.all(selectedFiles.map(resizePhoto));
-          uploadedPhotos = [...resizedPhotos, ...uploadedPhotos].slice(0, uploadedLimit);
-          saveUploadedPhotos();
-          renderUploadedPhotos();
-        } catch (error) {
-          if (uploadStatus) uploadStatus.textContent = "Some photos could not be uploaded. Please try another image.";
-        } finally {
-          uploadInput.value = "";
-        }
-      });
-    }
-
-    if (clearUploadsButton) {
-      clearUploadsButton.addEventListener("click", () => {
-        uploadedPhotos = [];
-        localStorage.removeItem(uploadedStorageKey);
-        renderUploadedPhotos();
-      });
-    }
+    renderServices();
+    serviceSearch.addEventListener("input", () => renderServices(serviceSearch.value));
   }
 
   const galleryGrids = document.querySelectorAll(".gallery-grid");
@@ -434,7 +470,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const previewImage = lightbox.querySelector("img");
     const closeButton = lightbox.querySelector("button");
-
     const closeLightbox = () => {
       lightbox.classList.remove("show");
       document.body.style.overflow = "";
@@ -461,23 +496,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const scrollTop = document.createElement("button");
-  scrollTop.className = "scroll-top";
-  scrollTop.type = "button";
-  scrollTop.textContent = "^";
-  scrollTop.setAttribute("aria-label", "Scroll to top");
-  document.body.appendChild(scrollTop);
-
-  window.addEventListener("scroll", () => {
-    scrollTop.classList.toggle("show", window.scrollY > 450);
-  });
-
-  scrollTop.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
   const year = document.querySelector("#year");
-  if (year) {
-    year.textContent = new Date().getFullYear();
-  }
+  if (year) year.textContent = new Date().getFullYear();
 });
