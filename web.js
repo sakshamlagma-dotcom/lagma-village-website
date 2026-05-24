@@ -458,6 +458,42 @@ document.addEventListener("DOMContentLoaded", () => {
     serviceSearch.addEventListener("input", () => renderServices(serviceSearch.value));
   }
 
+  const dynamicGalleryGrid = document.querySelector(".photo-gallery-grid[data-gallery-end]");
+  if (dynamicGalleryGrid) {
+    const start = Number(dynamicGalleryGrid.dataset.galleryStart || 1);
+    const end = Number(dynamicGalleryGrid.dataset.galleryEnd || 500);
+    const extension = dynamicGalleryGrid.dataset.galleryExtension || "jpeg";
+    const counter = document.querySelector("#gallery-photo-count");
+    let visiblePhotos = 0;
+
+    const updateCounter = () => {
+      if (counter) counter.textContent = String(visiblePhotos);
+    };
+
+    const fragment = document.createDocumentFragment();
+    for (let photoNumber = start; photoNumber <= end; photoNumber += 1) {
+      const image = document.createElement("img");
+      image.src = `${photoNumber}.${extension}`;
+      image.alt = `Lagma village photo ${photoNumber}`;
+      image.loading = "lazy";
+      image.decoding = "async";
+
+      image.addEventListener("load", () => {
+        visiblePhotos += 1;
+        updateCounter();
+      }, { once: true });
+
+      image.addEventListener("error", () => {
+        image.remove();
+      }, { once: true });
+
+      fragment.appendChild(image);
+    }
+
+    dynamicGalleryGrid.appendChild(fragment);
+    updateCounter();
+  }
+
   const galleryGrids = document.querySelectorAll(".gallery-grid");
   if (galleryGrids.length) {
     const lightbox = document.createElement("div");
