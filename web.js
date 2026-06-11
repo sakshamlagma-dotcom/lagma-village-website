@@ -1,3 +1,28 @@
+let deferredInstallPrompt = null;
+
+function updateInstallButton() {
+  const installButton = document.querySelector(".install-app-btn");
+  if (!installButton) return;
+
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  installButton.classList.toggle("show", !isStandalone);
+}
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  updateInstallButton();
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  updateInstallButton();
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const menuButton = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".site-nav");
@@ -294,6 +319,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const header = document.querySelector(".site-header");
   if (header) {
+    const installButton = document.createElement("button");
+    installButton.className = "install-app-btn";
+    installButton.type = "button";
+    installButton.textContent = "Install LAGMA APP";
+    installButton.setAttribute("aria-label", "Install LAGMA APP");
+    installButton.addEventListener("click", async () => {
+      if (!deferredInstallPrompt) {
+        window.alert("App install karne ke liye browser menu kholen aur 'Install app' ya 'Add to Home screen' select karein.");
+        return;
+      }
+
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      updateInstallButton();
+    });
+    header.appendChild(installButton);
+    updateInstallButton();
+
     const languageWrap = document.createElement("label");
     languageWrap.className = "language-switcher";
     languageWrap.innerHTML = `
