@@ -576,6 +576,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const likeButtons = document.querySelectorAll(".site-like-button");
+  likeButtons.forEach((button) => {
+    const likeKey = button.dataset.likeKey || "lagma-website-like";
+    const label = button.querySelector(".site-like-text");
+    const setLiked = () => {
+      button.classList.add("is-liked");
+      button.disabled = true;
+      button.setAttribute("aria-pressed", "true");
+      if (label) label.textContent = "Thanks for liking";
+    };
+
+    button.setAttribute("aria-pressed", "false");
+    if (localStorage.getItem(likeKey) === "yes") {
+      setLiked();
+      return;
+    }
+
+    button.addEventListener("click", () => {
+      localStorage.setItem(likeKey, "yes");
+      setLiked();
+
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "website_like", {
+          event_category: "engagement",
+          event_label: document.title,
+          page_path: window.location.pathname
+        });
+      }
+    });
+  });
+
   const year = document.querySelector("#year");
   if (year) year.textContent = new Date().getFullYear();
 });

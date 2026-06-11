@@ -2034,6 +2034,76 @@ h3 {
   border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 
+.site-like-panel {
+  width: min(1160px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  margin: 0 auto 22px;
+  padding: 20px;
+  color: var(--mithila-ink);
+  background:
+    linear-gradient(rgba(255, 246, 216, 0.94), rgba(255, 246, 216, 0.94)),
+    url("mithila-pattern.svg") center / 220px 220px;
+  border: 3px double rgba(255, 217, 145, 0.82);
+  border-radius: 14px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+}
+
+.site-like-panel strong,
+.site-like-panel p {
+  display: block;
+}
+
+.site-like-panel strong {
+  color: var(--mithila-red);
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+}
+
+.site-like-panel p {
+  max-width: 660px;
+  margin-top: 4px;
+  color: #5a4033;
+}
+
+.like-eyebrow {
+  display: inline-block;
+  margin-bottom: 4px;
+  color: var(--green-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-like-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 12px 20px;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--mithila-red), #d45a3a);
+  border: 2px solid #ffd991;
+  border-radius: 999px;
+  box-shadow: 0 12px 28px rgba(182, 59, 46, 0.28);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.site-like-button span[aria-hidden="true"] {
+  color: #ffd991;
+  font-size: 1.1rem;
+}
+
+.site-like-button.is-liked {
+  color: var(--green-dark);
+  background: linear-gradient(135deg, #ffd991, #fff7d6);
+}
+
 .copyright {
   text-align: center;
 }
@@ -2285,6 +2355,15 @@ h3 {
     align-items: center;
     flex-direction: column;
     text-align: center;
+  }
+
+  .site-like-panel {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .site-like-button {
+    width: 100%;
   }
 
   .page-hero {
