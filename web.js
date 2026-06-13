@@ -361,6 +361,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  if (!document.querySelector(".whatsapp-float")) {
+    const whatsappFloat = document.createElement("a");
+    whatsappFloat.className = "whatsapp-float";
+    whatsappFloat.href = "https://wa.me/917011504426?text=Namaste%2C%20mujhe%20Lagma%20Village%20website%20ke%20baare%20me%20jankari%20chahiye.";
+    whatsappFloat.target = "_blank";
+    whatsappFloat.rel = "noopener";
+    whatsappFloat.setAttribute("aria-label", "WhatsApp par juriye");
+    whatsappFloat.textContent = "WhatsApp";
+    document.body.appendChild(whatsappFloat);
+  }
+
   if (menuButton && nav) {
     menuButton.addEventListener("click", () => {
       const isOpen = nav.classList.toggle("open");
@@ -538,6 +549,127 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCounter();
   }
 
+  const uploadForm = document.querySelector("#gallery-upload-form");
+  if (uploadForm) {
+    const photoInput = uploadForm.querySelector("#gallery-photo-input");
+    const preview = uploadForm.querySelector("#gallery-upload-preview");
+    const status = uploadForm.querySelector("#gallery-upload-status");
+    const submitButton = uploadForm.querySelector("button[type='submit']");
+    const fallbackLink = uploadForm.querySelector(".whatsapp-photo-btn");
+    const maxPhotoSize = 8 * 1024 * 1024;
+    let previewUrl = "";
+
+    const setUploadStatus = (message, type = "") => {
+      if (!status) return;
+      status.textContent = message;
+      status.classList.toggle("is-success", type === "success");
+      status.classList.toggle("is-error", type === "error");
+    };
+
+    const clearPreviewUrl = () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = "";
+    };
+
+    const getUploadFieldValue = (fieldName) => {
+      const field = uploadForm.elements.namedItem(fieldName);
+      return field ? String(field.value || "").replace(/[|=]/g, " ").trim() : "";
+    };
+
+    photoInput?.addEventListener("change", () => {
+      clearPreviewUrl();
+      const file = photoInput.files?.[0];
+      setUploadStatus("");
+
+      if (!file) {
+        if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        photoInput.value = "";
+        if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
+        setUploadStatus("Kripya JPG, PNG ya WEBP photo select karein.", "error");
+        return;
+      }
+
+      if (file.size > maxPhotoSize) {
+        photoInput.value = "";
+        if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
+        setUploadStatus("Photo 8 MB se chhoti honi chahiye.", "error");
+        return;
+      }
+
+      previewUrl = URL.createObjectURL(file);
+      if (preview) preview.innerHTML = `<img src="${previewUrl}" alt="Selected photo preview">`;
+    });
+
+    uploadForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const endpoint = uploadForm.dataset.uploadEndpoint?.trim();
+      const cloudinaryCloud = uploadForm.dataset.cloudinaryCloud?.trim();
+      const cloudinaryUploadPreset = uploadForm.dataset.cloudinaryUploadPreset?.trim();
+      const file = photoInput?.files?.[0];
+
+      if (!file) {
+        setUploadStatus("Pehle photo choose karein.", "error");
+        return;
+      }
+
+      if (!endpoint && (!cloudinaryCloud || !cloudinaryUploadPreset)) {
+        setUploadStatus("Upload setup hona baaki hai. Abhi WhatsApp khulega, wahan photo attach karke bhej dein.", "error");
+        fallbackLink?.click();
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Uploading...";
+      setUploadStatus("Photo upload ho rahi hai...");
+
+      try {
+        if (cloudinaryCloud && cloudinaryUploadPreset) {
+          const cloudinaryData = new FormData();
+          cloudinaryData.append("file", file);
+          cloudinaryData.append("upload_preset", cloudinaryUploadPreset);
+          cloudinaryData.append("tags", "lagma-village-gallery,website-upload");
+          cloudinaryData.append("context", [
+            `name=${getUploadFieldValue("name")}`,
+            `contact=${getUploadFieldValue("contact")}`,
+            `caption=${getUploadFieldValue("caption")}`,
+            "source=Lagma Village website gallery",
+          ].join("|"));
+
+          const cloudinaryResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloud}/image/upload`, {
+            method: "POST",
+            body: cloudinaryData,
+          });
+
+          if (!cloudinaryResponse.ok) throw new Error("Cloudinary upload failed");
+        } else {
+          const formData = new FormData(uploadForm);
+          formData.append("source", "Lagma Village website gallery");
+
+          const response = await fetch(endpoint, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) throw new Error("Upload failed");
+        }
+
+        uploadForm.reset();
+        clearPreviewUrl();
+        if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
+        setUploadStatus("Photo mil gayi. Review ke baad gallery me add ki jayegi.", "success");
+      } catch (error) {
+        setUploadStatus("Upload nahi ho payi. Kripya dobara try karein ya WhatsApp se photo bhejein.", "error");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Upload photo";
+      }
+    });
+  }
+
   const galleryGrids = document.querySelectorAll(".gallery-grid");
   if (galleryGrids.length) {
     const lightbox = document.createElement("div");
@@ -603,6 +735,36 @@ document.addEventListener("DOMContentLoaded", () => {
           event_label: document.title,
           page_path: window.location.pathname
         });
+      }
+    });
+  });
+
+  const shareButtons = document.querySelectorAll(".share-site-btn");
+  shareButtons.forEach((button) => {
+    const originalText = button.textContent;
+    const shareData = {
+      title: "Lagma Village Website",
+      text: "Lagma Village ki official website dekhein.",
+      url: window.location.origin && window.location.origin !== "null"
+        ? `${window.location.origin}${window.location.pathname}`
+        : window.location.href
+    };
+
+    button.addEventListener("click", async () => {
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+          return;
+        }
+
+        await navigator.clipboard.writeText(shareData.url);
+        button.textContent = "Link copied";
+        window.setTimeout(() => {
+          button.textContent = originalText;
+        }, 1800);
+      } catch (error) {
+        if (error?.name === "AbortError") return;
+        window.prompt("Website link copy karein:", shareData.url);
       }
     });
   });
