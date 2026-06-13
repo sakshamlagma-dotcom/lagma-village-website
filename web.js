@@ -556,6 +556,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const status = uploadForm.querySelector("#gallery-upload-status");
     const submitButton = uploadForm.querySelector("button[type='submit']");
     const fallbackLink = uploadForm.querySelector(".whatsapp-photo-btn");
+    const uploadedPhotoStorageKey = "lagma-uploaded-gallery-photos";
     const maxPhotoSize = 8 * 1024 * 1024;
     let previewUrl = "";
 
@@ -575,6 +576,36 @@ document.addEventListener("DOMContentLoaded", () => {
       const field = uploadForm.elements.namedItem(fieldName);
       return field ? String(field.value || "").replace(/[|=]/g, " ").trim() : "";
     };
+
+    const incrementGalleryCount = () => {
+      const counter = document.querySelector("#gallery-photo-count");
+      if (!counter) return;
+      counter.textContent = String(Number(counter.textContent || 0) + 1);
+    };
+
+    const addUploadedPhotoToGallery = (photoUrl, caption = "Uploaded Lagma village photo", shouldUpdateCount = false) => {
+      const gallery = document.querySelector(".photo-gallery-grid");
+      if (!gallery || !photoUrl) return;
+
+      const image = document.createElement("img");
+      image.src = photoUrl;
+      image.alt = caption || "Uploaded Lagma village photo";
+      image.loading = "lazy";
+      image.decoding = "async";
+      image.className = "uploaded-gallery-photo";
+      gallery.prepend(image);
+      if (shouldUpdateCount) incrementGalleryCount();
+    };
+
+    const getStoredUploadedPhotos = () => {
+      try {
+        return JSON.parse(localStorage.getItem(uploadedPhotoStorageKey) || "[]");
+      } catch (error) {
+        return [];
+      }
+    };
+
+    getStoredUploadedPhotos().forEach((photo) => addUploadedPhotoToGallery(photo.url, photo.caption));
 
     photoInput?.addEventListener("change", () => {
       clearPreviewUrl();
@@ -609,7 +640,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const endpoint = uploadForm.dataset.uploadEndpoint?.trim();
       const cloudinaryCloud = uploadForm.dataset.cloudinaryCloud?.trim();
       const cloudinaryUploadPreset = uploadForm.dataset.cloudinaryUploadPreset?.trim();
-      const reviewWhatsapp = uploadForm.dataset.reviewWhatsapp?.trim();
       const file = photoInput?.files?.[0];
 
       if (!file) {
@@ -629,6 +659,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         let uploadedPhotoUrl = "";
+        const caption = getUploadFieldValue("caption") || "Uploaded Lagma village photo";
 
         if (cloudinaryCloud && cloudinaryUploadPreset) {
           const cloudinaryData = new FormData();
@@ -665,15 +696,13 @@ document.addEventListener("DOMContentLoaded", () => {
         uploadForm.reset();
         clearPreviewUrl();
         if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
-        setUploadStatus("Photo mil gayi. Review ke liye WhatsApp message khul raha hai.", "success");
+        setUploadStatus("Photo upload ho gayi aur gallery me add ho gayi.", "success");
 
-        if (reviewWhatsapp && uploadedPhotoUrl) {
-          const reviewMessage = [
-            "Lagma Village gallery ke liye nayi photo upload hui hai.",
-            `Photo link: ${uploadedPhotoUrl}`,
-            "Kripya review karke approved photo gallery me add kar dijiye.",
-          ].join("\n");
-          window.open(`https://wa.me/${reviewWhatsapp}?text=${encodeURIComponent(reviewMessage)}`, "_blank", "noopener");
+        if (uploadedPhotoUrl) {
+          addUploadedPhotoToGallery(uploadedPhotoUrl, caption, true);
+          const storedPhotos = getStoredUploadedPhotos();
+          storedPhotos.unshift({ url: uploadedPhotoUrl, caption });
+          localStorage.setItem(uploadedPhotoStorageKey, JSON.stringify(storedPhotos.slice(0, 100)));
         }
       } catch (error) {
         setUploadStatus("Upload nahi ho payi. Kripya dobara try karein ya WhatsApp se photo bhejein.", "error");
