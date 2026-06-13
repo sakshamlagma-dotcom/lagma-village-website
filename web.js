@@ -555,7 +555,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const preview = uploadForm.querySelector("#gallery-upload-preview");
     const status = uploadForm.querySelector("#gallery-upload-status");
     const submitButton = uploadForm.querySelector("button[type='submit']");
-    const fallbackLink = uploadForm.querySelector(".whatsapp-photo-btn");
     const uploadedPhotoStorageKey = "lagma-uploaded-gallery-photos";
     const maxPhotoSize = 8 * 1024 * 1024;
     let previewUrl = "";
@@ -648,8 +647,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (!endpoint && (!cloudinaryCloud || !cloudinaryUploadPreset)) {
-        setUploadStatus("Upload setup hona baaki hai. Abhi WhatsApp khulega, wahan photo attach karke bhej dein.", "error");
-        fallbackLink?.click();
+        setUploadStatus("Upload setup hona baaki hai. Kripya baad me dobara try karein.", "error");
         return;
       }
 
@@ -659,7 +657,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         let uploadedPhotoUrl = "";
-        const caption = getUploadFieldValue("caption") || "Uploaded Lagma village photo";
+        const uploaderName = getUploadFieldValue("name");
+        const caption = uploaderName ? `Uploaded by ${uploaderName}` : "Uploaded Lagma village photo";
 
         if (cloudinaryCloud && cloudinaryUploadPreset) {
           const cloudinaryData = new FormData();
@@ -667,9 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
           cloudinaryData.append("upload_preset", cloudinaryUploadPreset);
           cloudinaryData.append("tags", "lagma-village-gallery,website-upload");
           cloudinaryData.append("context", [
-            `name=${getUploadFieldValue("name")}`,
-            `contact=${getUploadFieldValue("contact")}`,
-            `caption=${getUploadFieldValue("caption")}`,
+            `name=${uploaderName}`,
             "source=Lagma Village website gallery",
           ].join("|"));
 
@@ -705,10 +702,10 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem(uploadedPhotoStorageKey, JSON.stringify(storedPhotos.slice(0, 100)));
         }
       } catch (error) {
-        setUploadStatus("Upload nahi ho payi. Kripya dobara try karein ya WhatsApp se photo bhejein.", "error");
+        setUploadStatus("Upload nahi ho payi. Kripya dobara try karein.", "error");
       } finally {
         submitButton.disabled = false;
-        submitButton.textContent = "Upload photo";
+        submitButton.textContent = "Review karke upload karein";
       }
     });
   }
