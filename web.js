@@ -585,6 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const addUploadedPhotoToGallery = (photoUrl, caption = "Uploaded Lagma village photo", shouldUpdateCount = false) => {
       const gallery = document.querySelector(".photo-gallery-grid");
       if (!gallery || !photoUrl) return;
+      if ([...gallery.querySelectorAll("img")].some((image) => image.src === photoUrl)) return;
 
       const image = document.createElement("img");
       image.src = photoUrl;
@@ -604,7 +605,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    getStoredUploadedPhotos().forEach((photo) => addUploadedPhotoToGallery(photo.url, photo.caption));
+    const loadCloudinaryGalleryPhotos = async () => {
+      const cloudinaryCloud = uploadForm.dataset.cloudinaryCloud?.trim();
+      if (!cloudinaryCloud) return;
+
+      try {
+        const response = await fetch(`https://res.cloudinary.com/${cloudinaryCloud}/image/list/lagma-village-gallery.json`);
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const resources = Array.isArray(data.resources) ? data.resources : [];
+        resources
+          .slice()
+          .reverse()
+          .forEach((resource) => {
+            if (!resource.public_id || !resource.format) return;
+            const version = resource.version ? `v${resource.version}/` : "";
+            const photoUrl = `https://res.cloudinary.com/${cloudinaryCloud}/image/upload/${version}${resource.public_id}.${resource.format}`;
+            const caption = resource.context?.custom?.caption || resource.context?.caption || "Uploaded Lagma village photo";
+            addUploadedPhotoToGallery(photoUrl, caption, true);
+          });
+      } catch (error) {
+        // Public Cloudinary asset lists may be disabled in account security settings.
+      }
+    };
+
+    getStoredUploadedPhotos().forEach((photo) => addUploadedPhotoToGallery(photo.url, photo.caption, true));
+    loadCloudinaryGalleryPhotos();
 
     photoInput?.addEventListener("change", () => {
       clearPreviewUrl();
