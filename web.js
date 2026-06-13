@@ -609,6 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const endpoint = uploadForm.dataset.uploadEndpoint?.trim();
       const cloudinaryCloud = uploadForm.dataset.cloudinaryCloud?.trim();
       const cloudinaryUploadPreset = uploadForm.dataset.cloudinaryUploadPreset?.trim();
+      const reviewWhatsapp = uploadForm.dataset.reviewWhatsapp?.trim();
       const file = photoInput?.files?.[0];
 
       if (!file) {
@@ -627,6 +628,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setUploadStatus("Photo upload ho rahi hai...");
 
       try {
+        let uploadedPhotoUrl = "";
+
         if (cloudinaryCloud && cloudinaryUploadPreset) {
           const cloudinaryData = new FormData();
           cloudinaryData.append("file", file);
@@ -645,6 +648,8 @@ document.addEventListener("DOMContentLoaded", () => {
           });
 
           if (!cloudinaryResponse.ok) throw new Error("Cloudinary upload failed");
+          const cloudinaryResult = await cloudinaryResponse.json();
+          uploadedPhotoUrl = cloudinaryResult.secure_url || "";
         } else {
           const formData = new FormData(uploadForm);
           formData.append("source", "Lagma Village website gallery");
@@ -660,7 +665,16 @@ document.addEventListener("DOMContentLoaded", () => {
         uploadForm.reset();
         clearPreviewUrl();
         if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
-        setUploadStatus("Photo mil gayi. Review ke baad gallery me add ki jayegi.", "success");
+        setUploadStatus("Photo mil gayi. Review ke liye WhatsApp message khul raha hai.", "success");
+
+        if (reviewWhatsapp && uploadedPhotoUrl) {
+          const reviewMessage = [
+            "Lagma Village gallery ke liye nayi photo upload hui hai.",
+            `Photo link: ${uploadedPhotoUrl}`,
+            "Kripya review karke approved photo gallery me add kar dijiye.",
+          ].join("\n");
+          window.open(`https://wa.me/${reviewWhatsapp}?text=${encodeURIComponent(reviewMessage)}`, "_blank", "noopener");
+        }
       } catch (error) {
         setUploadStatus("Upload nahi ho payi. Kripya dobara try karein ya WhatsApp se photo bhejein.", "error");
       } finally {
