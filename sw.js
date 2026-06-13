@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v11";
+const CACHE = "lagma-village-v12";
 const ASSETS = [
   "./",
   "./index.html",
@@ -8,7 +8,7 @@ const ASSETS = [
   "./gallery.html",
   "./notification.html",
   "./style.css?v=8",
-  "./web.js?v=6",
+  "./web.js?v=7",
   "./analytics.js?v=1",
   "./manifest.webmanifest?v=4",
   "./sj-logo.png",
