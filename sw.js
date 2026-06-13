@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v10";
+const CACHE = "lagma-village-v11";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,8 +7,8 @@ const ASSETS = [
   "./online-services.html",
   "./gallery.html",
   "./notification.html",
-  "./style.css?v=7",
-  "./web.js?v=5",
+  "./style.css?v=8",
+  "./web.js?v=6",
   "./analytics.js?v=1",
   "./manifest.webmanifest?v=4",
   "./sj-logo.png",
@@ -31,6 +31,11 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  if (event.request.mode === "navigate") {
+    event.respondWith(fetch(event.request).catch(() => caches.match("./index.html")));
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
