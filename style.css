@@ -1386,6 +1386,19 @@ h3 {
 
 .gallery-upload-panel {
   display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(260px, 1.2fr);
+  gap: 18px 24px;
+  align-items: start;
+  margin-bottom: 28px;
+  padding: 24px;
+  background: #f8fbf5;
+  border: 1px solid rgba(47, 111, 78, 0.24);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.gallery-community-actions {
+  display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 18px 24px;
   align-items: center;
@@ -1401,12 +1414,92 @@ h3 {
   margin-bottom: 8px;
 }
 
+.gallery-upload-copy h3 {
+  margin-bottom: 8px;
+  color: var(--green-dark);
+}
+
+.gallery-upload-copy p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.gallery-upload-fields {
+  display: grid;
+  gap: 12px;
+}
+
+.gallery-upload-fields input,
+.gallery-upload-fields textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid rgba(47, 111, 78, 0.22);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--white);
+  font: inherit;
+}
+
+.gallery-upload-fields textarea {
+  resize: vertical;
+}
+
+.upload-photo-picker {
+  display: grid;
+  gap: 3px;
+  padding: 16px;
+  border: 1px dashed rgba(47, 111, 78, 0.48);
+  border-radius: 8px;
+  color: var(--green-dark);
+  background: var(--white);
+  cursor: pointer;
+}
+
+.upload-picker-title {
+  font-weight: 900;
+}
+
+.upload-picker-detail {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.upload-preview {
+  display: grid;
+  min-height: 150px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(47, 111, 78, 0.18);
+  border-radius: 8px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.72);
+  font-weight: 800;
+}
+
+.upload-preview img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+}
+
+.gallery-community-actions h3 {
+  margin-bottom: 8px;
+  color: var(--green-dark);
+}
+
+.gallery-community-actions p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
 .gallery-upload-copy p:last-child,
 .upload-status {
   margin-bottom: 0;
   color: var(--muted);
 }
 
+.gallery-action-buttons,
 .gallery-upload-actions {
   display: flex;
   align-items: center;
@@ -1415,6 +1508,7 @@ h3 {
   flex-wrap: wrap;
 }
 
+.gallery-upload-fields input[type="file"],
 .gallery-upload-actions input[type="file"] {
   position: absolute;
   inline-size: 1px;
@@ -1429,6 +1523,14 @@ h3 {
   grid-column: 1 / -1;
   padding-top: 2px;
   font-weight: 700;
+}
+
+.upload-status.is-success {
+  color: var(--green-dark);
+}
+
+.upload-status.is-error {
+  color: #a43c26;
 }
 
 .uploaded-gallery-slot {
@@ -2254,6 +2356,11 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .gallery-community-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-action-buttons,
   .gallery-upload-actions {
     justify-content: flex-start;
   }
