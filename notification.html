@@ -15,7 +15,7 @@
   <title>Notices | Lagma Village Saharsa Bihar</title>
   <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="apple-touch-icon" href="icons/lagma-icon-192.png">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=10">
   <script src="analytics.js?v=1" defer></script>
 </head>
 <body>
@@ -43,6 +43,33 @@
     </section>
 
     <section class="section">
+      <div class="notice-publisher" aria-labelledby="add-note-title">
+        <div>
+          <p class="eyebrow">Public note</p>
+          <h2 id="add-note-title">Apna note likhein</h2>
+          <p>Yahan koi bhi visitor apna naam aur chhota sa note type karke notice board par dekh sakta hai.</p>
+        </div>
+        <form class="notice-form" id="visitor-note-form">
+          <label>
+            Aapka naam
+            <input id="visitor-note-name" name="name" type="text" maxlength="40" placeholder="Naam likhein" autocomplete="name">
+          </label>
+          <label>
+            Note title
+            <input id="visitor-note-title" name="title" type="text" maxlength="70" placeholder="Title likhein" required>
+          </label>
+          <label class="full-field">
+            Note
+            <textarea id="visitor-note-message" name="message" rows="4" maxlength="300" placeholder="Apna note yahan type karein..." required></textarea>
+          </label>
+          <div class="notice-form-actions">
+            <button class="btn" type="submit">Note add karein</button>
+            <button class="btn btn-outline" type="button" id="clear-visitor-notes">Mere notes clear karein</button>
+          </div>
+          <p class="notice-status" id="visitor-note-status" aria-live="polite"></p>
+        </form>
+      </div>
+
       <div class="notice-list" id="notice-list">
         <article class="notice-card highlight-notice">
           <span>Welcome</span>
@@ -88,7 +115,7 @@
     </div>
   </footer>
 
-  <script src="web.js?v=5"></script>
+  <script src="web.js?v=11"></script>
 </body>
 </html>
 

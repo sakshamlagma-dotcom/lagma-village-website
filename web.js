@@ -401,6 +401,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  document.querySelectorAll("img").forEach((image) => {
+    if (!image.hasAttribute("decoding")) image.decoding = "async";
+  });
+
   const serviceSearch = document.querySelector("#service-search");
   const serviceResults = document.querySelector("#service-results");
   if (serviceSearch && serviceResults) {
@@ -582,18 +586,33 @@ document.addEventListener("DOMContentLoaded", () => {
       counter.textContent = String(Number(counter.textContent || 0) + 1);
     };
 
-    const addUploadedPhotoToGallery = (photoUrl, caption = "Uploaded Lagma village photo", shouldUpdateCount = false) => {
+    const formatUploaderLabel = (name = "") => {
+      const cleanName = String(name || "").trim();
+      return cleanName ? `Uploaded by ${cleanName}` : "Uploaded photo";
+    };
+
+    const addUploadedPhotoToGallery = (photoUrl, uploaderName = "", shouldUpdateCount = false) => {
       const gallery = document.querySelector(".photo-gallery-grid");
       if (!gallery || !photoUrl) return;
       if ([...gallery.querySelectorAll("img")].some((image) => image.src === photoUrl)) return;
 
+      const caption = formatUploaderLabel(uploaderName);
+      const card = document.createElement("figure");
+      card.className = "uploaded-photo-card";
+
       const image = document.createElement("img");
       image.src = photoUrl;
-      image.alt = caption || "Uploaded Lagma village photo";
+      image.alt = caption;
       image.loading = "lazy";
       image.decoding = "async";
       image.className = "uploaded-gallery-photo";
-      gallery.prepend(image);
+
+      const nameBadge = document.createElement("figcaption");
+      nameBadge.className = "uploaded-photo-name";
+      nameBadge.textContent = caption;
+
+      card.append(image, nameBadge);
+      gallery.prepend(card);
       if (shouldUpdateCount) incrementGalleryCount();
     };
 
@@ -622,15 +641,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!resource.public_id || !resource.format) return;
             const version = resource.version ? `v${resource.version}/` : "";
             const photoUrl = `https://res.cloudinary.com/${cloudinaryCloud}/image/upload/${version}${resource.public_id}.${resource.format}`;
-            const caption = resource.context?.custom?.caption || resource.context?.caption || "Uploaded Lagma village photo";
-            addUploadedPhotoToGallery(photoUrl, caption, true);
+            const uploaderName = resource.context?.custom?.name || resource.context?.name || "";
+            addUploadedPhotoToGallery(photoUrl, uploaderName, true);
           });
       } catch (error) {
         // Public Cloudinary asset lists may be disabled in account security settings.
       }
     };
 
-    getStoredUploadedPhotos().forEach((photo) => addUploadedPhotoToGallery(photo.url, photo.caption, true));
+    getStoredUploadedPhotos().forEach((photo) => addUploadedPhotoToGallery(photo.url, photo.name || photo.caption, true));
     loadCloudinaryGalleryPhotos();
 
     photoInput?.addEventListener("change", () => {
@@ -685,7 +704,6 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         let uploadedPhotoUrl = "";
         const uploaderName = getUploadFieldValue("name");
-        const caption = uploaderName ? `Uploaded by ${uploaderName}` : "Uploaded Lagma village photo";
 
         if (cloudinaryCloud && cloudinaryUploadPreset) {
           const cloudinaryData = new FormData();
@@ -723,9 +741,9 @@ document.addEventListener("DOMContentLoaded", () => {
         setUploadStatus("Photo upload ho gayi aur gallery me add ho gayi.", "success");
 
         if (uploadedPhotoUrl) {
-          addUploadedPhotoToGallery(uploadedPhotoUrl, caption, true);
+          addUploadedPhotoToGallery(uploadedPhotoUrl, uploaderName, true);
           const storedPhotos = getStoredUploadedPhotos();
-          storedPhotos.unshift({ url: uploadedPhotoUrl, caption });
+          storedPhotos.unshift({ url: uploadedPhotoUrl, name: uploaderName });
           localStorage.setItem(uploadedPhotoStorageKey, JSON.stringify(storedPhotos.slice(0, 100)));
         }
       } catch (error) {
@@ -775,18 +793,128 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const visitorNoteForm = document.querySelector("#visitor-note-form");
+  const visitorNoteList = document.querySelector("#notice-list");
+  if (visitorNoteForm && visitorNoteList) {
+    const noteStorageKey = "lagma-visitor-notes";
+    const status = document.querySelector("#visitor-note-status");
+    const clearButton = document.querySelector("#clear-visitor-notes");
+    const fields = {
+      name: visitorNoteForm.querySelector("#visitor-note-name"),
+      title: visitorNoteForm.querySelector("#visitor-note-title"),
+      message: visitorNoteForm.querySelector("#visitor-note-message")
+    };
+
+    const getStoredNotes = () => {
+      try {
+        return JSON.parse(localStorage.getItem(noteStorageKey) || "[]");
+      } catch (error) {
+        return [];
+      }
+    };
+
+    const setStatus = (message, type = "") => {
+      if (!status) return;
+      status.textContent = message;
+      status.classList.toggle("success", type === "success");
+      status.classList.toggle("error", type === "error");
+    };
+
+    const formatDate = (value) => {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime())
+        ? "Visitor note"
+        : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    };
+
+    const renderVisitorNotes = () => {
+      visitorNoteList.querySelectorAll("[data-visitor-note]").forEach((note) => note.remove());
+
+      getStoredNotes().forEach((note) => {
+        const card = document.createElement("article");
+        card.className = "notice-card visitor-note-card";
+        card.dataset.visitorNote = "true";
+
+        const date = document.createElement("span");
+        date.textContent = formatDate(note.createdAt);
+
+        const title = document.createElement("h3");
+        title.textContent = note.title;
+
+        const message = document.createElement("p");
+        message.textContent = note.message;
+
+        const author = document.createElement("small");
+        author.textContent = note.name ? `By ${note.name}` : "By visitor";
+
+        card.append(date, title, message, author);
+        visitorNoteList.prepend(card);
+      });
+    };
+
+    visitorNoteForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const title = fields.title?.value.trim() || "";
+      const message = fields.message?.value.trim() || "";
+      const name = fields.name?.value.trim() || "";
+
+      if (!title || !message) {
+        setStatus("Title aur note dono likhna zaroori hai.", "error");
+        return;
+      }
+
+      const notes = getStoredNotes();
+      notes.unshift({
+        title,
+        message,
+        name,
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem(noteStorageKey, JSON.stringify(notes.slice(0, 25)));
+      visitorNoteForm.reset();
+      renderVisitorNotes();
+      setStatus("Aapka note add ho gaya.", "success");
+    });
+
+    clearButton?.addEventListener("click", () => {
+      localStorage.removeItem(noteStorageKey);
+      renderVisitorNotes();
+      setStatus("Is device ke saved notes clear ho gaye.", "success");
+    });
+
+    renderVisitorNotes();
+  }
+
   const likeButtons = document.querySelectorAll(".site-like-button");
   likeButtons.forEach((button) => {
     const likeKey = button.dataset.likeKey || "lagma-website-like";
+    const countKey = `${likeKey}-count`;
     const label = button.querySelector(".site-like-text");
+    let count = Math.max(0, Number(localStorage.getItem(countKey) || 0));
+    let countLabel = button.querySelector(".site-like-count");
+
+    if (!countLabel) {
+      countLabel = document.createElement("span");
+      countLabel.className = "site-like-count";
+      button.appendChild(countLabel);
+    }
+
+    const updateCount = () => {
+      countLabel.textContent = `${count} likes`;
+      button.setAttribute("aria-label", `Like Website, ${count} likes`);
+    };
+
     const setLiked = () => {
       button.classList.add("is-liked");
       button.disabled = true;
       button.setAttribute("aria-pressed", "true");
       if (label) label.textContent = "Thanks for liking";
+      updateCount();
     };
 
     button.setAttribute("aria-pressed", "false");
+    updateCount();
+
     if (localStorage.getItem(likeKey) === "yes") {
       setLiked();
       return;
@@ -794,6 +922,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     button.addEventListener("click", () => {
       localStorage.setItem(likeKey, "yes");
+      count += 1;
+      localStorage.setItem(countKey, String(count));
       setLiked();
 
       if (typeof window.gtag === "function") {
