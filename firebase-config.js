@@ -8,5 +8,8 @@ window.LAGMA_FIREBASE_CONFIG = {
 };
 
 window.LAGMA_FIREBASE_OPTIONS = {
-  notesCollection: "visitorNotes"
+  notesCollection: "visitorNotes",
+  likesCollection: "websiteStats",
+  likesDocument: "likes",
+  initialLikeCount: 761
 };

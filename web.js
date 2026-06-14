@@ -1,5 +1,14 @@
 let deferredInstallPrompt = null;
 
+async function getLagmaFirebaseServices(firebaseConfig) {
+  const [{ initializeApp, getApp, getApps }, firestore] = await Promise.all([
+    import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
+    import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js")
+  ]);
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  return { app, firestore };
+}
+
 function updateInstallButton() {
   const installButton = document.querySelector(".install-app-btn");
   if (!installButton) return;
@@ -871,10 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const [{ initializeApp }, firestore] = await Promise.all([
-          import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
-          import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js")
-        ]);
+        const { app, firestore } = await getLagmaFirebaseServices(firebaseConfig);
         const {
           addDoc,
           collection,
@@ -885,7 +891,6 @@ document.addEventListener("DOMContentLoaded", () => {
           query,
           serverTimestamp
         } = firestore;
-        const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const collectionName = firebaseOptions.notesCollection || "visitorNotes";
         const notesRef = collection(db, collectionName);
@@ -974,8 +979,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const likeKey = button.dataset.likeKey || "lagma-website-like";
     const countKey = `${likeKey}-count`;
     const label = button.querySelector(".site-like-text");
-    let count = Math.max(0, Number(localStorage.getItem(countKey) || 0));
+    const firebaseConfig = window.LAGMA_FIREBASE_CONFIG || {};
+    const firebaseOptions = window.LAGMA_FIREBASE_OPTIONS || {};
+    const hasFirebaseConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+    const initialLikeCount = Math.max(0, Number(firebaseOptions.initialLikeCount || 761));
+    const savedLocalCount = Number(localStorage.getItem(countKey) || 0);
+    let count = Math.max(initialLikeCount, savedLocalCount);
     let countLabel = button.querySelector(".site-like-count");
+    let cloudIncrementLike = null;
+    let cloudModeReady = false;
 
     if (!countLabel) {
       countLabel = document.createElement("span");
@@ -1001,13 +1013,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (localStorage.getItem(likeKey) === "yes") {
       setLiked();
-      return;
     }
 
-    button.addEventListener("click", () => {
+    const initCloudLikes = async () => {
+      if (!hasFirebaseConfig) return;
+
+      try {
+        const { app, firestore } = await getLagmaFirebaseServices(firebaseConfig);
+        const {
+          doc,
+          getDoc,
+          getFirestore,
+          increment,
+          onSnapshot,
+          serverTimestamp,
+          setDoc,
+          updateDoc
+        } = firestore;
+        const db = getFirestore(app);
+        const likesRef = doc(
+          db,
+          firebaseOptions.likesCollection || "websiteStats",
+          firebaseOptions.likesDocument || "likes"
+        );
+        const snapshot = await getDoc(likesRef);
+
+        if (!snapshot.exists()) {
+          await setDoc(likesRef, {
+            count: initialLikeCount,
+            updatedAt: serverTimestamp()
+          });
+        }
+
+        cloudModeReady = true;
+        cloudIncrementLike = () => updateDoc(likesRef, {
+          count: increment(1),
+          updatedAt: serverTimestamp()
+        });
+
+        onSnapshot(likesRef, (docSnapshot) => {
+          const data = docSnapshot.data() || {};
+          count = Math.max(initialLikeCount, Number(data.count || initialLikeCount));
+          updateCount();
+        });
+      } catch (error) {
+        count = Math.max(initialLikeCount, Number(localStorage.getItem(countKey) || 0));
+        updateCount();
+      }
+    };
+
+    button.addEventListener("click", async () => {
+      if (localStorage.getItem(likeKey) === "yes") return;
+
       localStorage.setItem(likeKey, "yes");
-      count += 1;
-      localStorage.setItem(countKey, String(count));
+
+      if (cloudModeReady && cloudIncrementLike) {
+        try {
+          await cloudIncrementLike();
+        } catch (error) {
+          count += 1;
+          localStorage.setItem(countKey, String(count));
+          updateCount();
+        }
+      } else {
+        count += 1;
+        localStorage.setItem(countKey, String(count));
+        updateCount();
+      }
+
       setLiked();
 
       if (typeof window.gtag === "function") {
@@ -1018,6 +1091,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     });
+
+    initCloudLikes();
   });
 
   const shareButtons = document.querySelectorAll(".share-site-btn");
