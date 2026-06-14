@@ -804,6 +804,11 @@ document.addEventListener("DOMContentLoaded", () => {
       title: visitorNoteForm.querySelector("#visitor-note-title"),
       message: visitorNoteForm.querySelector("#visitor-note-message")
     };
+    const firebaseConfig = window.LAGMA_FIREBASE_CONFIG || {};
+    const firebaseOptions = window.LAGMA_FIREBASE_OPTIONS || {};
+    const hasFirebaseConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+    let cloudAddNote = null;
+    let isCloudMode = false;
 
     const getStoredNotes = () => {
       try {
@@ -827,10 +832,17 @@ document.addEventListener("DOMContentLoaded", () => {
         : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
     };
 
-    const renderVisitorNotes = () => {
+    const normalizeCloudDate = (value) => {
+      if (!value) return new Date().toISOString();
+      if (typeof value.toDate === "function") return value.toDate().toISOString();
+      if (typeof value === "string") return value;
+      return new Date().toISOString();
+    };
+
+    const renderVisitorNotes = (notes = getStoredNotes()) => {
       visitorNoteList.querySelectorAll("[data-visitor-note]").forEach((note) => note.remove());
 
-      getStoredNotes().forEach((note) => {
+      notes.forEach((note) => {
         const card = document.createElement("article");
         card.className = "notice-card visitor-note-card";
         card.dataset.visitorNote = "true";
@@ -852,7 +864,68 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    visitorNoteForm.addEventListener("submit", (event) => {
+    const initCloudNotes = async () => {
+      if (!hasFirebaseConfig) {
+        renderVisitorNotes();
+        return;
+      }
+
+      try {
+        const [{ initializeApp }, firestore] = await Promise.all([
+          import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
+          import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js")
+        ]);
+        const {
+          addDoc,
+          collection,
+          getFirestore,
+          limit,
+          onSnapshot,
+          orderBy,
+          query,
+          serverTimestamp
+        } = firestore;
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const collectionName = firebaseOptions.notesCollection || "visitorNotes";
+        const notesRef = collection(db, collectionName);
+        const notesQuery = query(notesRef, orderBy("createdAt", "desc"), limit(50));
+
+        isCloudMode = true;
+        if (clearButton) clearButton.hidden = true;
+        setStatus("Cloud notes active hain. Ab notes sab visitors ko dikh sakte hain.", "success");
+
+        cloudAddNote = (note) => addDoc(notesRef, {
+          ...note,
+          page: "notification",
+          createdAt: serverTimestamp()
+        });
+
+        onSnapshot(notesQuery, (snapshot) => {
+          const notes = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+              title: data.title || "",
+              message: data.message || "",
+              name: data.name || "",
+              createdAt: normalizeCloudDate(data.createdAt)
+            };
+          });
+          renderVisitorNotes(notes);
+        }, () => {
+          isCloudMode = false;
+          cloudAddNote = null;
+          if (clearButton) clearButton.hidden = false;
+          renderVisitorNotes();
+          setStatus("Cloud notes connect nahi ho paye. Abhi local notes mode chal raha hai.", "error");
+        });
+      } catch (error) {
+        renderVisitorNotes();
+        setStatus("Firebase setup complete nahi hai. Abhi local notes mode chal raha hai.", "error");
+      }
+    };
+
+    visitorNoteForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const title = fields.title?.value.trim() || "";
       const message = fields.message?.value.trim() || "";
@@ -860,6 +933,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!title || !message) {
         setStatus("Title aur note dono likhna zaroori hai.", "error");
+        return;
+      }
+
+      if (isCloudMode && cloudAddNote) {
+        try {
+          await cloudAddNote({ title, message, name });
+          visitorNoteForm.reset();
+          setStatus("Aapka note add ho gaya. Ab ye sab visitors ko dikhega.", "success");
+        } catch (error) {
+          setStatus("Cloud par note save nahi ho paya. Kripya Firebase rules check karein.", "error");
+        }
         return;
       }
 
@@ -882,7 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setStatus("Is device ke saved notes clear ho gaye.", "success");
     });
 
-    renderVisitorNotes();
+    initCloudNotes();
   }
 
   const likeButtons = document.querySelectorAll(".site-like-button");
