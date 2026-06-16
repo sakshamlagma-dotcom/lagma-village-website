@@ -1,0 +1,39 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /websiteStats/{document} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.keys().hasOnly(['count', 'updatedAt']) &&
+        request.resource.data.count is int &&
+        request.resource.data.count >= 0 &&
+        request.resource.data.count <= 1000000;
+      allow update: if
+        request.resource.data.diff(resource.data).changedKeys().hasOnly(['count', 'updatedAt']) &&
+        request.resource.data.count is int &&
+        request.resource.data.count == resource.data.count + 1;
+    }
+
+    match /visitorNotes/{noteId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /pendingVisitorNotes/{noteId} {
+      allow create: if
+        request.resource.data.keys().hasOnly(['title', 'message', 'name', 'page', 'status', 'createdAt']) &&
+        request.resource.data.title is string &&
+        request.resource.data.title.size() > 0 &&
+        request.resource.data.title.size() <= 70 &&
+        request.resource.data.message is string &&
+        request.resource.data.message.size() > 0 &&
+        request.resource.data.message.size() <= 300 &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() <= 40 &&
+        request.resource.data.page == 'notification' &&
+        request.resource.data.status == 'pending';
+      allow read, update, delete: if false;
+    }
+  }
+}

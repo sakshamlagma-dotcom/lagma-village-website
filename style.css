@@ -141,6 +141,31 @@ a {
   background: #e7f0e9;
 }
 
+.service-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 0 auto 28px;
+}
+
+.service-filter {
+  border: 1px solid rgba(47, 111, 78, 0.24);
+  border-radius: 999px;
+  padding: 9px 14px;
+  color: var(--green-dark);
+  background: var(--white);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.service-filter:hover,
+.service-filter.is-active {
+  color: var(--white);
+  background: var(--green-dark);
+}
+
 .menu-toggle {
   display: none;
   border: 1px solid var(--line);
@@ -892,7 +917,7 @@ h3 {
     linear-gradient(rgba(255, 253, 247, 0.84), rgba(255, 248, 226, 0.78)),
     url("mithila-pattern.svg") center / 260px 260px,
     linear-gradient(180deg, rgba(255, 253, 247, 0.9), rgba(255, 248, 226, 0.72)),
-    url("vasudha-kendra-poster-bg.png") center / cover;
+    url("vasudha-kendra-poster-bg.webp") center / cover;
   border-right: 2px solid var(--mithila-red);
   isolation: isolate;
 }
@@ -1287,7 +1312,7 @@ h3 {
   color: var(--green-dark);
   background:
     linear-gradient(180deg, rgba(255, 253, 247, 0.9), rgba(255, 248, 226, 0.72)),
-    url("vasudha-kendra-poster-bg.png") center / cover;
+    url("vasudha-kendra-poster-bg.webp") center / cover;
   border-right: 1px solid var(--line);
   isolation: isolate;
 }
@@ -2032,6 +2057,18 @@ h3 {
   color: var(--green-dark);
 }
 
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.contact-actions .btn {
+  min-width: 128px;
+}
+
 .contact-panel {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
@@ -2096,23 +2133,23 @@ h3 {
 }
 
 .about-hero::before {
-  background-image: url("2.jpeg");
+  background-image: url("2.webp");
 }
 
 .services-hero::before {
-  background-image: url("school-service.jpeg");
+  background-image: url("school-service.webp");
 }
 
 .online-services-hero::before {
-  background-image: url("bank-service.jpeg");
+  background-image: url("bank-service.webp");
 }
 
 .gallery-hero::before {
-  background-image: url("7.jpeg");
+  background-image: url("7.webp");
 }
 
 .notice-hero::before {
-  background-image: url("10.jpeg");
+  background-image: url("10.webp");
 }
 
 .content-page .section {

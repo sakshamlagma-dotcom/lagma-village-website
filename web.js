@@ -1,5 +1,12 @@
 let deferredInstallPrompt = null;
 
+function isFirebaseConfigured(firebaseConfig, firebaseOptions) {
+  return (
+    firebaseOptions?.enabled === true &&
+    Boolean(firebaseConfig?.apiKey && firebaseConfig?.projectId && firebaseConfig?.appId)
+  );
+}
+
 async function getLagmaFirebaseServices(firebaseConfig) {
   const [{ initializeApp, getApp, getApps }, firestore] = await Promise.all([
     import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
@@ -526,6 +533,25 @@ document.addEventListener("DOMContentLoaded", () => {
     serviceSearch.addEventListener("input", () => renderServices(serviceSearch.value));
   }
 
+  const serviceFilterButtons = document.querySelectorAll("[data-service-filter]");
+  const serviceCards = document.querySelectorAll("[data-service-category]");
+  if (serviceFilterButtons.length && serviceCards.length) {
+    serviceFilterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const activeFilter = button.dataset.serviceFilter || "all";
+        serviceFilterButtons.forEach((item) => {
+          item.classList.toggle("is-active", item === button);
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        serviceCards.forEach((card) => {
+          const category = card.dataset.serviceCategory || "";
+          card.hidden = activeFilter !== "all" && category !== activeFilter;
+        });
+      });
+      button.setAttribute("aria-pressed", String(button.classList.contains("is-active")));
+    });
+  }
+
   const dynamicGalleryGrid = document.querySelector(".photo-gallery-grid[data-gallery-end]");
   if (dynamicGalleryGrid) {
     const start = Number(dynamicGalleryGrid.dataset.galleryStart || 1);
@@ -569,7 +595,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const status = uploadForm.querySelector("#gallery-upload-status");
     const submitButton = uploadForm.querySelector("button[type='submit']");
     const uploadedPhotoStorageKey = "lagma-uploaded-gallery-photos";
-    const maxPhotoSize = 8 * 1024 * 1024;
+    const maxPhotoSize = 20 * 1024 * 1024;
+    const compressedPhotoMaxSize = 2 * 1024 * 1024;
+    const compressedPhotoMaxEdge = 1800;
     let previewUrl = "";
 
     const setUploadStatus = (message, type = "") => {
@@ -587,6 +615,55 @@ document.addEventListener("DOMContentLoaded", () => {
     const getUploadFieldValue = (fieldName) => {
       const field = uploadForm.elements.namedItem(fieldName);
       return field ? String(field.value || "").replace(/[|=]/g, " ").trim() : "";
+    };
+
+    const isAllowedPhotoFile = (file) => {
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+      const allowedExtensions = /\.(jpe?g|png|webp|heic|heif)$/i;
+      return allowedTypes.includes(file.type) || allowedExtensions.test(file.name || "");
+    };
+
+    const loadImageFromFile = (file) => new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const image = new Image();
+      image.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(image);
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error("Image preview failed"));
+      };
+      image.src = url;
+    });
+
+    const canvasToBlob = (canvas, type, quality) => new Promise((resolve) => {
+      canvas.toBlob(resolve, type, quality);
+    });
+
+    const preparePhotoForUpload = async (file) => {
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return file;
+      if (file.size <= compressedPhotoMaxSize) return file;
+
+      const image = await loadImageFromFile(file);
+      const scale = Math.min(1, compressedPhotoMaxEdge / Math.max(image.naturalWidth, image.naturalHeight));
+      const width = Math.max(1, Math.round(image.naturalWidth * scale));
+      const height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext("2d");
+      if (!context) return file;
+
+      context.drawImage(image, 0, 0, width, height);
+      const blob = await canvasToBlob(canvas, "image/jpeg", 0.82);
+      if (!blob || blob.size >= file.size) return file;
+
+      const cleanName = (file.name || "lagma-photo").replace(/\.[^.]+$/, "");
+      return new File([blob], `${cleanName}.jpg`, {
+        type: "image/jpeg",
+        lastModified: Date.now()
+      });
     };
 
     const incrementGalleryCount = () => {
@@ -671,22 +748,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (!file.type.startsWith("image/")) {
+      if (!isAllowedPhotoFile(file)) {
         photoInput.value = "";
         if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
-        setUploadStatus("Kripya JPG, PNG ya WEBP photo select karein.", "error");
+        setUploadStatus("Kripya JPG, PNG, WEBP ya HEIC photo select karein.", "error");
         return;
       }
 
       if (file.size > maxPhotoSize) {
         photoInput.value = "";
         if (preview) preview.innerHTML = "<span>Preview yahan dikhega</span>";
-        setUploadStatus("Photo 8 MB se chhoti honi chahiye.", "error");
+        setUploadStatus("Photo 20 MB se chhoti honi chahiye.", "error");
         return;
       }
 
       previewUrl = URL.createObjectURL(file);
-      if (preview) preview.innerHTML = `<img src="${previewUrl}" alt="Selected photo preview">`;
+      if (preview) {
+        preview.innerHTML = `<img src="${previewUrl}" alt="Selected photo preview">`;
+        preview.querySelector("img")?.addEventListener("error", () => {
+          preview.innerHTML = "<span>Photo selected hai</span>";
+        }, { once: true });
+      }
     });
 
     uploadForm.addEventListener("submit", async (event) => {
@@ -706,6 +788,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      if (!isAllowedPhotoFile(file)) {
+        setUploadStatus("Kripya JPG, PNG, WEBP ya HEIC photo select karein.", "error");
+        return;
+      }
+
+      if (file.size > maxPhotoSize) {
+        setUploadStatus("Photo 20 MB se chhoti honi chahiye.", "error");
+        return;
+      }
+
       submitButton.disabled = true;
       submitButton.textContent = "Uploading...";
       setUploadStatus("Photo upload ho rahi hai...");
@@ -713,10 +805,11 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         let uploadedPhotoUrl = "";
         const uploaderName = getUploadFieldValue("name");
+        const uploadFile = await preparePhotoForUpload(file);
 
         if (cloudinaryCloud && cloudinaryUploadPreset) {
           const cloudinaryData = new FormData();
-          cloudinaryData.append("file", file);
+          cloudinaryData.append("file", uploadFile);
           cloudinaryData.append("upload_preset", cloudinaryUploadPreset);
           cloudinaryData.append("tags", "lagma-village-gallery,website-upload");
           cloudinaryData.append("context", [
@@ -729,11 +822,21 @@ document.addEventListener("DOMContentLoaded", () => {
             body: cloudinaryData,
           });
 
-          if (!cloudinaryResponse.ok) throw new Error("Cloudinary upload failed");
+          if (!cloudinaryResponse.ok) {
+            let uploadError = "Cloudinary upload failed";
+            try {
+              const errorResult = await cloudinaryResponse.json();
+              uploadError = errorResult?.error?.message || uploadError;
+            } catch (error) {
+              // Keep the default upload error when the response is not JSON.
+            }
+            throw new Error(uploadError);
+          }
           const cloudinaryResult = await cloudinaryResponse.json();
           uploadedPhotoUrl = cloudinaryResult.secure_url || "";
         } else {
           const formData = new FormData(uploadForm);
+          formData.set("photo", uploadFile, uploadFile.name);
           formData.append("source", "Lagma Village website gallery");
 
           const response = await fetch(endpoint, {
@@ -756,7 +859,8 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem(uploadedPhotoStorageKey, JSON.stringify(storedPhotos.slice(0, 100)));
         }
       } catch (error) {
-        setUploadStatus("Upload nahi ho payi. Kripya dobara try karein.", "error");
+        const message = error?.message ? `Upload nahi ho payi: ${error.message}` : "Upload nahi ho payi. Kripya dobara try karein.";
+        setUploadStatus(message, "error");
       } finally {
         submitButton.disabled = false;
         submitButton.textContent = "Review karke upload karein";
@@ -815,7 +919,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     const firebaseConfig = window.LAGMA_FIREBASE_CONFIG || {};
     const firebaseOptions = window.LAGMA_FIREBASE_OPTIONS || {};
-    const hasFirebaseConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+    const hasFirebaseConfig = isFirebaseConfigured(firebaseConfig, firebaseOptions);
+    const requireNoteApproval = firebaseOptions.requireNoteApproval !== false;
     let cloudAddNote = null;
     let isCloudMode = false;
 
@@ -892,17 +997,23 @@ document.addEventListener("DOMContentLoaded", () => {
           serverTimestamp
         } = firestore;
         const db = getFirestore(app);
-        const collectionName = firebaseOptions.notesCollection || "visitorNotes";
-        const notesRef = collection(db, collectionName);
-        const notesQuery = query(notesRef, orderBy("createdAt", "desc"), limit(50));
+        const approvedCollectionName = firebaseOptions.notesCollection || "visitorNotes";
+        const pendingCollectionName = firebaseOptions.pendingNotesCollection || "pendingVisitorNotes";
+        const approvedNotesRef = collection(db, approvedCollectionName);
+        const pendingNotesRef = collection(db, pendingCollectionName);
+        const notesQuery = query(approvedNotesRef, orderBy("createdAt", "desc"), limit(50));
 
         isCloudMode = true;
         if (clearButton) clearButton.hidden = true;
-        setStatus("Cloud notes active hain. Ab notes sab visitors ko dikh sakte hain.", "success");
+        setStatus(requireNoteApproval
+          ? "Cloud notes active hain. Naye notes review ke baad public dikhenge."
+          : "Cloud notes active hain. Ab notes sab visitors ko dikh sakte hain.",
+        "success");
 
-        cloudAddNote = (note) => addDoc(notesRef, {
+        cloudAddNote = (note) => addDoc(requireNoteApproval ? pendingNotesRef : approvedNotesRef, {
           ...note,
           page: "notification",
+          status: requireNoteApproval ? "pending" : "approved",
           createdAt: serverTimestamp()
         });
 
@@ -945,7 +1056,10 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           await cloudAddNote({ title, message, name });
           visitorNoteForm.reset();
-          setStatus("Aapka note add ho gaya. Ab ye sab visitors ko dikhega.", "success");
+          setStatus(requireNoteApproval
+            ? "Aapka note review ke liye bhej diya gaya. Approval ke baad public notice board par dikhega."
+            : "Aapka note add ho gaya. Ab ye sab visitors ko dikhega.",
+          "success");
         } catch (error) {
           setStatus("Cloud par note save nahi ho paya. Kripya Firebase rules check karein.", "error");
         }
@@ -962,7 +1076,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(noteStorageKey, JSON.stringify(notes.slice(0, 25)));
       visitorNoteForm.reset();
       renderVisitorNotes();
-      setStatus("Aapka note add ho gaya.", "success");
+      setStatus("Aapka note is device par save ho gaya. Cloud setup ke baad review ke liye bheja jayega.", "success");
     });
 
     clearButton?.addEventListener("click", () => {
@@ -981,7 +1095,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const label = button.querySelector(".site-like-text");
     const firebaseConfig = window.LAGMA_FIREBASE_CONFIG || {};
     const firebaseOptions = window.LAGMA_FIREBASE_OPTIONS || {};
-    const hasFirebaseConfig = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+    const hasFirebaseConfig = isFirebaseConfigured(firebaseConfig, firebaseOptions);
     const initialLikeCount = Math.max(0, Number(firebaseOptions.initialLikeCount || 761));
     const savedLocalCount = Number(localStorage.getItem(countKey) || 0);
     let count = Math.max(initialLikeCount, savedLocalCount);

@@ -1,3 +1,8 @@
+window.LAGMA_SITE_OPTIONS = {
+  analyticsMeasurementId: "G-PZQ45J2B8G",
+  enableFirebase: true
+};
+
 window.LAGMA_FIREBASE_CONFIG = {
   apiKey: "AIzaSyAUkYG6pWWUMLYPKwRq62hjsogHN-1JmqA",
   authDomain: "lagma-village-notes.firebaseapp.com",
@@ -8,7 +13,10 @@ window.LAGMA_FIREBASE_CONFIG = {
 };
 
 window.LAGMA_FIREBASE_OPTIONS = {
+  enabled: window.LAGMA_SITE_OPTIONS.enableFirebase === true,
   notesCollection: "visitorNotes",
+  pendingNotesCollection: "pendingVisitorNotes",
+  requireNoteApproval: true,
   likesCollection: "websiteStats",
   likesDocument: "likes",
   initialLikeCount: 761

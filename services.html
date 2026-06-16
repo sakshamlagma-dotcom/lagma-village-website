@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -15,8 +15,9 @@
   <title>Services | Lagma Village Saharsa Bihar</title>
   <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="apple-touch-icon" href="icons/lagma-icon-192.png">
-  <link rel="stylesheet" href="style.css?v=10">
-  <script src="analytics.js?v=1" defer></script>
+  <link rel="stylesheet" href="style.css?v=11">
+  <script src="firebase-config.js?v=6"></script>
+  <script src="analytics.js?v=2" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -43,9 +44,20 @@
     </section>
 
     <section class="section">
+      <div class="service-filter-bar" aria-label="Filter village services">
+        <button class="service-filter is-active" type="button" data-service-filter="all">All</button>
+        <button class="service-filter" type="button" data-service-filter="education">Education</button>
+        <button class="service-filter" type="button" data-service-filter="community">Community</button>
+        <button class="service-filter" type="button" data-service-filter="health">Health</button>
+        <button class="service-filter" type="button" data-service-filter="governance">Panchayat</button>
+        <button class="service-filter" type="button" data-service-filter="agriculture">Agriculture</button>
+        <button class="service-filter" type="button" data-service-filter="utility">Utility</button>
+        <button class="service-filter" type="button" data-service-filter="banking">Banking</button>
+      </div>
+
       <div class="card-grid services-grid">
-        <article class="feature-card">
-          <img src="school-service.jpeg" alt="Middle school in Lagma">
+        <article class="feature-card" data-service-category="education">
+          <img src="school-service.webp" alt="Middle school in Lagma">
           <div>
             <h3>Middle School</h3>
             <p>Established in 1956 and located in Ward No. 7, Lagma.</p>
@@ -53,8 +65,8 @@
           </div>
         </article>
 
-        <article class="feature-card">
-          <img src="temple.jpeg" alt="Temple in Lagma">
+        <article class="feature-card" data-service-category="community">
+          <img src="temple.webp" alt="Temple in Lagma">
           <div>
             <h3>Village Temples</h3>
             <p>Temples and Brahm Sthan are central to spiritual and cultural life.</p>
@@ -62,8 +74,8 @@
           </div>
         </article>
 
-        <article class="feature-card">
-          <img src="pond-service.jpeg" alt="Fish farming pond">
+        <article class="feature-card" data-service-category="agriculture">
+          <img src="pond-service.webp" alt="Fish farming pond">
           <div>
             <h3>Fish Farming Ponds</h3>
             <p>Village ponds support fish farming, irrigation, and local livelihoods.</p>
@@ -71,8 +83,8 @@
           </div>
         </article>
 
-        <article class="feature-card">
-          <img src="agriculture-service.jpeg" alt="Agricultural land">
+        <article class="feature-card" data-service-category="agriculture">
+          <img src="agriculture-service.webp" alt="Agricultural land">
           <div>
             <h3>Agriculture and Irrigation</h3>
             <p>Farmers cultivate paddy, wheat, maize, mustard, and seasonal crops.</p>
@@ -80,8 +92,8 @@
           </div>
         </article>
 
-        <article class="feature-card">
-          <img src="health-service.jpeg" alt="Health service location">
+        <article class="feature-card" data-service-category="health">
+          <img src="health-service.webp" alt="Health service location">
           <div>
             <h3>Health Services</h3>
             <p>Primary medical support and nearby healthcare facilities are available.</p>
@@ -89,8 +101,8 @@
           </div>
         </article>
 
-        <article class="feature-card">
-          <img src="gas-service.jpeg" alt="Local gas and market service">
+        <article class="feature-card" data-service-category="utility">
+          <img src="gas-service.webp" alt="Local gas and market service">
           <div>
             <h3>Local Market</h3>
             <p>Local shops provide gas service and essential daily items.</p>
@@ -98,8 +110,8 @@
           </div>
         </article>
 
-        <article class="feature-card">
-          <img src="bank-service.jpeg" alt="Banking service">
+        <article class="feature-card" data-service-category="banking">
+          <img src="bank-service.webp" alt="Banking service">
           <div>
             <h3>Banking</h3>
             <p>Banking facilities are available through nearby branches and centers.</p>
@@ -107,8 +119,8 @@
           </div>
         </article>
 
-        <article class="feature-card">
-          <img src="panchayat-service.jpeg" alt="Panchayat office service">
+        <article class="feature-card" data-service-category="governance">
+          <img src="panchayat-service.webp" alt="Panchayat office service">
           <div>
             <h3>Panchayat Services</h3>
             <p>Support for certificates, public schemes, and local governance.</p>
@@ -132,21 +144,20 @@
         <p>Like dabane par hume analytics me pata chalega ki logon ko website pasand aa rahi hai.</p>
       </div>
       <button class="site-like-button" type="button" data-like-key="lagma-website-like">
-        <span aria-hidden="true">♥</span>
+        <span aria-hidden="true">?</span>
         <span class="site-like-text">Like Website</span>
       </button>
     </div>
     <div class="footer-bottom">
       <p class="copyright">&copy; <span id="year">2026</span> Lagma Village. All rights reserved.</p>
       <p class="developer-credit" aria-label="Developed by SJ">
-        <img class="developer-logo" src="sj-logo.png" alt="" aria-hidden="true" loading="lazy">
+        <img class="developer-logo" src="sj-logo.webp" alt="" aria-hidden="true" loading="lazy">
         <span>Developed by <strong>SJ</strong></span>
       </p>
     </div>
   </footer>
 
-  <script src="firebase-config.js?v=2"></script>
-  <script src="web.js?v=13"></script>
+  <script src="web.js?v=16"></script>
 </body>
 </html>
 

@@ -1,0 +1,4 @@
+*.exe
+*.zip
+local-backups/
+*.log

@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v18";
+const CACHE = "lagma-village-v22";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,12 +7,17 @@ const ASSETS = [
   "./online-services.html",
   "./gallery.html",
   "./notification.html",
-  "./style.css?v=10",
-  "./web.js?v=13",
-  "./firebase-config.js?v=2",
-  "./analytics.js?v=1",
+  "./style.css?v=11",
+  "./web.js?v=16",
+  "./firebase-config.js?v=6",
+  "./analytics.js?v=2",
   "./manifest.webmanifest?v=4",
-  "./sj-logo.png",
+  "./sj-logo.webp",
+  "./a.webp",
+  "./b.webp",
+  "./c.webp",
+  "./school-service.webp",
+  "./temple.webp",
   "./mithila-pattern.svg",
   "./icons/lagma-icon-192.png",
   "./icons/lagma-icon-512.png"

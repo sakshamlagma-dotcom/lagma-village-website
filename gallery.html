@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -15,8 +15,9 @@
   <title>Gallery | Lagma Village Saharsa Bihar</title>
   <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="apple-touch-icon" href="icons/lagma-icon-192.png">
-  <link rel="stylesheet" href="style.css?v=10">
-  <script src="analytics.js?v=1" defer></script>
+  <link rel="stylesheet" href="style.css?v=11">
+  <script src="firebase-config.js?v=6"></script>
+  <script src="analytics.js?v=2" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -68,15 +69,15 @@
       >
         <div class="gallery-upload-copy">
           <h3>Website se photo upload karein</h3>
-          <p>Photo select karein, preview dekh kar naam ke saath upload karein.</p>
+          <p>Photo select karein, preview dekh kar naam ke saath upload karein. Agar upload setup unavailable ho, WhatsApp option use karein.</p>
         </div>
 
         <div class="gallery-upload-fields">
           <label class="upload-photo-picker" for="gallery-photo-input">
             <span class="upload-picker-title">Photo choose karein</span>
-            <span class="upload-picker-detail">JPG, PNG ya WEBP - maximum 8 MB</span>
-          </label>
-          <input id="gallery-photo-input" name="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
+          <span class="upload-picker-detail">JPG, PNG, WEBP ya HEIC - maximum 20 MB</span>
+        </label>
+          <input id="gallery-photo-input" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" required>
 
           <div class="upload-preview" id="gallery-upload-preview" aria-live="polite">
             <span>Preview yahan dikhega</span>
@@ -130,21 +131,20 @@
         <p>Like dabane par hume analytics me pata chalega ki logon ko website pasand aa rahi hai.</p>
       </div>
       <button class="site-like-button" type="button" data-like-key="lagma-website-like">
-        <span aria-hidden="true">♥</span>
+        <span aria-hidden="true">?</span>
         <span class="site-like-text">Like Website</span>
       </button>
     </div>
     <div class="footer-bottom">
       <p class="copyright">&copy; <span id="year">2026</span> Lagma Village. All rights reserved.</p>
       <p class="developer-credit" aria-label="Developed by SJ">
-        <img class="developer-logo" src="sj-logo.png" alt="" aria-hidden="true" loading="lazy">
+        <img class="developer-logo" src="sj-logo.webp" alt="" aria-hidden="true" loading="lazy">
         <span>Developed by <strong>SJ</strong></span>
       </p>
     </div>
   </footer>
 
-  <script src="firebase-config.js?v=2"></script>
-  <script src="web.js?v=13"></script>
+  <script src="web.js?v=16"></script>
 </body>
 </html>
 
