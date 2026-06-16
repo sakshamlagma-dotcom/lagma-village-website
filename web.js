@@ -377,17 +377,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (!document.querySelector(".whatsapp-float")) {
-    const whatsappFloat = document.createElement("a");
-    whatsappFloat.className = "whatsapp-float";
-    whatsappFloat.href = "https://wa.me/917011504426?text=Namaste%2C%20mujhe%20Lagma%20Village%20website%20ke%20baare%20me%20jankari%20chahiye.";
-    whatsappFloat.target = "_blank";
-    whatsappFloat.rel = "noopener";
-    whatsappFloat.setAttribute("aria-label", "WhatsApp par juriye");
-    whatsappFloat.textContent = "WhatsApp";
-    document.body.appendChild(whatsappFloat);
-  }
-
   if (menuButton && nav) {
     menuButton.addEventListener("click", () => {
       const isOpen = nav.classList.toggle("open");
