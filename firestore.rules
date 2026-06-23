@@ -32,7 +32,8 @@ service cloud.firestore {
         request.resource.data.name is string &&
         request.resource.data.name.size() <= 40 &&
         request.resource.data.page == 'notification' &&
-        request.resource.data.status == 'pending';
+        request.resource.data.status == 'pending' &&
+        request.resource.data.createdAt == request.time;
       allow read, update, delete: if false;
     }
   }

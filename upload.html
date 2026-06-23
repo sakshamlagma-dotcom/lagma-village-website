@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Upload photos for the Lagma Village gallery.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Upload Photo | Lagma Gallery</title>
+  <link rel="manifest" href="manifest.webmanifest?v=4">
+  <link rel="apple-touch-icon" href="icons/lagma-icon-192.png">
+  <link rel="stylesheet" href="upload.css?v=1">
+</head>
+<body>
+  <main class="upload-shell">
+    <section class="upload-intro">
+      <a class="back-link" href="gallery.html">← Back to Gallery</a>
+      <p class="eyebrow">Gallery admin panel</p>
+      <h1>Upload Photo</h1>
+      <p>Prepare new photos for Lagma Gallery with title, category, description, and preview before publishing.</p>
+    </section>
+
+    <section class="upload-panel" aria-labelledby="upload-title">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">New gallery item</p>
+          <h2 id="upload-title">Add a Lagma memory</h2>
+        </div>
+        <span class="panel-badge">Pure HTML preview</span>
+      </div>
+
+      <form id="photo-upload-form" class="upload-form">
+        <label class="drop-zone" id="drop-zone" for="photo-file">
+          <input id="photo-file" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" required>
+          <span class="drop-icon">+</span>
+          <strong>Drag & drop photo here</strong>
+          <small>or click to choose JPG, PNG, WEBP, HEIC</small>
+        </label>
+
+        <div class="preview-card" id="preview-card" hidden>
+          <img id="image-preview" src="" alt="Selected photo preview">
+          <button type="button" id="remove-photo">Remove</button>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Photo title
+            <input id="photo-title" name="title" type="text" placeholder="Example: Temple morning view" maxlength="80" required>
+          </label>
+
+          <label>
+            Photo category
+            <select id="photo-category" name="category" required>
+              <option value="">Select category</option>
+              <option>Village Life</option>
+              <option>Culture & Festival</option>
+              <option>School & Education</option>
+              <option>Farming & Nature</option>
+              <option>Old Memories</option>
+              <option>Development Work</option>
+              <option>People of Lagma</option>
+            </select>
+          </label>
+
+          <label class="full-field">
+            Short description
+            <textarea id="photo-description" name="description" rows="4" placeholder="Write a short memory or place detail..." maxlength="220" required></textarea>
+          </label>
+        </div>
+
+        <div class="progress-wrap" id="progress-wrap" hidden>
+          <div class="progress-track">
+            <span id="progress-bar"></span>
+          </div>
+          <p id="progress-text">Preparing upload...</p>
+        </div>
+
+        <button class="upload-button" type="submit">Upload Photo</button>
+        <p class="upload-status" id="upload-status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="upload.js?v=1"></script>
+</body>
+</html>

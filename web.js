@@ -1,5 +1,9 @@
 let deferredInstallPrompt = null;
 
+function canUsePwaInstall() {
+  return window.location.protocol === "https:" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+}
+
 function isFirebaseConfigured(firebaseConfig, firebaseOptions) {
   return (
     firebaseOptions?.enabled === true &&
@@ -22,6 +26,7 @@ function updateInstallButton() {
 
   const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
   installButton.classList.toggle("show", !isStandalone);
+  installButton.disabled = isStandalone;
 }
 
 window.addEventListener("beforeinstallprompt", (event) => {
@@ -35,13 +40,13 @@ window.addEventListener("appinstalled", () => {
   updateInstallButton();
 });
 
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && canUsePwaInstall()) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   const menuButton = document.querySelector(".menu-toggle");
-  const nav = document.querySelector(".site-nav");
+  const nav = document.querySelector(".site-nav, .gallery-nav");
   const translations = {
     en: {
       label: "Language",
@@ -240,6 +245,37 @@ document.addEventListener("DOMContentLoaded", () => {
     "Call: 7677773236": { hi: "कॉल: 7677773236", mai: "कॉल: 7677773236" },
     "Open details": { hi: "विवरण खोलें", mai: "विवरण खोलू" }
   };
+  Object.assign(staticTranslations, {
+    "Photo upload and viewing system": { hi: "फोटो अपलोड और देखने की व्यवस्था", mai: "फोटो अपलोड आ देखबाक व्यवस्था" },
+    "Lagma Gallery": { hi: "लगमा गैलरी", mai: "लगमा गैलरी" },
+    "Purane photo, naye upload, search, filter aur full-screen preview ek hi page par.": { hi: "पुराने फोटो, नया अपलोड, खोज, फिल्टर और फुल-स्क्रीन प्रीव्यू एक ही पेज पर।", mai: "पुरान फोटो, नव अपलोड, खोज, फिल्टर आ फुल-स्क्रीन प्रीव्यू एके पेज पर।" },
+    "Upload photo": { hi: "फोटो अपलोड करें", mai: "फोटो अपलोड करू" },
+    "Naya photo add karein": { hi: "नया फोटो जोड़ें", mai: "नव फोटो जोड़ू" },
+    "Preview first": { hi: "पहले प्रीव्यू", mai: "पहिने प्रीव्यू" },
+    "Photo choose ya drag & drop karein": { hi: "फोटो चुनें या ड्रैग-ड्रॉप करें", mai: "फोटो चुनू वा ड्रैग-ड्रॉप करू" },
+    "JPG, PNG, WEBP, HEIC supported": { hi: "JPG, PNG, WEBP, HEIC सपोर्टेड", mai: "JPG, PNG, WEBP, HEIC सपोर्टेड" },
+    "Photo title": { hi: "फोटो शीर्षक", mai: "फोटो शीर्षक" },
+    "Category": { hi: "श्रेणी", mai: "श्रेणी" },
+    "Select category": { hi: "श्रेणी चुनें", mai: "श्रेणी चुनू" },
+    "Description": { hi: "विवरण", mai: "विवरण" },
+    "Short description": { hi: "छोटा विवरण", mai: "छोट विवरण" },
+    "Upload Photo": { hi: "फोटो अपलोड करें", mai: "फोटो अपलोड करू" },
+    "Photos": { hi: "फोटो", mai: "फोटो" },
+    "Purane aur naye photos": { hi: "पुराने और नए फोटो", mai: "पुरान आ नव फोटो" },
+    "Search title or category...": { hi: "शीर्षक या श्रेणी खोजें...", mai: "शीर्षक वा श्रेणी खोजू..." },
+    "No photos found.": { hi: "कोई फोटो नहीं मिला।", mai: "कोनो फोटो नहि भेटल।" },
+    "Photo, title, category aur description sab bharna zaroori hai.": { hi: "फोटो, शीर्षक, श्रेणी और विवरण सभी भरना जरूरी है।", mai: "फोटो, शीर्षक, श्रेणी आ विवरण सभ भरब जरूरी अछि।" },
+    "Photo gallery me add ho gaya. Ye isi browser me saved rahega.": { hi: "फोटो गैलरी में जुड़ गया। यह इसी ब्राउज़र में सेव रहेगा।", mai: "फोटो गैलरी मे जुड़ि गेल। ई एहि ब्राउज़र मे सेव रहत।" },
+    "Sirf image file upload karein.": { hi: "सिर्फ इमेज फाइल अपलोड करें।", mai: "सिर्फ इमेज फाइल अपलोड करू।" },
+    "Photo remove ho gaya.": { hi: "फोटो हट गया।", mai: "फोटो हटि गेल।" },
+    "Village Life": { hi: "गांव का जीवन", mai: "गामक जीवन" },
+    "Culture & Festival": { hi: "संस्कृति और त्योहार", mai: "संस्कृति आ पर्व" },
+    "School & Education": { hi: "स्कूल और शिक्षा", mai: "स्कूल आ शिक्षा" },
+    "Farming & Nature": { hi: "खेती और प्रकृति", mai: "खेती आ प्रकृति" },
+    "Development Work": { hi: "विकास कार्य", mai: "विकास काज" },
+    "People of Lagma": { hi: "लगमा के लोग", mai: "लगमा के लोक" }
+  });
+
   const textSources = [];
   const attrSources = [];
   const seenTextNodes = new WeakSet();
@@ -249,9 +285,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return translations[language] || translations.en;
   }
 
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
   function translateValue(value, language) {
     if (language === "en") return value;
-    return staticTranslations[value]?.[language] || value;
+    const exactTranslation = staticTranslations[value]?.[language];
+    if (exactTranslation) return exactTranslation;
+
+    // Translate mixed text nodes too, so whole pages update instead of only exact matches.
+    return Object.entries(staticTranslations)
+      .sort(([a], [b]) => b.length - a.length)
+      .reduce((text, [source, translationsForSource]) => {
+        const translated = translationsForSource?.[language];
+        if (!translated || !text.includes(source)) return text;
+        return text.replace(new RegExp(escapeRegExp(source), "g"), translated);
+      }, value);
   }
 
   function collectTextSources(root = document.body) {
@@ -260,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const parent = node.parentElement;
-        if (!parent || ["SCRIPT", "STYLE", "OPTION"].includes(parent.tagName)) {
+        if (!parent || ["SCRIPT", "STYLE"].includes(parent.tagName)) {
           return NodeFilter.FILTER_REJECT;
         }
         if (parent.closest("[data-i18n], [data-i18n-html]")) {
@@ -333,26 +383,33 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("lagma-language", active);
   }
 
-  const header = document.querySelector(".site-header");
+  const header = document.querySelector(".site-header, .gallery-header");
   if (header) {
-    const installButton = document.createElement("button");
-    installButton.className = "install-app-btn";
-    installButton.type = "button";
-    installButton.textContent = "Install LAGMA APP";
-    installButton.setAttribute("aria-label", "Install LAGMA APP");
-    installButton.addEventListener("click", async () => {
-      if (!deferredInstallPrompt) {
-        window.alert("App install karne ke liye browser menu kholen aur 'Install app' ya 'Add to Home screen' select karein.");
-        return;
-      }
+    if (header.classList.contains("site-header")) {
+      const installButton = document.createElement("button");
+      installButton.className = "install-app-btn";
+      installButton.type = "button";
+      installButton.textContent = "Install LAGMA APP";
+      installButton.setAttribute("aria-label", "Install LAGMA APP");
+      installButton.addEventListener("click", async () => {
+        if (!canUsePwaInstall()) {
+          window.alert("App install ke liye website ko localhost ya hosted HTTPS link par kholen. File mode me install prompt nahi aata.");
+          return;
+        }
 
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
+        if (!deferredInstallPrompt) {
+          window.alert("App install karne ke liye browser menu kholen aur 'Install app' ya 'Add to Home screen' select karein.");
+          return;
+        }
+
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        updateInstallButton();
+      });
+      header.appendChild(installButton);
       updateInstallButton();
-    });
-    header.appendChild(installButton);
-    updateInstallButton();
+    }
 
     const languageWrap = document.createElement("label");
     languageWrap.className = "language-switcher";
@@ -375,11 +432,27 @@ document.addEventListener("DOMContentLoaded", () => {
       applyLanguage(languageSelect.value);
       languageWrap.querySelector("span").textContent = getActiveTranslation(languageSelect.value).label;
     });
+
+    const observer = new MutationObserver((mutations) => {
+      const language = localStorage.getItem("lagma-language") || "en";
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) collectTextSources(node);
+          if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() && !seenTextNodes.has(node)) {
+            seenTextNodes.add(node);
+            textSources.push({ node, original: node.nodeValue.trim() });
+          }
+        });
+      });
+      translateStaticText(language);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   if (menuButton && nav) {
     menuButton.addEventListener("click", () => {
       const isOpen = nav.classList.toggle("open");
+      nav.classList.toggle("is-open", isOpen);
       const language = localStorage.getItem("lagma-language") || "en";
       const copy = getActiveTranslation(language);
       menuButton.setAttribute("aria-expanded", String(isOpen));
@@ -390,6 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (event.target instanceof HTMLAnchorElement) {
         const language = localStorage.getItem("lagma-language") || "en";
         nav.classList.remove("open");
+        nav.classList.remove("is-open");
         menuButton.setAttribute("aria-expanded", "false");
         menuButton.textContent = getActiveTranslation(language).menu;
       }

@@ -1,0 +1,311 @@
+:root {
+  --cream: #fff7df;
+  --saffron: #e58a22;
+  --maroon: #7d1f2a;
+  --green: #1f6b48;
+  --gold: #c99a2e;
+  --ink: #23150f;
+  --muted: #705d4f;
+  --line: rgba(125, 31, 42, 0.16);
+  --shadow: 0 26px 70px rgba(75, 39, 16, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  font-family: "Georgia", "Noto Serif Devanagari", serif;
+  background:
+    linear-gradient(rgba(255, 247, 223, 0.88), rgba(255, 247, 223, 0.92)),
+    url("mithila-pattern.svg"),
+    radial-gradient(circle at 85% 5%, rgba(31, 107, 72, 0.18), transparent 30%),
+    var(--cream);
+  background-size: auto, 220px, auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.upload-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.75fr) minmax(320px, 1.25fr);
+  gap: clamp(24px, 4vw, 58px);
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: clamp(28px, 6vw, 82px) 0;
+}
+
+.upload-intro {
+  align-self: center;
+}
+
+.back-link {
+  display: inline-flex;
+  margin-bottom: 36px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 11px 15px;
+  color: var(--maroon);
+  background: rgba(255, 255, 255, 0.64);
+  font: 900 0.88rem "Trebuchet MS", sans-serif;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--green);
+  font: 900 0.76rem "Trebuchet MS", sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.upload-intro h1 {
+  margin: 0;
+  color: var(--maroon);
+  font-size: clamp(3.2rem, 9vw, 7rem);
+  line-height: 0.9;
+}
+
+.upload-intro p:not(.eyebrow) {
+  max-width: 460px;
+  color: var(--muted);
+  font: 1.04rem/1.8 "Trebuchet MS", sans-serif;
+}
+
+.upload-panel {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 34px;
+  padding: clamp(20px, 4vw, 34px);
+  background: rgba(255, 252, 242, 0.84);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.panel-heading h2 {
+  margin: 0;
+  color: var(--maroon);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.panel-badge {
+  border-radius: 999px;
+  padding: 10px 12px;
+  color: #fff8ec;
+  background: linear-gradient(135deg, var(--green), var(--maroon));
+  font: 900 0.72rem "Trebuchet MS", sans-serif;
+  white-space: nowrap;
+}
+
+.upload-form {
+  display: grid;
+  gap: 18px;
+}
+
+.drop-zone {
+  display: grid;
+  min-height: 260px;
+  place-items: center;
+  border: 2px dashed rgba(125, 31, 42, 0.32);
+  border-radius: 28px;
+  padding: 30px;
+  color: var(--maroon);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.64)),
+    url("mithila-pattern.svg");
+  background-size: auto, 180px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.drop-zone.is-dragging {
+  border-color: var(--green);
+  transform: translateY(-2px);
+  background-color: rgba(31, 107, 72, 0.08);
+}
+
+.drop-zone input {
+  display: none;
+}
+
+.drop-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff8ec;
+  background: linear-gradient(135deg, var(--maroon), var(--saffron));
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.drop-zone strong {
+  margin-top: 16px;
+  font-size: 1.4rem;
+}
+
+.drop-zone small {
+  color: var(--muted);
+  font: 0.95rem "Trebuchet MS", sans-serif;
+}
+
+.preview-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 16px 38px rgba(75, 39, 16, 0.14);
+}
+
+.preview-card img {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+}
+
+.preview-card button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 13px;
+  color: #fff8ec;
+  background: rgba(125, 31, 42, 0.88);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  color: var(--maroon);
+  font: 900 0.82rem "Trebuchet MS", sans-serif;
+  text-transform: uppercase;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 14px 15px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.78);
+  font: 1rem "Trebuchet MS", sans-serif;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(201, 154, 46, 0.18);
+}
+
+.full-field {
+  grid-column: 1 / -1;
+}
+
+.progress-wrap {
+  display: grid;
+  gap: 8px;
+}
+
+.progress-track {
+  overflow: hidden;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(125, 31, 42, 0.12);
+}
+
+.progress-track span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--saffron), var(--green), var(--maroon));
+  transition: width 240ms ease;
+}
+
+.progress-wrap p,
+.upload-status {
+  margin: 0;
+  color: var(--muted);
+  font: 900 0.92rem "Trebuchet MS", sans-serif;
+}
+
+.upload-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 15px 20px;
+  color: #fff8ec;
+  background: linear-gradient(135deg, var(--maroon), var(--green));
+  box-shadow: 0 18px 42px rgba(125, 31, 42, 0.22);
+  cursor: pointer;
+  font: 900 1rem "Trebuchet MS", sans-serif;
+}
+
+.upload-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.upload-status.is-success {
+  color: var(--green);
+}
+
+.upload-status.is-error {
+  color: var(--maroon);
+}
+
+@media (max-width: 860px) {
+  .upload-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .panel-heading,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-heading {
+    display: grid;
+  }
+
+  .panel-badge {
+    width: max-content;
+  }
+
+  .drop-zone {
+    min-height: 220px;
+    padding: 22px;
+  }
+}
