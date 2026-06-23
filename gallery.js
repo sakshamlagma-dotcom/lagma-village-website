@@ -34,13 +34,17 @@ const categories = [
 ];
 
 const uploadedStorageKey = "lagma-gallery-uploaded-photos";
+const cloudinaryCloudName = "dx7k5hkgl";
+const cloudinaryUploadPreset = "lagma_gallery_upload";
+const cloudinaryGalleryTag = "lagma-village-gallery";
 
 const state = {
   activeCategory: "All",
   searchText: "",
   visiblePhotos: [],
   activeIndex: 0,
-  previewUrl: ""
+  previewUrl: "",
+  cloudPhotos: []
 };
 
 const grid = document.querySelector("#gallery-grid");
@@ -78,7 +82,7 @@ function saveUploadedPhoto(photo) {
 }
 
 function getAllPhotos() {
-  return [...getUploadedPhotos(), ...baseGalleryPhotos];
+  return [...state.cloudPhotos, ...getUploadedPhotos(), ...baseGalleryPhotos];
 }
 
 function normalizeText(value) {
@@ -125,6 +129,41 @@ function renderGallery() {
       </div>
     </article>
   `).join("");
+}
+
+function getCloudinaryPhotoUrl(resource) {
+  const version = resource.version ? `v${resource.version}/` : "";
+  return `https://res.cloudinary.com/${cloudinaryCloudName}/image/upload/${version}${resource.public_id}.${resource.format}`;
+}
+
+async function loadCloudinaryUploads() {
+  try {
+    const response = await fetch(`https://res.cloudinary.com/${cloudinaryCloudName}/image/list/${cloudinaryGalleryTag}.json`);
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const resources = Array.isArray(data.resources) ? data.resources : [];
+    state.cloudPhotos = resources
+      .filter((resource) => {
+        const tags = Array.isArray(resource.tags) ? resource.tags : [];
+        const isHealthCheck = tags.includes("health-check") || resource.context?.custom?.name === "Health Check";
+        return resource.public_id && resource.format && !isHealthCheck && resource.width > 20 && resource.height > 20;
+      })
+      .slice()
+      .reverse()
+      .map((resource, index) => {
+        const uploader = resource.context?.custom?.name || resource.context?.name || "";
+        return {
+          title: uploader ? `Uploaded by ${uploader}` : `Uploaded Photo ${index + 1}`,
+          category: "People of Lagma",
+          image: getCloudinaryPhotoUrl(resource),
+          description: "Lagma website par visitor dwara upload kiya gaya photo."
+        };
+      });
+    renderGallery();
+  } catch (error) {
+    // Gallery should still work with local photos when Cloudinary is unavailable.
+  }
 }
 
 function clearPreview() {
@@ -246,13 +285,54 @@ uploadForm?.addEventListener("submit", (event) => {
   }
 
   startProgress();
-  const photoUrl = URL.createObjectURL(file);
-  saveUploadedPhoto({ title, category, description, image: photoUrl });
-  uploadForm.reset();
-  clearPreview();
-  renderGallery();
-  setUploadStatus("Photo gallery me add ho gaya. Ye isi browser me saved rahega.", "success");
-  stopProgress();
+  setUploadStatus("Photo upload ho raha hai...");
+
+  const cloudinaryData = new FormData();
+  cloudinaryData.append("file", file);
+  cloudinaryData.append("upload_preset", cloudinaryUploadPreset);
+  cloudinaryData.append("tags", `${cloudinaryGalleryTag},website-upload`);
+  cloudinaryData.append("context", [
+    `name=${title}`,
+    `category=${category}`,
+    `description=${description}`,
+    "source=Lagma Village website gallery"
+  ].join("|"));
+
+  fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`, {
+    method: "POST",
+    body: cloudinaryData
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        let message = "Cloud upload failed";
+        try {
+          const result = await response.json();
+          message = result?.error?.message || message;
+        } catch (error) {
+          // Keep default message when Cloudinary response is not JSON.
+        }
+        throw new Error(message);
+      }
+      return response.json();
+    })
+    .then((result) => {
+      const photo = {
+        title,
+        category,
+        description,
+        image: result.secure_url
+      };
+      state.cloudPhotos.unshift(photo);
+      saveUploadedPhoto(photo);
+      uploadForm.reset();
+      clearPreview();
+      renderGallery();
+      setUploadStatus("Photo upload ho gaya aur gallery me add ho gaya.", "success");
+    })
+    .catch((error) => {
+      setUploadStatus(`Upload nahi ho paya: ${error.message}`, "error");
+    })
+    .finally(stopProgress);
 });
 
 grid?.addEventListener("click", (event) => {
@@ -291,3 +371,4 @@ document.querySelector(".menu-toggle")?.addEventListener("click", (event) => {
 
 renderFilters();
 renderGallery();
+loadCloudinaryUploads();
