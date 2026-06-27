@@ -525,6 +525,12 @@ document.addEventListener("DOMContentLoaded", () => {
         link: "services.html"
       },
       {
+        category: "Kissan Help",
+        title: "Bihar Farmer Scheme Guide",
+        text: "Kisan, fasal disease, dairy farming, makhana subsidy, DBT, PM-Kisan, KCC aur official links.",
+        link: "kissan-help/index.html"
+      },
+      {
         category: "Banking",
         title: "Bank and KYC",
         text: "Banking support, KYC update, account opening aur money transfer.",
@@ -608,7 +614,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         serviceCards.forEach((card) => {
           const category = card.dataset.serviceCategory || "";
-          card.hidden = activeFilter !== "all" && category !== activeFilter;
+          const categories = category.split(/\s+/).filter(Boolean);
+          card.hidden = activeFilter !== "all" && !categories.includes(activeFilter);
         });
       });
       button.setAttribute("aria-pressed", String(button.classList.contains("is-active")));
@@ -1301,6 +1308,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  const copySiteLinkButton = document.querySelector(".copy-site-link-btn");
+  if (copySiteLinkButton) {
+    const copyStatus = document.querySelector("#copy-site-link-status");
+    copySiteLinkButton.addEventListener("click", async () => {
+      const siteUrl = "https://sakshamlagma-dotcom.github.io/lagma-village-website/";
+      try {
+        await navigator.clipboard.writeText(siteUrl);
+        if (copyStatus) copyStatus.textContent = "Website link copied.";
+      } catch (error) {
+        window.prompt("Website link copy karein:", siteUrl);
+      }
+    });
+  }
 
   const year = document.querySelector("#year");
   if (year) year.textContent = new Date().getFullYear();

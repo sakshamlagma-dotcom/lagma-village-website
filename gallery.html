@@ -14,7 +14,7 @@
   <title>Lagma Gallery | Lagma Village Saharsa Bihar</title>
   <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="apple-touch-icon" href="icons/lagma-icon-192.png">
-  <link rel="stylesheet" href="gallery.css?v=3">
+  <link rel="stylesheet" href="gallery.css?v=5">
   <script src="analytics.js?v=2" defer></script>
 </head>
 <body>
@@ -26,94 +26,91 @@
     <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
     <nav class="gallery-nav" aria-label="Main navigation">
       <a href="index.html">Home</a>
+      <a href="kissan-help/index.html">Kissan Help</a>
       <a href="gallery.html" aria-current="page">Gallery</a>
     </nav>
   </header>
 
   <main class="gallery-system">
     <section class="system-title" aria-labelledby="gallery-title">
-      <p class="eyebrow">Photo upload and viewing system</p>
+      <p class="eyebrow">Lagma photo collection</p>
       <h1 id="gallery-title">Lagma Gallery</h1>
-      <p>Purane photo, naye upload, search, filter aur full-screen preview ek hi page par.</p>
+      <p>Photo dekhein, naya photo upload karein, aur Lagma ki yaadon ko ek jagah sambhalein.</p>
     </section>
 
-    <section class="gallery-upload-box" aria-labelledby="upload-title">
-      <div class="upload-heading">
-        <div>
-          <p class="eyebrow">Upload photo</p>
-          <h2 id="upload-title">Naya photo add karein</h2>
-        </div>
-        <span>Preview first</span>
-      </div>
-
-      <form id="gallery-upload-form" class="inline-upload-form">
-        <label class="inline-drop-zone" id="inline-drop-zone" for="gallery-photo-input">
-          <input id="gallery-photo-input" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" required>
-          <strong>Photo choose ya drag & drop karein</strong>
-          <small>JPG, PNG, WEBP, HEIC supported</small>
-        </label>
-
-        <div class="inline-preview" id="gallery-upload-preview" hidden>
-          <img src="" alt="Selected photo preview">
-          <button type="button" id="remove-gallery-photo">Remove</button>
+    <div class="gallery-workspace">
+      <section class="gallery-upload-box" aria-labelledby="upload-title">
+        <div class="upload-heading">
+          <div>
+            <p class="eyebrow">Upload photo</p>
+            <h2 id="upload-title">Naya photo add karein</h2>
+          </div>
+          <span>Live gallery</span>
         </div>
 
-        <div class="inline-upload-fields">
-          <label>
-            Photo title
-            <input id="photo-title" name="title" type="text" placeholder="Photo title" maxlength="80" required>
+        <form id="gallery-upload-form" class="inline-upload-form">
+          <label class="inline-drop-zone" id="inline-drop-zone" for="gallery-photo-input">
+            <input id="gallery-photo-input" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" required>
+            <strong>Photo choose karein</strong>
+            <small>JPG, PNG, WEBP, HEIC supported</small>
           </label>
 
-          <label>
-            Category
-            <select id="photo-category" name="category" required>
-              <option value="">Select category</option>
-              <option>Village Life</option>
-              <option>Culture & Festival</option>
-              <option>School & Education</option>
-              <option>Farming & Nature</option>
-              <option>Development Work</option>
-              <option>People of Lagma</option>
-            </select>
-          </label>
+          <div class="inline-preview" id="gallery-upload-preview" hidden>
+            <img src="" alt="Selected photo preview">
+            <button type="button" id="remove-gallery-photo">Remove</button>
+          </div>
 
-          <label class="full-field">
-            Description
-            <textarea id="photo-description" name="description" rows="3" placeholder="Short description" maxlength="220" required></textarea>
-          </label>
+          <div class="inline-upload-fields">
+            <label>
+              Photo title
+              <input id="photo-title" name="title" type="text" placeholder="Photo title" maxlength="80" required>
+            </label>
+
+            <label>
+              Category
+              <select id="photo-category" name="category" required>
+                <option value="">Select category</option>
+                <option>Village Life</option>
+                <option>Culture & Festival</option>
+                <option>School & Education</option>
+                <option>Farming & Nature</option>
+                <option>Development Work</option>
+                <option>People of Lagma</option>
+              </select>
+            </label>
+
+            <label class="full-field">
+              Description
+              <textarea id="photo-description" name="description" rows="3" placeholder="Short description" maxlength="220" required></textarea>
+            </label>
+          </div>
+
+          <div class="inline-progress" id="inline-progress" hidden>
+            <span></span>
+          </div>
+
+          <button class="primary-action" type="submit">Upload Photo</button>
+          <p class="upload-status" id="gallery-upload-status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="gallery-dashboard" aria-label="Photo gallery">
+        <div class="dashboard-heading compact-heading">
+          <div>
+            <p class="eyebrow">Photos</p>
+            <h2>Photo dekhna</h2>
+          </div>
         </div>
 
-        <div class="inline-progress" id="inline-progress" hidden>
-          <span></span>
+        <div class="gallery-stats" aria-live="polite">
+          <strong id="visible-count">0</strong>
+          <span>photos</span>
         </div>
 
-        <button class="primary-action" type="submit">Upload Photo</button>
-        <p class="upload-status" id="gallery-upload-status" aria-live="polite"></p>
-      </form>
-    </section>
-
-    <section class="gallery-dashboard" aria-label="Photo gallery">
-      <div class="dashboard-heading compact-heading">
-        <div>
-          <p class="eyebrow">Photos</p>
-          <h2>Purane aur naye photos</h2>
-        </div>
-        <label class="search-box">
-          <span>Search</span>
-          <input id="gallery-search" type="search" placeholder="Search title or category..." autocomplete="off">
-        </label>
-      </div>
-
-      <div class="filter-bar" id="gallery-filters" aria-label="Gallery categories"></div>
-
-      <div class="gallery-stats" aria-live="polite">
-        <strong id="visible-count">0</strong>
-        <span>photos</span>
-      </div>
-
-      <div class="premium-grid" id="gallery-grid" aria-live="polite"></div>
-      <p class="empty-state" id="gallery-empty" hidden>No photos found.</p>
-    </section>
+        <div class="premium-grid" id="gallery-grid" aria-live="polite"></div>
+        <p class="empty-state" id="gallery-empty" hidden>No photos found.</p>
+      </section>
+    </div>
   </main>
 
   <div class="lightbox" id="gallery-lightbox" hidden>
@@ -130,7 +127,7 @@
     <button class="lightbox-arrow lightbox-next" type="button" aria-label="Next photo">&gt;</button>
   </div>
 
-  <script src="web.js?v=18"></script>
-  <script src="gallery.js?v=4"></script>
+  <script src="web.js?v=19"></script>
+  <script src="gallery.js?v=5"></script>
 </body>
 </html>

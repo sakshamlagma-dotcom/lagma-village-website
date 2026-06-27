@@ -33,7 +33,7 @@
   <title>Lagma Village Saharsa Bihar | Official Website</title>
   <link rel="manifest" href="manifest.webmanifest?v=4">
   <link rel="apple-touch-icon" href="icons/lagma-icon-192.png">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=14">
   <script src="firebase-config.js?v=6"></script>
   <script src="analytics.js?v=2" defer></script>
 </head>
@@ -46,6 +46,7 @@
       <a href="index.html" aria-current="page">Home</a>
       <a href="about.html">About</a>
       <a href="services.html">Services</a>
+      <a href="kissan-help/index.html">Kissan Help</a>
       <a href="online-services.html">Online Services</a>
       <a href="gallery.html">Gallery</a>
       <a href="notification.html">Notices</a>
@@ -181,6 +182,11 @@
           <h3>Online Services</h3>
           <p>Aadhaar, certificates, banking support, bill payment, and digital service details.</p>
         </a>
+        <a class="quick-card" href="kissan-help/index.html">
+          <span>06</span>
+          <h3>Kissan Help</h3>
+          <p>Crop disease, dairy farming, makhana subsidy, DBT registration, and Bihar scheme links.</p>
+        </a>
       </div>
     </section>
 
@@ -224,6 +230,15 @@
           <div>
             <h3>Panchayat Services</h3>
             <p>Local support for governance, certificates, and schemes.</p>
+          </div>
+        </article>
+        <article class="feature-card service-tab-card">
+          <img src="kissan-help/assets/bihar-agri-poster-optimized.webp" alt="Kissan Help agriculture support poster" loading="lazy">
+          <div>
+            <span class="service-badge">Kissan Help</span>
+            <h3>Farmer Scheme Guide</h3>
+            <p>Fasal, dairy, makhana, subsidy, disease control, and official Bihar agriculture links.</p>
+            <a class="text-link" href="kissan-help/index.html">Open Kissan Help</a>
           </div>
         </article>
       </div>
@@ -361,6 +376,49 @@
         <button class="btn btn-outline share-site-btn" type="button">Share website</button>
       </div>
     </section>
+
+    <section class="section connect-section" aria-labelledby="connect-title">
+      <div class="section-heading">
+        <p class="eyebrow">Free integrations demo</p>
+        <h2 id="connect-title">Connect with Lagma online</h2>
+        <p>Website ko free tools se link karke residents photo, notice, contact aur social updates easily access kar sakte hain.</p>
+      </div>
+      <div class="connect-grid">
+        <article class="connect-card">
+          <span>Photo form</span>
+          <h3>Gallery submission</h3>
+          <p>Google Form link yahan add karke log photo title, category aur image bhej sakte hain.</p>
+          <a class="btn btn-outline" href="gallery.html">Open gallery upload</a>
+        </article>
+        <article class="connect-card">
+          <span>Notice form</span>
+          <h3>Public note request</h3>
+          <p>Residents village notice ya suggestion submit kar sakte hain, review ke baad publish hoga.</p>
+          <a class="btn btn-outline" href="notification.html">Send note</a>
+        </article>
+        <article class="connect-card">
+          <span>Social</span>
+          <h3>Facebook, Instagram, YouTube</h3>
+          <p>Official social pages banne ke baad yahan direct links add kar sakte hain.</p>
+          <div class="social-link-row">
+            <a href="#" aria-label="Facebook placeholder">FB</a>
+            <a href="#" aria-label="Instagram placeholder">IG</a>
+            <a href="#" aria-label="YouTube placeholder">YT</a>
+          </div>
+        </article>
+        <article class="connect-card qr-card">
+          <span>QR code</span>
+          <h3>Share website offline</h3>
+          <p>Poster, shop, school aur Panchayat notice board par website QR lagaya ja sakta hai.</p>
+          <a class="qr-link" href="https://sakshamlagma-dotcom.github.io/lagma-village-website/" target="_blank" rel="noopener" aria-label="Open Lagma Village website">
+            <img src="lagma-website-qr.png" alt="QR code for Lagma Village website" width="742" height="742" loading="lazy">
+          </a>
+          <p class="qr-url">sakshamlagma-dotcom.github.io/lagma-village-website</p>
+          <button class="btn btn-outline copy-site-link-btn" type="button">Copy website link</button>
+          <p class="copy-status" id="copy-site-link-status" aria-live="polite"></p>
+        </article>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -373,6 +431,7 @@
         <h3>Explore</h3>
         <a href="about.html">About</a>
         <a href="services.html">Services</a>
+        <a href="kissan-help/index.html">Kissan Help</a>
         <a href="online-services.html">Online Services</a>
         <a href="gallery.html">Gallery</a>
         <a href="notification.html">Notices</a>
@@ -390,7 +449,7 @@
         <p>Like dabane par hume analytics me pata chalega ki logon ko website pasand aa rahi hai.</p>
       </div>
       <button class="site-like-button" type="button" data-like-key="lagma-website-like">
-        <span aria-hidden="true">?</span>
+        <span aria-hidden="true">Like</span>
         <span class="site-like-text">Like Website</span>
       </button>
     </div>
@@ -403,7 +462,7 @@
     </div>
   </footer>
 
-  <script src="web.js?v=18"></script>
+  <script src="web.js?v=21"></script>
 </body>
 </html>
 

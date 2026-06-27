@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>बिहार कृषि सेवाएँ, फसल, रोग और डेयरी</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="बिहार कृषि सेवा home">
+        <span class="brand-mark">BR</span>
+        <span>
+          <strong>बिहार कृषि सेवा</strong>
+          <small>फसल, रोग, दवा, subsidy और dairy farming</small>
+        </span>
+      </a>
+
+      <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#crops">फसलें</a>
+        <a href="#disease">रोग/दवा</a>
+        <a href="#subsidy">Subsidy</a>
+        <a href="#makhana">Makhana</a>
+        <a href="#dairy">Dairy</a>
+        <a href="#links">Links</a>
+      </nav>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Bihar Special Agriculture Guide</p>
+          <h1>बिहार के किसानों के लिए फसल, बीमारी, दवा और सरकारी सेवाएँ.</h1>
+          <p class="hero-copy">
+            धान, गेहूँ, मक्का, दाल, तेलहन, सब्जी, फल, मखाना और डेयरी तक की
+            practical जानकारी. हर जगह official Bihar और central portal links दिए
+            गए हैं ताकि आवेदन, subsidy और advisory सीधे सही जगह से मिल सके.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#subsidy">Subsidy देखें</a>
+            <a class="btn secondary" href="#makhana">मखाना योजना देखें</a>
+          </div>
+          <div class="trust-strip" aria-label="Bihar focus">
+            <span>DBT Bihar</span>
+            <span>Fasal Sahayata</span>
+            <span>Makhana Board</span>
+            <span>Dairy Development</span>
+            <span>KVK Advisory</span>
+          </div>
+        </div>
+        <div class="hero-media">
+          <img src="assets/bihar-agri-poster-optimized.webp" alt="बिहार किसान खेत में डिजिटल कृषि जानकारी देखते हुए" />
+        </div>
+      </section>
+
+      <section class="stats" aria-label="Bihar agriculture quick facts">
+        <div>
+          <strong>3</strong>
+          <span>मुख्य season: Kharif, Rabi, Zaid</span>
+        </div>
+        <div>
+          <strong>13</strong>
+          <span>DBT farmer registration digit</span>
+        </div>
+        <div>
+          <strong>1800</strong>
+          <span>180 1551 Kisan Call Center</span>
+        </div>
+        <div>
+          <strong>6681</strong>
+          <span>Dairy toll-free: 1800 345 6681</span>
+        </div>
+      </section>
+
+      <section class="data-note" aria-label="Safety note">
+        <strong>जरूरी सावधानी:</strong>
+        दवा का नाम active ingredient के रूप में दिया गया है. Dose, crop stage और waiting period
+        हमेशा packet label, licensed dealer, KVK या कृषि समन्वयक से confirm करके ही use करें.
+        गलत दवा या गलत मात्रा से फसल, मिट्टी, पशु और स्वास्थ्य को नुकसान हो सकता है.
+      </section>
+
+      <section class="section" id="crops">
+        <div class="section-heading">
+          <p class="eyebrow">Bihar Crop Calendar</p>
+          <h2>बिहार की प्रमुख फसलें season के अनुसार</h2>
+          <p>
+            बिहार में rice-wheat और rice-maize system बहुत common है. उत्तर बिहार में बाढ़,
+            दक्षिण बिहार में सूखा/नमी की कमी, और कई इलाकों में zinc, sulphur, boron deficiency
+            production को प्रभावित करती है.
+          </p>
+        </div>
+
+        <div class="season-grid">
+          <article class="season-card">
+            <span>Kharif</span>
+            <h3>जून से अक्टूबर</h3>
+            <p>धान, मक्का, अरहर, मूंग, उड़द, जूट, तिल, सोयाबीन, बाजरा, सब्जियाँ.</p>
+          </article>
+          <article class="season-card">
+            <span>Rabi</span>
+            <h3>नवंबर से अप्रैल</h3>
+            <p>गेहूँ, रबी मक्का, चना, मसूर, मटर, सरसों/राई, आलू, प्याज, लहसुन.</p>
+          </article>
+          <article class="season-card">
+            <span>Zaid</span>
+            <h3>मार्च से जून</h3>
+            <p>ग्रीष्म मूंग, मक्का, खीरा, ककड़ी, तरबूज, खरबूज, चारा, सब्जियाँ.</p>
+          </article>
+          <article class="season-card">
+            <span>Special</span>
+            <h3>बागवानी और local crops</h3>
+            <p>मखाना, लीची, आम, केला, अमरूद, मशरूम, पान, हल्दी, धनिया, मिर्च.</p>
+          </article>
+        </div>
+
+        <div class="crop-photo-panel" aria-labelledby="crop-photo-title">
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Photo Guide</p>
+            <h3 id="crop-photo-title">फसल पहचान फोटो के साथ</h3>
+            <p>इन cards में बिहार/सहरसा के हिसाब से common crops, बागवानी, मखाना, मछली और dairy model को जल्दी पहचानने लायक photo के साथ रखा गया है.</p>
+          </div>
+
+          <div class="crop-photo-grid">
+            <article class="crop-photo-card">
+              <img src="assets/crop-rice-paddy.webp" alt="धान की हरी पaddy crop" loading="lazy">
+              <div>
+                <span>Kharif</span>
+                <h3>धान</h3>
+                <p>Lowland और सिंचित खेतों की मुख्य फसल. पानी, nursery, zinc और stem borer पर ध्यान दें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-wheat.webp" alt="गेहूँ की फसल" loading="lazy">
+              <div>
+                <span>Rabi</span>
+                <h3>गेहूँ</h3>
+                <p>Rice-wheat belt की मजबूत फसल. समय पर बुवाई, rust, aphid और सिंचाई schedule देखें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-maize.webp" alt="मक्का की फसल और भुट्टा" loading="lazy">
+              <div>
+                <span>Kharif/Rabi</span>
+                <h3>मक्का</h3>
+                <p>ऊँची जमीन और Rabi season में अच्छा option. Fall armyworm और nitrogen split जरूरी.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-mustard.webp" alt="सरसों का पीला खेत" loading="lazy">
+              <div>
+                <span>Rabi</span>
+                <h3>सरसों/राई</h3>
+                <p>तेलहन crop. Aphid, white rust, alternaria blight और sulphur nutrition पर नजर रखें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-pulses-chana.webp" alt="चना और दाल वाली फसल" loading="lazy">
+              <div>
+                <span>Rabi/Zaid</span>
+                <h3>दालें</h3>
+                <p>चना, मसूर, अरहर, मूंग, उड़द. Seed treatment, wilt और pod borer से बचाव करें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-potato.webp" alt="आलू की खेती" loading="lazy">
+              <div>
+                <span>Rabi</span>
+                <h3>आलू</h3>
+                <p>सब्जी और cash crop. Late blight, seed quality, मिट्टी की नमी और market timing अहम.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-vegetables.webp" alt="बैंगन मिर्च और सब्जी की खेती" loading="lazy">
+              <div>
+                <span>All Season</span>
+                <h3>सब्जियाँ</h3>
+                <p>बैंगन, मिर्च, भिंडी, लौकी, करेला, टमाटर. Fruit borer, whitefly और wilt पर ध्यान दें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-litchi.webp" alt="लीची का बाग" loading="lazy">
+              <div>
+                <span>Horticulture</span>
+                <h3>लीची</h3>
+                <p>उत्तर बिहार की खास बागवानी. Irrigation, pruning, fruit cracking और orchard care जरूरी.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-mango-banana.webp" alt="आम और केला की बागवानी" loading="lazy">
+              <div>
+                <span>Horticulture</span>
+                <h3>आम/केला</h3>
+                <p>फल वाली खेती में planting material, spacing, fruit fly, hopper और पोषण management देखें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-makhana.webp" alt="मखाना तालाब की खेती" loading="lazy">
+              <div>
+                <span>Special Crop</span>
+                <h3>मखाना</h3>
+                <p>नीची जमीन/तालाब के लिए अच्छा option. Seed, pond preparation, popping और subsidy देखें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-fish-pond.webp" alt="मछली पालन तालाब" loading="lazy">
+              <div>
+                <span>Fish Farming</span>
+                <h3>मछली पालन</h3>
+                <p>Rohu, Catla, Mrigal combo popular. Pond depth, seed quality, feed और oxygen संभालें.</p>
+              </div>
+            </article>
+            <article class="crop-photo-card">
+              <img src="assets/crop-dairy.webp" alt="डेयरी फार्म में गाय" loading="lazy">
+              <div>
+                <span>Dairy</span>
+                <h3>डेयरी farming</h3>
+                <p>Daily income model. नस्ल, हरा चारा, vaccination, insurance और milk collection plan जरूरी.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="table-wrap roomy-table">
+          <table>
+            <thead>
+              <tr>
+                <th>फसल</th>
+                <th>बिहार में उपयोग</th>
+                <th>मुख्य ध्यान</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>धान</td>
+                <td>Lowland, medium land, flood-prone और irrigated areas.</td>
+                <td>Nursery health, BLB/blast, stem borer, zinc deficiency, water management.</td>
+              </tr>
+              <tr>
+                <td>गेहूँ</td>
+                <td>Rabi की सबसे अहम cereal crop, rice-wheat belt में common.</td>
+                <td>Timely sowing, zero tillage, rust, aphid, termite, balanced fertilizer.</td>
+              </tr>
+              <tr>
+                <td>मक्का</td>
+                <td>Rabi maize और Kharif maize दोनों, सीमांचल/उत्तर बिहार में मजबूत.</td>
+                <td>Fall armyworm, stem borer, leaf blight, drainage, nitrogen split.</td>
+              </tr>
+              <tr>
+                <td>दालें</td>
+                <td>चना, मसूर, अरहर, मूंग, उड़द, मटर.</td>
+                <td>Seed treatment, wilt, yellow mosaic, pod borer, Rhizobium culture.</td>
+              </tr>
+              <tr>
+                <td>तेलहन</td>
+                <td>सरसों, राई, तिल, सूरजमुखी, अलसी.</td>
+                <td>Mustard aphid, alternaria blight, white rust, sulphur nutrition.</td>
+              </tr>
+              <tr>
+                <td>सब्जियाँ</td>
+                <td>आलू, टमाटर, बैंगन, भिंडी, मिर्च, गोभी, cucurbits.</td>
+                <td>Seedling disease, fruit borer, blight, wilt, whitefly, market timing.</td>
+              </tr>
+              <tr>
+                <td>फल और बागवानी</td>
+                <td>लीची, आम, केला, अमरूद, पपीता, नींबू, मखाना, मशरूम.</td>
+                <td>Planting material, orchard pruning, fruit fly/hopper, irrigation, storage.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section muted-band" id="disease">
+        <div class="section-heading">
+          <p class="eyebrow">Crop Disease, Pest & Medicine</p>
+          <h2>फसल की बीमारी, कीट, उपाय और दवा</h2>
+          <p>
+            पहले diagnosis सही करें: पत्ती, तना, जड़, फल और खेत की नमी देखकर. बिना पहचान के
+            spray न करें. नीचे common Bihar crops के लिए practical IPM guide है.
+          </p>
+        </div>
+
+        <div class="table-wrap disease-table">
+          <table>
+            <thead>
+              <tr>
+                <th>फसल</th>
+                <th>रोग/कीट</th>
+                <th>लक्षण</th>
+                <th>उपाय</th>
+                <th>दवा/active ingredient examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>धान</td>
+                <td>Blast, BLB, sheath blight, stem borer, BPH</td>
+                <td>पत्ती पर धब्बे, झुलसा, तना सूखना, पौधा पीला/जलना.</td>
+                <td>Resistant variety, balanced nitrogen, field sanitation, light trap, water level control.</td>
+                <td>Blast में tricyclazole/azoxystrobin; sheath blight में validamycin/hexaconazole; stem borer में chlorantraniliprole. Label follow करें.</td>
+              </tr>
+              <tr>
+                <td>गेहूँ</td>
+                <td>Rust, loose smut, Karnal bunt, aphid, termite</td>
+                <td>पीले/भूरे powder जैसे pustules, बालियों में काला चूर्ण, पत्तियों पर aphid.</td>
+                <td>Certified seed, seed treatment, timely sowing, resistant varieties, yellow sticky trap.</td>
+                <td>Rust में propiconazole/tebuconazole; seed treatment में carboxin+thiram/tebuconazole; aphid में neem oil या recommended systemic insecticide.</td>
+              </tr>
+              <tr>
+                <td>मक्का</td>
+                <td>Fall armyworm, stem borer, turcicum leaf blight, BLSB</td>
+                <td>Whorl में छेद और frass, पत्ती पर लंबे धब्बे, sheath पर चकत्ते.</td>
+                <td>Early scouting, pheromone trap, egg mass destroy, proper spacing, residue management.</td>
+                <td>FAW में emamectin benzoate/spinetoram/chlorantraniliprole; leaf blight में mancozeb/azoxystrobin. Whorl spray सही stage पर.</td>
+              </tr>
+              <tr>
+                <td>दालें</td>
+                <td>Wilt, yellow mosaic, pod borer, aphid</td>
+                <td>पौधा अचानक मुरझाना, पीली mosaic पत्ती, फली में छेद.</td>
+                <td>Seed treatment, crop rotation, infected plant removal, pheromone trap, bird perches.</td>
+                <td>Trichoderma + Rhizobium seed treatment; pod borer में emamectin/indoxacarb; whitefly control के लिए neem/label insecticide.</td>
+              </tr>
+              <tr>
+                <td>सरसों/राई</td>
+                <td>Aphid, alternaria blight, white rust</td>
+                <td>फूल/फली पर aphid colony, पत्ती पर भूरे धब्बे, सफेद फफोले.</td>
+                <td>Early sowing, yellow sticky trap, excess nitrogen avoid, affected leaves remove.</td>
+                <td>Aphid में neem oil/thiamethoxam/imidacloprid label dose; blight में mancozeb/metalaxyl+mancozeb.</td>
+              </tr>
+              <tr>
+                <td>आलू</td>
+                <td>Late blight, early blight, cutworm, aphid</td>
+                <td>पत्ती पर पानी जैसे धब्बे, तेजी से झुलसा, tuber rot risk.</td>
+                <td>Certified seed, ridge drainage, infected haulm removal, weather-based spray.</td>
+                <td>Mancozeb preventive; late blight severe में cymoxanil+mancozeb/metalaxyl+mancozeb; aphid में recommended systemic insecticide.</td>
+              </tr>
+              <tr>
+                <td>टमाटर/बैंगन/मिर्च</td>
+                <td>Fruit borer, leaf curl, bacterial wilt, blight</td>
+                <td>फल में छेद, पत्ती मुड़ना, पौधा मुरझाना, पत्ती/फल धब्बे.</td>
+                <td>Healthy nursery, pheromone trap, rouging, staking, drip irrigation, crop rotation.</td>
+                <td>Fruit borer में spinosad/emamectin; blight में copper oxychloride/mancozeb; viral disease में vector control only.</td>
+              </tr>
+              <tr>
+                <td>भिंडी/कद्दूवर्गीय</td>
+                <td>Yellow vein mosaic, fruit fly, powdery mildew</td>
+                <td>पीली vein, फल में सड़न/कीड़ा, पत्ती पर सफेद powder.</td>
+                <td>Resistant variety, yellow sticky trap, cue-lure trap, infected plant removal.</td>
+                <td>Whitefly/aphid के लिए neem/label insecticide; powdery mildew में sulphur/hexaconazole. Harvest waiting period याद रखें.</td>
+              </tr>
+              <tr>
+                <td>केला</td>
+                <td>Sigatoka, panama wilt, rhizome weevil</td>
+                <td>पत्ती पर streak, पौधा पीला, rhizome damage.</td>
+                <td>Tissue culture healthy plant, drainage, sucker treatment, sanitation, propping.</td>
+                <td>Trichoderma soil application; sigatoka में propiconazole/carbendazim rotation; weevil के लिए traps और label insecticide.</td>
+              </tr>
+              <tr>
+                <td>आम/लीची</td>
+                <td>Hopper, powdery mildew, anthracnose, fruit borer</td>
+                <td>फूल झड़ना, सफेद powder, काले धब्बे, फल damage.</td>
+                <td>Pruning, orchard sanitation, timely irrigation, bagging, pheromone/sticky traps.</td>
+                <td>Powdery mildew में wettable sulphur; anthracnose में carbendazim/mancozeb; hopper में neem/imidacloprid as advised.</td>
+              </tr>
+              <tr>
+                <td>मखाना</td>
+                <td>Leaf spot, aphid, aquatic weeds</td>
+                <td>पत्तियों पर धब्बे, growth कम, weeds से competition.</td>
+                <td>Clean pond, healthy seed, weed removal, balanced nutrient, local advisory.</td>
+                <td>दवा pond ecology को प्रभावित कर सकती है, इसलिए KVK/मत्स्य-कृषि expert से site-specific सलाह लें.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="subsidy">
+        <div class="section-heading">
+          <p class="eyebrow">Bihar Services & Subsidy</p>
+          <h2>बिहार में किसान सेवाएँ और आवेदन portals</h2>
+          <p>
+            अधिकतर Bihar agriculture schemes के लिए पहले DBT Agriculture Bihar पर farmer registration
+            और 13 digit किसान पंजीकरण संख्या जरूरी होती है.
+          </p>
+        </div>
+
+        <div class="scheme-alert">
+          <strong>पहला step:</strong>
+          DBT Agriculture Bihar पर किसान registration करें. किसान की उम्र 18+ हो, mobile number
+          Aadhaar से जुड़ा हो, active bank account हो और DBT/benefit payment के लिए account Aadhaar/NPCI
+          linked रहे. Registration के बाद 13 अंकों का किसान पंजीकरण नंबर सुरक्षित रखें.
+        </div>
+
+        <div class="scheme-grid">
+          <article class="scheme-card featured-card">
+            <span>मुख्य योजना</span>
+            <h3>समग्र गव्य विकास योजना</h3>
+            <p>
+              2 और 4 दुधारू पशु / बाछी-हिफर unit पर EBC/SC/ST को 75% और अन्य वर्गों को 50%
+              subsidy. 15 और 20 पशु की बड़ी unit पर सभी वर्गों के लिए 40% subsidy व्यवस्था.
+            </p>
+            <a href="https://dairy.bihar.gov.in/" target="_blank" rel="noopener">Apply / latest date देखें</a>
+          </article>
+          <article class="scheme-card">
+            <span>सुरक्षा</span>
+            <h3>दुधारू पशु बीमा</h3>
+            <p>गाय/भैंस की बीमारी, दुर्घटना या मृत्यु से नुकसान कम करने के लिए insurance cover. छोटे dairy farmer के लिए बहुत जरूरी.</p>
+          </article>
+          <article class="scheme-card">
+            <span>Training</span>
+            <h3>गव्य प्रशिक्षण</h3>
+            <p>Dairy science, पशु आहार, दूध उत्पादन, स्वास्थ्य और shed management सीखने के लिए department training updates देखें.</p>
+          </article>
+          <article class="scheme-card">
+            <span>Support</span>
+            <h3>KCC + PM-Kisan</h3>
+            <p>KCC से working capital/loan और PM-Kisan से yearly ₹6,000 support. Dairy के daily खर्च में मदद.</p>
+          </article>
+        </div>
+
+        <div class="table-wrap subsidy-table">
+          <table>
+            <thead>
+              <tr>
+                <th>2 पशु dairy unit</th>
+                <th>Official project cost</th>
+                <th>EBC / SC / ST</th>
+                <th>अन्य वर्ग</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>कुल लागत</td>
+                <td>₹1,74,000</td>
+                <td>75% subsidy</td>
+                <td>50% subsidy</td>
+              </tr>
+              <tr>
+                <td>अनुमानित subsidy</td>
+                <td>2 पशु, बीमा, transport, shed/other cost included</td>
+                <td>लगभग ₹1,30,500</td>
+                <td>लगभग ₹87,000</td>
+              </tr>
+              <tr>
+                <td>Cost break-up</td>
+                <td colspan="3">पशु ₹1,20,000 + बीमा ₹7,200 + परिवहन ₹20,000 + पशुशाला/अन्य ₹26,800</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="quick-list">
+          <article>
+            <h3>कृषि योजनाएँ</h3>
+            <p>कृषि इनपुट अनुदान, डीजल अनुदान, बीज अनुदान, जैविक खेती और गोदाम योजना के लिए DBT portal पर current window देखें.</p>
+          </article>
+          <article>
+            <h3>Documents ready रखें</h3>
+            <p>Aadhaar, mobile, bank passbook, photo, जाति/आवासीय प्रमाण पत्र, जमीन/पशुशाला paper या self declaration, training certificate.</p>
+          </article>
+          <article>
+            <h3>Office contact</h3>
+            <p>Dairy के लिए जिला गव्य विकास पदाधिकारी. कृषि के लिए किसान सलाहकार, कृषि समन्वयक, BAO या DAO से संपर्क करें.</p>
+          </article>
+        </div>
+
+        <div class="link-grid">
+          <article class="link-card" data-keywords="dbt bihar farmer registration 13 digit subsidy agriculture">
+            <span>Registration</span>
+            <h3>DBT Agriculture Bihar</h3>
+            <p>किसान registration, 13 digit ID, scheme application और DBT benefit tracking.</p>
+            <a href="https://dbtagriculture.bihar.gov.in/" target="_blank" rel="noopener">dbtagriculture.bihar.gov.in</a>
+          </article>
+          <article class="link-card" data-keywords="agristack bihar farmer registry enrollment status">
+            <span>Farmer Registry</span>
+            <h3>Bihar Farmer Registry</h3>
+            <p>AgriStack enrollment status, CSC login और farmer details services.</p>
+            <a href="https://bhfr.agristack.gov.in/" target="_blank" rel="noopener">bhfr.agristack.gov.in</a>
+          </article>
+          <article class="link-card" data-keywords="fasal sahayata bihar crop loss assistance cooperative">
+            <span>Crop Loss</span>
+            <h3>Bihar Rajya Fasal Sahayata</h3>
+            <p>Natural calamity से crop loss support. आवेदन से पहले DBT registration देखें.</p>
+            <a href="https://esahkari.bihar.gov.in/coop/MIS/BRFSY.aspx" target="_blank" rel="noopener">e-Sahkari BRFSY</a>
+          </article>
+          <article class="link-card" data-keywords="horticulture bihar subsidy fruit vegetable mushroom makhana cold storage">
+            <span>Horticulture</span>
+            <h3>Directorate of Horticulture Bihar</h3>
+            <p>फल, सब्जी, मशरूम, मखाना, cold storage, protected cultivation और बागवानी subsidy.</p>
+            <a href="https://horticulture.bihar.gov.in/" target="_blank" rel="noopener">horticulture.bihar.gov.in</a>
+          </article>
+          <article class="link-card" data-keywords="seed subsidy bihar brbn beej anudan kharif rabi">
+            <span>Seed</span>
+            <h3>Bihar Rajya Beej Nigam</h3>
+            <p>Subsidy seed application, foundation/certified seed और Kharif/Rabi seed demand.</p>
+            <a href="https://brbn.bihar.gov.in/Home/Demand" target="_blank" rel="noopener">brbn.bihar.gov.in</a>
+          </article>
+          <article class="link-card" data-keywords="soil testing bihar soil health card cstl">
+            <span>Soil</span>
+            <h3>Bihar Soil Testing</h3>
+            <p>Soil sample, soil health card और fertilizer recommendation के लिए state lab portal.</p>
+            <a href="https://biharsoilhealth.in/" target="_blank" rel="noopener">biharsoilhealth.in</a>
+          </article>
+          <article class="link-card" data-keywords="pm kisan bihar beneficiary status ekyc">
+            <span>PM-Kisan</span>
+            <h3>PM-Kisan</h3>
+            <p>e-KYC, beneficiary status और installment details.</p>
+            <a href="https://pmkisan.gov.in/" target="_blank" rel="noopener">pmkisan.gov.in</a>
+          </article>
+          <article class="link-card" data-keywords="mandi market price bihar enam agmarknet">
+            <span>Market</span>
+            <h3>Market Price and Mandi</h3>
+            <p>eNAM और AGMARKNET से mandi price, arrivals और commodity rates देखें.</p>
+            <a href="https://agmarknet.gov.in/" target="_blank" rel="noopener">agmarknet.gov.in</a>
+          </article>
+          <article class="link-card" data-keywords="kvk bihar advisory training disease pest">
+            <span>Advisory</span>
+            <h3>KVK District Support</h3>
+            <p>जिला level training, crop diagnosis, seed, livestock और dairy advisory.</p>
+            <a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener">kvk.icar.gov.in</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section makhana-section" id="makhana">
+        <div class="section-heading">
+          <p class="eyebrow">Bihar Makhana Farming</p>
+          <h2>मखाना farming, subsidy, बीज, tools और market support</h2>
+          <p>
+            बिहार में मखाना के लिए Horticulture Department और National Makhana Board के जरिए खेती,
+            बीज, training, processing, branding, export, FPO और KCC/loan linkage जैसी सुविधाएँ दी जा रही हैं.
+          </p>
+        </div>
+
+        <div class="makhana-hero-card">
+          <div>
+            <span>सबसे जरूरी बात</span>
+            <h3>पहले छोटा area लेकर सीखें</h3>
+            <p>
+              मखाना labour-intensive crop है. शुरुआत में 0.25 acre या 0.5 acre से सीखना practical है.
+              Saharsa, Kosi, Mithila और Seemanchal belt में नीची/जलजमाव वाली जमीन इसके लिए उपयोगी हो सकती है.
+            </p>
+          </div>
+          <a class="btn primary" href="https://horticulture.bihar.gov.in/HortMIS/Makhana/DashboardMakhana.aspx" target="_blank" rel="noopener">MIDH Apply</a>
+        </div>
+
+        <div class="scheme-grid">
+          <article class="scheme-card featured-card" data-keywords="makhana subsidy 97000 36375 hectare midh">
+            <span>Subsidy</span>
+            <h3>MIDH मखाना योजना 2025-26</h3>
+            <p>
+              Field system से मखाना क्षेत्र विस्तार के लिए unit cost ₹97,000/ha और first year assistance
+              ₹36,375/ha बताई गई है. Minimum 0.25 acre और maximum 5 acre तक लाभ.
+            </p>
+            <a href="https://horticulture.bihar.gov.in/HortMIS/Makhana/DashboardMakhana.aspx" target="_blank" rel="noopener">Dashboard / apply</a>
+          </article>
+          <article class="scheme-card" data-keywords="national makhana board processing export fpo training">
+            <span>Board</span>
+            <h3>National Makhana Board</h3>
+            <p>Production, seed, training, processing, branding, market, export, certification और FPO support के लिए central sector scheme.</p>
+            <a href="https://horticulture.bihar.gov.in/HORTMIS/MakhanaBoard/MBOnlineApp.aspx" target="_blank" rel="noopener">Board apply</a>
+          </article>
+          <article class="scheme-card" data-keywords="makhana toolkit subsidy tools kit aunka ganj kara chalni thapi">
+            <span>Tools</span>
+            <h3>मखाना tools kit</h3>
+            <p>औंका/गाँज, कारा, खेन्ची, चलनी, चटाई, अफरा, थापी जैसे tools. Previous state scheme में ₹22,100 kit पर 75% subsidy दिखी थी.</p>
+          </article>
+          <article class="scheme-card" data-keywords="makhana seed swarna vaidehi sabour makhana 1 225 kg">
+            <span>Seed</span>
+            <h3>उन्नत बीज</h3>
+            <p>स्वर्ण वैदेही और सबौर मखाना-1 जैसे improved varieties. Recommended seed पर maximum ₹225/kg तक subsidy का उल्लेख.</p>
+          </article>
+        </div>
+
+        <div class="district-panel">
+          <h3>योजना वाले प्रमुख जिले</h3>
+          <p>MIDH मखाना योजना 16 जिलों में और National Makhana Board 21 जिलों में लागू बताया गया है.</p>
+          <div class="district-tags">
+            <span>कटिहार</span><span>पूर्णिया</span><span>दरभंगा</span><span>मधुबनी</span><span>किशनगंज</span><span>सुपौल</span><span>अररिया</span><span>मधेपुरा</span><span>सहरसा</span><span>खगड़िया</span><span>समस्तीपुर</span><span>भागलपुर</span><span>सीतामढ़ी</span><span>पूर्वी चम्पारण</span><span>पश्चिम चम्पारण</span><span>मुजफ्फरपुर</span><span>वैशाली</span><span>सारण</span><span>सीवान</span><span>गोपालगंज</span><span>पटना</span>
+          </div>
+        </div>
+
+        <div class="table-wrap subsidy-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Topic</th>
+                <th>Practical जानकारी</th>
+                <th>Farmer action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>खेती का तरीका</td>
+                <td>तालाब प्रणाली और खेत प्रणाली. Field system में नीची जमीन, मजबूत मेड़ और 1-2 फीट शांत पानी जरूरी.</td>
+                <td>Local उद्यान अधिकारी/KVK से field suitability check कराएँ.</td>
+              </tr>
+              <tr>
+                <td>Crop duration</td>
+                <td>लंबी अवधि crop. Sabour Makhana-1 seed-to-seed maturity करीब 240-250 दिन बताई गई है.</td>
+                <td>Labour, पानी और harvesting calendar पहले से plan करें.</td>
+              </tr>
+              <tr>
+                <td>Processing</td>
+                <td>Raw seed सुखाने के बाद roasting, tempering और popping से सफेद मखाना बनता है.</td>
+                <td>Raw seed बेचने से profit कम; processing/grading/packaging सीखें.</td>
+              </tr>
+              <tr>
+                <td>Market</td>
+                <td>Mithila Makhana GI tag से branding और export potential बढ़ा है.</td>
+                <td>FPO, trader, packaging unit या direct market से जुड़ें.</td>
+              </tr>
+              <tr>
+                <td>Risk</td>
+                <td>पानी बहुत कम/ज्यादा, high labour cost, poor seed, tough harvesting, market rate fluctuation.</td>
+                <td>पहले 0.25-0.5 acre से trial करें, फिर area बढ़ाएँ.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="quick-list">
+          <article>
+            <h3>Apply documents</h3>
+            <p>Aadhaar, mobile, bank passbook, DBT registration number, जमीन का कागज/राजस्व रसीद, photo, जाति प्रमाण पत्र और lease हो तो एकरारनामा.</p>
+          </article>
+          <article>
+            <h3>Best plan for Saharsa</h3>
+            <p>जिला उद्यान कार्यालय से 2025-26/2026-27 application status पूछें. DBT registration कराएँ और नीची जमीन/lease papers ready रखें.</p>
+          </article>
+          <article>
+            <h3>Profit point</h3>
+            <p>असली value processing, grading, packaging और direct/FPO market में है. सिर्फ raw seed बेचने पर margin कम रह सकता है.</p>
+          </article>
+        </div>
+
+        <div class="link-grid compact-links">
+          <article class="link-card" data-keywords="makhana midh apply dashboard horticulture bihar">
+            <span>MIDH Apply</span>
+            <h3>मखाना से सम्बंधित योजना 2025-26</h3>
+            <p>मखाना क्षेत्र विस्तार, seed/input और cultivation assistance के लिए official dashboard.</p>
+            <a href="https://horticulture.bihar.gov.in/HortMIS/Makhana/DashboardMakhana.aspx" target="_blank" rel="noopener">DashboardMakhana.aspx</a>
+          </article>
+          <article class="link-card" data-keywords="national makhana board apply online horticulture bihar">
+            <span>NMB Apply</span>
+            <h3>National Makhana Board Apply</h3>
+            <p>Production, processing, branding, export और FPO support के लिए application page.</p>
+            <a href="https://horticulture.bihar.gov.in/HORTMIS/MakhanaBoard/MBOnlineApp.aspx" target="_blank" rel="noopener">MBOnlineApp.aspx</a>
+          </article>
+          <article class="link-card" data-keywords="national makhana board guideline pdf">
+            <span>Guideline</span>
+            <h3>NMB Operational Guideline</h3>
+            <p>Eligibility, objectives, value chain support, training और implementation details.</p>
+            <a href="https://horticulture.bihar.gov.in/HORTMIS/MakhanaBoard/Documents/SchemeDocuments/Guideline/NMB_OperationalGuideline.pdf" target="_blank" rel="noopener">Guideline PDF</a>
+          </article>
+          <article class="link-card" data-keywords="makhana vikas yojana old state page online app">
+            <span>State Scheme</span>
+            <h3>Makhana Vikas Yojana</h3>
+            <p>क्षेत्र विस्तार, उन्नत बीज, training, tools kit और improved variety distribution info.</p>
+            <a href="https://horticulture.bihar.gov.in/HortMIS/Makhana/OnlineAppMakhana.aspx" target="_blank" rel="noopener">OnlineAppMakhana.aspx</a>
+          </article>
+          <article class="link-card" data-keywords="makhana beneficiary list status horticulture bihar">
+            <span>Status</span>
+            <h3>Beneficiary List</h3>
+            <p>Financial year और district चुनकर मखाना योजना के लाभुकों की list देखें.</p>
+            <a href="https://horticulture.bihar.gov.in/HortMIS/Status_BeneficiaryList/MakhanaVikasList.aspx" target="_blank" rel="noopener">MakhanaVikasList.aspx</a>
+          </article>
+          <article class="link-card" data-keywords="dbt agriculture bihar farmer registration makhana">
+            <span>Registration</span>
+            <h3>DBT Bihar Registration</h3>
+            <p>मखाना योजना apply से पहले 13 digit किसान registration number जरूरी हो सकता है.</p>
+            <a href="https://dbtagriculture.bihar.gov.in/" target="_blank" rel="noopener">dbtagriculture.bihar.gov.in</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section muted-band" id="dairy">
+        <div class="section-heading">
+          <p class="eyebrow">Dairy Farming Bihar</p>
+          <h2>डेयरी farming, पशु स्वास्थ्य और subsidy</h2>
+          <p>
+            बिहार में dairy के लिए Dairy Development Directorate, Animal & Fisheries Resources Department,
+            Sudha/COMFED और central DAHD schemes उपयोगी हैं.
+          </p>
+        </div>
+
+        <div class="model-strip">
+          <div>
+            <span>Best starter model</span>
+            <strong>2 गाय/भैंस + पशु बीमा + KCC + चारा खेती + PM-Kisan</strong>
+          </div>
+          <p>
+            कम budget में पहले 2 पशु से experience लें. 6-12 महीने milk market, Sudha/private buyer,
+            feed cost और veterinary support समझने के बाद 4 या 10 पशु तक बढ़ें.
+          </p>
+        </div>
+
+        <div class="dairy-grid">
+          <article class="guide-card">
+            <h3>Start करने से पहले</h3>
+            <ul>
+              <li>2-4 milch animal से शुरुआत practical रहती है.</li>
+              <li>Local market या Sudha milk society से procurement route confirm करें.</li>
+              <li>हरा चारा, सूखा चारा, concentrate और mineral mixture की monthly cost calculate करें.</li>
+              <li>Shed में slope floor, drainage, clean water और shade रखें.</li>
+            </ul>
+          </article>
+          <article class="guide-card">
+            <h3>Breed और feeding</h3>
+            <ul>
+              <li>Desi: Sahiwal, Gir, Red Sindhi; crossbred: Jersey/HF cross; buffalo: Murrah type.</li>
+              <li>Azolla, napier, maize fodder, berseem, mineral mixture और salt नियमित दें.</li>
+              <li>Calving के बाद veterinary guidance से ration और calcium support लें.</li>
+              <li>Milk yield के हिसाब से concentrate दें, fixed अंदाज से नहीं.</li>
+            </ul>
+          </article>
+          <article class="guide-card">
+            <h3>Animal disease care</h3>
+            <ul>
+              <li>FMD, HS, BQ, Brucellosis vaccination schedule local vet से बनवाएँ.</li>
+              <li>Deworming और tick control seasonal रखें.</li>
+              <li>Mastitis से बचाव: clean milking, teat dip, dry bedding.</li>
+              <li>बुखार, खुर में घाव, दूध कम होना या बार-बार बैठना emergency sign है.</li>
+            </ul>
+          </article>
+          <article class="guide-card">
+            <h3>Subsidy और loan</h3>
+            <ul>
+              <li>Dairy Bihar portal पर active scheme और application window देखें.</li>
+              <li>Bank account Aadhaar/NPCI linked रखें.</li>
+              <li>Training, site verification और cattle purchase proof संभाल कर रखें.</li>
+              <li>Insurance के लिए Pashu Bima/available dairy schemes check करें.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="table-wrap subsidy-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Apply करने से पहले</th>
+                <th>क्या check करें</th>
+                <th>क्यों जरूरी है</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>DBT registration</td>
+                <td>13 digit किसान registration number, Aadhaar linked mobile और bank account.</td>
+                <td>योजना का पैसा DBT से आता है और application verification इसी से जुड़ता है.</td>
+              </tr>
+              <tr>
+                <td>Dairy portal</td>
+                <td>Application window खुली है या नहीं. Dates हर साल बदल सकती हैं.</td>
+                <td>2025-26 में online application window 25.06.2025 से 25.07.2025 तक रखी गई थी.</td>
+              </tr>
+              <tr>
+                <td>Market survey</td>
+                <td>Sudha collection center, private buyer, milk rate, transport और payment cycle.</td>
+                <td>Subsidy के बावजूद दूध बिके बिना dairy profitable नहीं होगी.</td>
+              </tr>
+              <tr>
+                <td>Animal purchase</td>
+                <td>Milk yield खुद देखकर खरीदें; health certificate, insurance, breed और calving record देखें.</td>
+                <td>Seller की बात पर ही भरोसा करने से नुकसान हो सकता है.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="quick-list">
+          <article>
+            <h3>Daily management</h3>
+            <p>हरा चारा, सूखा चारा, दाना, mineral mixture, clean water और clean shed को daily routine बनाएं.</p>
+          </article>
+          <article>
+            <h3>Health protection</h3>
+            <p>Vaccination, deworming, tick control और mastitis prevention schedule local veterinary doctor से बनवाएं.</p>
+          </article>
+          <article>
+            <h3>Extra income</h3>
+            <p>गोबर से vermicompost, compost pit, gobar gas या organic manure बनाकर खेत और income दोनों में फायदा लें.</p>
+          </article>
+        </div>
+
+        <div class="link-grid compact-links">
+          <article class="link-card" data-keywords="dairy bihar subsidy gavya vikas gaay pashu">
+            <span>Dairy Bihar</span>
+            <h3>गव्य विकास निदेशालय</h3>
+            <p>Dairy schemes, application login, directory और helpline: 1800 345 6681.</p>
+            <a href="https://dairy.bihar.gov.in/" target="_blank" rel="noopener">dairy.bihar.gov.in</a>
+          </article>
+          <article class="link-card" data-keywords="animal husbandry bihar fisheries resources department">
+            <span>Animal Dept</span>
+            <h3>Animal & Fisheries Resources</h3>
+            <p>पशुपालन, dairy, fisheries और state programmes.</p>
+            <a href="https://state.bihar.gov.in/ahd/" target="_blank" rel="noopener">state.bihar.gov.in/ahd</a>
+          </article>
+          <article class="link-card" data-keywords="sudha comfed bihar milk dairy cooperative">
+            <span>Milk Society</span>
+            <h3>Sudha / COMFED</h3>
+            <p>Milk cooperative, procurement network और dairy product information.</p>
+            <a href="https://sudha.coop/" target="_blank" rel="noopener">sudha.coop</a>
+          </article>
+          <article class="link-card" data-keywords="dahd rgm npdd ahidf dairy central schemes">
+            <span>Central Schemes</span>
+            <h3>DAHD Schemes</h3>
+            <p>Rashtriya Gokul Mission, NPDD, AHIDF, livestock health programmes.</p>
+            <a href="https://www.dahd.gov.in/en/schemes-programmes" target="_blank" rel="noopener">dahd.gov.in</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="links">
+        <div class="section-heading link-heading">
+          <div>
+            <p class="eyebrow">Bihar Official Links</p>
+            <h2>सारे जरूरी Bihar agriculture links</h2>
+            <p>Search में crop, disease, dairy, seed, DBT, subsidy या portal name लिखकर filter करें.</p>
+          </div>
+          <label class="search-box">
+            <span>Search links</span>
+            <input id="linkSearch" type="search" placeholder="जैसे dairy, seed, fasal, makhana..." />
+          </label>
+        </div>
+
+        <div class="state-list bihar-links">
+          <a href="https://state.bihar.gov.in/krishi/" target="_blank" rel="noopener">
+            <strong>Bihar Agriculture Department</strong>
+            <span>state.bihar.gov.in/krishi</span>
+          </a>
+          <a href="https://dbtagriculture.bihar.gov.in/" target="_blank" rel="noopener">
+            <strong>DBT Agriculture Bihar</strong>
+            <span>dbtagriculture.bihar.gov.in</span>
+          </a>
+          <a href="https://www.biharkrishi.in/" target="_blank" rel="noopener">
+            <strong>Bihar Krishi Platform</strong>
+            <span>biharkrishi.in</span>
+          </a>
+          <a href="https://horticulture.bihar.gov.in/" target="_blank" rel="noopener">
+            <strong>Horticulture Bihar</strong>
+            <span>horticulture.bihar.gov.in</span>
+          </a>
+          <a href="https://brbn.bihar.gov.in/Home/Demand" target="_blank" rel="noopener">
+            <strong>Bihar Seed Application</strong>
+            <span>brbn.bihar.gov.in</span>
+          </a>
+          <a href="https://biharsoilhealth.in/" target="_blank" rel="noopener">
+            <strong>Bihar Soil Health</strong>
+            <span>biharsoilhealth.in</span>
+          </a>
+          <a href="https://esahkari.bihar.gov.in/coop/MIS/BRFSY.aspx" target="_blank" rel="noopener">
+            <strong>Fasal Sahayata Yojana</strong>
+            <span>esahkari.bihar.gov.in</span>
+          </a>
+          <a href="https://dairy.bihar.gov.in/" target="_blank" rel="noopener">
+            <strong>Dairy Development Bihar</strong>
+            <span>dairy.bihar.gov.in</span>
+          </a>
+          <a href="https://state.bihar.gov.in/ahd/" target="_blank" rel="noopener">
+            <strong>Animal & Fisheries Dept</strong>
+            <span>state.bihar.gov.in/ahd</span>
+          </a>
+          <a href="https://sudha.coop/" target="_blank" rel="noopener">
+            <strong>Sudha / COMFED</strong>
+            <span>sudha.coop</span>
+          </a>
+          <a href="https://bausabour.ac.in/" target="_blank" rel="noopener">
+            <strong>Bihar Agricultural University</strong>
+            <span>bausabour.ac.in</span>
+          </a>
+          <a href="https://rpcau.ac.in/" target="_blank" rel="noopener">
+            <strong>RPCAU Pusa</strong>
+            <span>rpcau.ac.in</span>
+          </a>
+          <a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener">
+            <strong>KVK Portal</strong>
+            <span>kvk.icar.gov.in</span>
+          </a>
+          <a href="https://pmkisan.gov.in/" target="_blank" rel="noopener">
+            <strong>PM-Kisan</strong>
+            <span>pmkisan.gov.in</span>
+          </a>
+          <a href="https://agmarknet.gov.in/" target="_blank" rel="noopener">
+            <strong>AGMARKNET Mandi Prices</strong>
+            <span>agmarknet.gov.in</span>
+          </a>
+          <a href="https://www.enam.gov.in/" target="_blank" rel="noopener">
+            <strong>eNAM</strong>
+            <span>enam.gov.in</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>बिहार कृषि सेवा</p>
+      <span>Official portals + practical crop and dairy guide. Use KVK/local officer for final dose and field diagnosis.</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
