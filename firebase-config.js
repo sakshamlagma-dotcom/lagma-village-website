@@ -3,12 +3,6 @@ window.LAGMA_SITE_OPTIONS = {
   enableFirebase: true
 };
 
-window.LAGMA_INTEGRATIONS = {
-  whatsappNumber: "917677773236",
-  whatsappMessage: "Namaste, mujhe Lagma Village website se jankari chahiye.",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Lagma%2C%20Saharsa%2C%20Bihar"
-};
-
 window.LAGMA_FIREBASE_CONFIG = {
   apiKey: "AIzaSyAUkYG6pWWUMLYPKwRq62hjsogHN-1JmqA",
   authDomain: "lagma-village-notes.firebaseapp.com",

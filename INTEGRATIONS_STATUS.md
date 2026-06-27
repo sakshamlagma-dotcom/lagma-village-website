@@ -5,7 +5,7 @@
 - GitHub Pages hosting
 - Google Analytics (`G-PZQ45J2B8G`)
 - Google Maps embed and directions
-- WhatsApp and phone contact for Vasudha Kendra
+- Phone contact for Vasudha Kendra
 - Firebase Firestore visitor notes and website likes (within Spark plan limits)
 - Cloudinary gallery uploads (within free-plan limits)
 - Installable PWA with offline cache and app shortcuts

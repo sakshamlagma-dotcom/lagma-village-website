@@ -1339,21 +1339,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const integrationOptions = window.LAGMA_INTEGRATIONS || {};
-  const whatsappNumber = String(integrationOptions.whatsappNumber || "917677773236").replace(/\D/g, "");
-  if (whatsappNumber && !document.querySelector(".whatsapp-float")) {
-    const whatsappLink = document.createElement("a");
-    const whatsappMessage = integrationOptions.whatsappMessage || "Namaste, mujhe Lagma Village website se jankari chahiye.";
-    whatsappLink.className = "whatsapp-float";
-    whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-    whatsappLink.target = "_blank";
-    whatsappLink.rel = "noopener";
-    whatsappLink.setAttribute("aria-label", "WhatsApp par Lagma digital seva se sampark karein");
-    whatsappLink.dataset.analyticsEvent = "whatsapp_contact";
-    whatsappLink.textContent = "WhatsApp";
-    document.body.appendChild(whatsappLink);
-  }
-
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a[href]");
     if (!link || typeof window.gtag !== "function") return;
@@ -1361,7 +1346,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const href = link.href;
     let eventName = link.dataset.analyticsEvent || "";
     if (!eventName && href.startsWith("tel:")) eventName = "phone_call";
-    if (!eventName && href.includes("wa.me/")) eventName = "whatsapp_contact";
     if (!eventName && (href.includes("google.com/maps") || href.includes("maps.google.com"))) eventName = "map_open";
     if (!eventName && link.origin && link.origin !== window.location.origin) eventName = "outbound_click";
     if (!eventName) return;
