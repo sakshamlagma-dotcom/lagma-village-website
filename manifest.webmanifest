@@ -5,8 +5,27 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "categories": ["education", "government", "utilities"],
   "background_color": "#fffdf7",
   "theme_color": "#1f4f37",
+  "shortcuts": [
+    {
+      "name": "Village Services",
+      "short_name": "Services",
+      "url": "services.html"
+    },
+    {
+      "name": "Latest Notices",
+      "short_name": "Notices",
+      "url": "notification.html"
+    },
+    {
+      "name": "Photo Gallery",
+      "short_name": "Gallery",
+      "url": "gallery.html"
+    }
+  ],
   "icons": [
     {
       "src": "icons/lagma-icon-192.png",
