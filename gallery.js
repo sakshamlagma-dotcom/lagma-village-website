@@ -34,6 +34,7 @@ const categories = [
 ];
 
 const uploadedStorageKey = "lagma-gallery-uploaded-photos";
+const legacyUploadedStorageKey = "lagma-uploaded-gallery-photos";
 const cloudinaryCloudName = "dx7k5hkgl";
 const cloudinaryUploadPreset = "lagma_gallery_upload";
 const cloudinaryGalleryTag = "lagma-village-gallery";
@@ -69,7 +70,26 @@ const progressBar = progress?.querySelector("span");
 
 function getUploadedPhotos() {
   try {
-    return JSON.parse(localStorage.getItem(uploadedStorageKey) || "[]");
+    const currentPhotos = JSON.parse(localStorage.getItem(uploadedStorageKey) || "[]");
+    const legacyPhotos = JSON.parse(localStorage.getItem(legacyUploadedStorageKey) || "[]");
+    const photosByUrl = new Map();
+
+    [...currentPhotos, ...legacyPhotos].forEach((photo) => {
+      const image = photo?.image || photo?.url;
+      if (!image || photosByUrl.has(image)) return;
+      photosByUrl.set(image, {
+        title: photo.title || photo.caption || "Uploaded Photo",
+        category: photo.category || "People of Lagma",
+        description: photo.description || "Lagma gallery me upload kiya gaya photo.",
+        image
+      });
+    });
+
+    const mergedPhotos = [...photosByUrl.values()];
+    if (legacyPhotos.length) {
+      localStorage.setItem(uploadedStorageKey, JSON.stringify(mergedPhotos.slice(0, 60)));
+    }
+    return mergedPhotos;
   } catch (error) {
     return [];
   }
@@ -110,6 +130,7 @@ function setUploadStatus(message, type = "") {
 }
 
 function renderFilters() {
+  if (!filters) return;
   filters.innerHTML = categories.map((category) => `
     <button class="filter-button${category === state.activeCategory ? " is-active" : ""}" type="button" data-category="${category}">
       ${category}
@@ -125,7 +146,7 @@ function renderGallery() {
   grid.innerHTML = state.visiblePhotos.map((photo, index) => `
     <article class="gallery-card" style="animation-delay:${index * 25}ms" data-index="${index}" tabindex="0">
       <div class="card-image">
-        <img src="${photo.image}" alt="Lagma gallery photo" loading="lazy">
+        <img src="${photo.image}" alt="${photo.title || "Lagma gallery photo"}" loading="lazy" decoding="async">
       </div>
     </article>
   `).join("");

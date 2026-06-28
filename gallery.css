@@ -24,9 +24,9 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  font-family: "Georgia", "Noto Serif Devanagari", serif;
+  font-family: "Trebuchet MS", "Noto Serif Devanagari", sans-serif;
   background:
-    linear-gradient(rgba(255, 247, 223, 0.88), rgba(255, 247, 223, 0.92)),
+    linear-gradient(rgba(255, 247, 223, 0.9), rgba(255, 247, 223, 0.94)),
     url("mithila-pattern.svg"),
     radial-gradient(circle at top left, rgba(229, 138, 34, 0.2), transparent 34%),
     var(--cream);
@@ -129,35 +129,39 @@ img {
 
 .gallery-system {
   display: grid;
-  gap: 22px;
-  width: min(1180px, calc(100% - 32px));
+  gap: 18px;
+  width: min(1320px, calc(100% - 28px));
   margin: 0 auto;
-  padding: clamp(24px, 5vw, 58px) 0 clamp(34px, 6vw, 78px);
+  padding: clamp(18px, 4vw, 36px) 0 clamp(34px, 6vw, 72px);
 }
 
 .system-title {
   position: relative;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 34px;
-  padding: clamp(22px, 4vw, 36px);
-  background: rgba(255, 252, 242, 0.82);
-  box-shadow: var(--shadow);
+  border-radius: 30px;
+  padding: clamp(20px, 4vw, 34px);
+  background:
+    linear-gradient(135deg, rgba(125, 31, 42, 0.94), rgba(31, 107, 72, 0.9)),
+    url("mithila-pattern.svg");
+  background-size: auto, 190px;
+  box-shadow: 0 22px 58px rgba(75, 39, 16, 0.18);
   backdrop-filter: blur(16px);
 }
 
 .system-title {
-  padding-left: clamp(0px, 2vw, 18px);
+  padding-left: clamp(20px, 4vw, 34px);
 }
 
 .system-title::before {
   content: "";
   position: absolute;
-  left: 16px;
-  top: 20px;
-  width: 5px;
-  height: calc(100% - 40px);
-  border-radius: 999px;
-  background: linear-gradient(var(--saffron), var(--maroon), var(--green));
+  right: -70px;
+  bottom: -110px;
+  width: 280px;
+  height: 280px;
+  border: 34px solid rgba(255, 216, 131, 0.2);
+  border-radius: 50%;
 }
 
 .eyebrow {
@@ -168,18 +172,23 @@ img {
   text-transform: uppercase;
 }
 
+.system-title .eyebrow {
+  color: #ffe6a5;
+}
+
 .system-title h1 {
   margin: 0;
   max-width: 780px;
-  color: var(--maroon);
-  font-size: clamp(3rem, 8vw, 6.4rem);
-  line-height: 0.92;
+  color: #fff7df;
+  font-family: "Georgia", "Noto Serif Devanagari", serif;
+  font-size: clamp(2.5rem, 7vw, 5.4rem);
+  line-height: 0.96;
 }
 
 .system-title p:not(.eyebrow) {
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   max-width: 620px;
-  color: var(--muted);
+  color: rgba(255, 247, 223, 0.9);
   font: 1.04rem/1.8 "Trebuchet MS", sans-serif;
 }
 
@@ -218,21 +227,30 @@ img {
   text-transform: uppercase;
 }
 
+.gallery-workspace {
+  display: grid;
+  grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
 .gallery-dashboard {
   margin: 0;
   width: 100%;
-  padding: clamp(20px, 4vw, 34px);
+  padding: clamp(18px, 3vw, 28px);
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 34px;
+  border-radius: 30px;
   background: rgba(255, 252, 242, 0.82);
   box-shadow: var(--shadow);
   backdrop-filter: blur(16px);
 }
 
 .gallery-upload-box {
-  padding: clamp(20px, 4vw, 34px);
+  position: sticky;
+  top: 88px;
+  padding: clamp(18px, 3vw, 26px);
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 34px;
+  border-radius: 30px;
   background: rgba(255, 252, 242, 0.82);
   box-shadow: var(--shadow);
   backdrop-filter: blur(16px);
@@ -249,7 +267,8 @@ img {
 .upload-heading h2 {
   margin: 0;
   color: var(--maroon);
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-family: "Georgia", "Noto Serif Devanagari", serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
 }
 
 .upload-heading span {
@@ -268,11 +287,11 @@ img {
 
 .inline-drop-zone {
   display: grid;
-  min-height: 190px;
+  min-height: 150px;
   place-items: center;
   border: 2px dashed rgba(125, 31, 42, 0.32);
-  border-radius: 28px;
-  padding: 26px;
+  border-radius: 24px;
+  padding: 22px;
   color: var(--maroon);
   background:
     linear-gradient(rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.64)),
@@ -293,7 +312,7 @@ img {
 }
 
 .inline-drop-zone strong {
-  font-size: 1.25rem;
+  font-size: 1.06rem;
 }
 
 .inline-drop-zone small {
@@ -329,7 +348,7 @@ img {
 
 .inline-upload-fields {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 14px;
 }
 
@@ -407,7 +426,8 @@ img {
 .dashboard-heading h2 {
   margin: 0;
   color: var(--maroon);
-  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-family: "Georgia", "Noto Serif Devanagari", serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
 }
 
 .dashboard-heading p:not(.eyebrow) {
@@ -419,7 +439,7 @@ img {
 .search-box {
   display: grid;
   gap: 8px;
-  width: min(100%, 360px);
+  width: min(100%, 300px);
   color: var(--maroon);
   font: 900 0.78rem "Trebuchet MS", sans-serif;
   text-transform: uppercase;
@@ -442,10 +462,10 @@ img {
 }
 
 .filter-bar {
-  display: none;
+  display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 28px 0 18px;
+  margin: 22px 0 18px;
 }
 
 .filter-button {
@@ -481,20 +501,31 @@ img {
 
 .premium-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
 }
 
 .gallery-card {
+  position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 18px 42px rgba(75, 39, 16, 0.12);
+  border: 3px solid rgba(255, 247, 223, 0.78);
+  border-radius: 22px;
+  background: #fff8ec;
+  box-shadow: 0 14px 30px rgba(75, 39, 16, 0.14);
   cursor: pointer;
   opacity: 0;
   transform: translateY(16px);
   animation: cardIn 420ms ease forwards;
+}
+
+.gallery-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  z-index: 2;
+  border: 1px dashed rgba(255, 247, 223, 0.72);
+  border-radius: 16px;
+  pointer-events: none;
 }
 
 .gallery-card:hover img {
@@ -508,15 +539,15 @@ img {
 .card-image {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
 }
 
 .card-image::after {
   content: "";
   position: absolute;
-  inset: 10px;
-  border: 1px dashed rgba(255, 247, 223, 0.7);
-  border-radius: 18px;
+  inset: auto 0 0;
+  height: 48%;
+  background: linear-gradient(transparent, rgba(35, 21, 15, 0.52));
   pointer-events: none;
 }
 
@@ -660,6 +691,18 @@ img {
 }
 
 @media (max-width: 920px) {
+  .gallery-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-upload-box {
+    position: static;
+  }
+
+  .gallery-dashboard {
+    order: -1;
+  }
+
   .dashboard-heading {
     align-items: flex-start;
     flex-direction: column;
