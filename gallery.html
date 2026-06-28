@@ -50,11 +50,11 @@
           <span>Live gallery</span>
         </div>
 
-        <form id="gallery-upload-form" class="inline-upload-form">
+        <form id="gallery-upload-form" class="inline-upload-form" data-dedicated-gallery-upload>
           <label class="inline-drop-zone" id="inline-drop-zone" for="gallery-photo-input">
-            <input id="gallery-photo-input" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" required>
+            <input id="gallery-photo-input" name="photo" type="file" accept="image/*,.heic,.heif,.avif,.jfif,.tif,.tiff,.bmp" required>
             <strong>Photo choose karein</strong>
-            <small>JPG, PNG, WEBP, HEIC supported</small>
+            <small>Phone ki sabhi photo formats supported</small>
           </label>
 
           <div class="inline-preview" id="gallery-upload-preview" hidden>
@@ -65,13 +65,13 @@
           <div class="inline-upload-fields">
             <label>
               Photo title
-              <input id="photo-title" name="title" type="text" placeholder="Photo title" maxlength="80" required>
+              <input id="photo-title" name="title" type="text" placeholder="Optional — naam automatic ban jayega" maxlength="80">
             </label>
 
             <label>
               Category
-              <select id="photo-category" name="category" required>
-                <option value="">Select category</option>
+              <select id="photo-category" name="category">
+                <option value="">Optional category</option>
                 <option>Village Life</option>
                 <option>Culture & Festival</option>
                 <option>School & Education</option>
@@ -83,7 +83,7 @@
 
             <label class="full-field">
               Description
-              <textarea id="photo-description" name="description" rows="3" placeholder="Short description" maxlength="220" required></textarea>
+              <textarea id="photo-description" name="description" rows="3" placeholder="Optional description" maxlength="220"></textarea>
             </label>
           </div>
 
@@ -130,6 +130,6 @@
   </div>
 
   <script src="web.js?v=24"></script>
-  <script src="gallery.js?v=7"></script>
+  <script src="gallery.js?v=8"></script>
 </body>
 </html>

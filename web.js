@@ -737,7 +737,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const uploadForm = document.querySelector("#gallery-upload-form");
-  if (uploadForm) {
+  if (uploadForm && !uploadForm.hasAttribute("data-dedicated-gallery-upload")) {
     const photoInput = uploadForm.querySelector("#gallery-photo-input");
     const preview = uploadForm.querySelector("#gallery-upload-preview");
     const status = uploadForm.querySelector("#gallery-upload-status");
