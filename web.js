@@ -50,6 +50,75 @@ if ("serviceWorker" in navigator && canUsePwaInstall()) {
 document.addEventListener("DOMContentLoaded", () => {
   const menuButton = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".site-nav, .gallery-nav");
+  const homeWeatherBadge = document.querySelector(".home-weather-badge");
+
+  if (homeWeatherBadge) {
+    const temperatureNode = homeWeatherBadge.querySelector("#home-weather-temp");
+    const conditionNode = homeWeatherBadge.querySelector("#home-weather-condition");
+    const cacheKey = "lagma-home-weather-v1";
+    const cacheDuration = 15 * 60 * 1000;
+    const conditionLabels = {
+      0: "साफ",
+      1: "साफ",
+      2: "हल्के बादल",
+      3: "बादल",
+      45: "कोहरा",
+      48: "कोहरा",
+      51: "बूंदाबांदी",
+      53: "बूंदाबांदी",
+      55: "बूंदाबांदी",
+      61: "हल्की बारिश",
+      63: "बारिश",
+      65: "तेज बारिश",
+      80: "बौछार",
+      81: "बौछार",
+      82: "तेज बौछार",
+      95: "आंधी",
+      96: "आंधी",
+      99: "ओलावृष्टि"
+    };
+
+    const renderHomeWeather = (weather) => {
+      if (!Number.isFinite(Number(weather?.temperature))) return;
+      const temperature = Math.round(Number(weather.temperature));
+      const condition = conditionLabels[weather.code] || "मौसम";
+      temperatureNode.textContent = `${temperature}°C`;
+      conditionNode.textContent = condition;
+      homeWeatherBadge.setAttribute("aria-label", `Lagma ${temperature} degree Celsius, ${condition}. पूरा मौसम खोलें`);
+    };
+
+    const loadHomeWeather = async () => {
+      try {
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
+        if (cached?.savedAt && Date.now() - cached.savedAt < cacheDuration) {
+          renderHomeWeather(cached);
+          return;
+        }
+
+        const params = new URLSearchParams({
+          latitude: "25.7489959",
+          longitude: "86.6731798",
+          current: "temperature_2m,weather_code",
+          timezone: "Asia/Kolkata"
+        });
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+        if (!response.ok) throw new Error("Weather request failed");
+        const data = await response.json();
+        const weather = {
+          temperature: data.current?.temperature_2m,
+          code: data.current?.weather_code,
+          savedAt: Date.now()
+        };
+        renderHomeWeather(weather);
+        localStorage.setItem(cacheKey, JSON.stringify(weather));
+      } catch (error) {
+        conditionNode.textContent = "मौसम देखें";
+      }
+    };
+
+    loadHomeWeather();
+  }
+
   const translations = {
     en: {
       label: "Language",
