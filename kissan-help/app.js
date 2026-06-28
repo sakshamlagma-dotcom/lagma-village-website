@@ -24,8 +24,12 @@ linkSearch.addEventListener("input", () => {
     card.classList.toggle("is-hidden", query.length > 0 && !haystack.includes(query));
   });
 
-  stateLinks.forEach((link) => {
+stateLinks.forEach((link) => {
     const haystack = link.textContent.toLowerCase();
     link.classList.toggle("is-hidden", query.length > 0 && !haystack.includes(query));
   });
 });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("../sw.js"));
+}

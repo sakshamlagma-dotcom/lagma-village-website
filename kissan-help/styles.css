@@ -795,6 +795,11 @@ input:focus {
 }
 
 @media (max-width: 1080px) {
+  .nav-links {
+    gap: 14px;
+    font-size: 14px;
+  }
+
   .hero,
   .link-heading {
     grid-template-columns: 1fr;

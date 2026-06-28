@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Lagma Saharsa ke liye live weather, rain forecast, wind alerts aur safer crop work advisory." />
+    <meta name="robots" content="index, follow" />
+    <meta name="google-analytics-id" content="G-PZQ45J2B8G" />
+    <link rel="canonical" href="https://sakshamlagma-dotcom.github.io/lagma-village-website/kissan-help/mausam.html" />
+    <meta property="og:title" content="किसान मौसम | Lagma Village" />
+    <meta property="og:description" content="Lagma aur Bihar ke farmers ke liye live weather aur field-work advisory." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sakshamlagma-dotcom.github.io/lagma-village-website/kissan-help/mausam.html" />
+    <meta property="og:image" content="https://sakshamlagma-dotcom.github.io/lagma-village-website/a.webp" />
+    <link rel="manifest" href="../manifest.webmanifest?v=6" />
+    <link rel="apple-touch-icon" href="../icons/lagma-icon-192.png" />
+    <link rel="icon" href="../icons/lagma-icon-192.png" type="image/png" />
+    <title>किसान मौसम | Lagma Saharsa</title>
+    <link rel="stylesheet" href="mausam.css?v=1" />
+    <script src="../analytics.js?v=3" defer></script>
+  </head>
+  <body>
+    <header class="weather-header">
+      <a class="weather-brand" href="index.html" aria-label="बिहार कृषि सेवा">
+        <span class="weather-brand-mark">BR</span>
+        <span>
+          <strong>किसान मौसम</strong>
+          <small>Lagma, Saharsa</small>
+        </span>
+      </a>
+
+      <button class="weather-menu" type="button" aria-label="मेनू खोलें" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="weather-nav" aria-label="मुख्य नेविगेशन">
+        <a href="../index.html">Lagma Home</a>
+        <a href="index.html">कृषि गाइड</a>
+        <a href="mausam.html" aria-current="page">मौसम</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="weather-toolbar" aria-labelledby="page-title">
+        <div>
+          <p class="weather-eyebrow">LIVE FARM WEATHER</p>
+          <h1 id="page-title">खेत के काम से पहले मौसम देखें</h1>
+        </div>
+
+        <form class="location-search" id="location-form" role="search">
+          <label for="location-input">जगह खोजें</label>
+          <div class="search-row">
+            <input id="location-input" name="location" type="search" value="Lagma, Saharsa" autocomplete="address-level2" required />
+            <button class="action-button" type="submit">मौसम देखें</button>
+            <button class="secondary-button" id="current-location" type="button">मेरी जगह</button>
+          </div>
+        </form>
+      </section>
+
+      <div class="weather-status" id="weather-status" role="status" aria-live="polite">
+        <span class="status-spinner" aria-hidden="true"></span>
+        <strong>मौसम की ताजा जानकारी आ रही है...</strong>
+      </div>
+
+      <div id="weather-content" hidden>
+        <section class="current-weather" aria-labelledby="current-location-name">
+          <div class="current-copy">
+            <p id="current-location-name">Lagma, Saharsa</p>
+            <div class="current-temperature">
+              <strong id="current-temperature">--</strong><span>°C</span>
+            </div>
+            <h2 id="current-condition">मौसम</h2>
+            <p id="weather-updated">अपडेट समय --</p>
+          </div>
+          <div class="condition-mark" id="condition-mark" aria-hidden="true">☀</div>
+          <dl class="current-highlights">
+            <div><dt>आज अधिकतम</dt><dd id="today-high">--°</dd></div>
+            <div><dt>आज न्यूनतम</dt><dd id="today-low">--°</dd></div>
+            <div><dt>बारिश</dt><dd id="today-rain">--%</dd></div>
+          </dl>
+        </section>
+
+        <section class="weather-alerts" id="weather-alerts" aria-labelledby="alert-title" hidden>
+          <div class="section-title compact-title">
+            <p class="weather-eyebrow">FIELD ALERT</p>
+            <h2 id="alert-title">आज की सावधानी</h2>
+          </div>
+          <div class="alert-list" id="alert-list"></div>
+        </section>
+
+        <section class="metric-grid" aria-label="मौसम के मुख्य आंकड़े">
+          <article><span>महसूस</span><strong id="feels-like">--°C</strong><small>Feels like</small></article>
+          <article><span>नमी</span><strong id="humidity">--%</strong><small>Relative humidity</small></article>
+          <article><span>हवा</span><strong id="wind-speed">-- km/h</strong><small id="wind-direction">Wind</small></article>
+          <article><span>तेज झोंका</span><strong id="wind-gust">-- km/h</strong><small>Wind gust</small></article>
+          <article><span>आज की वर्षा</span><strong id="rain-sum">-- mm</strong><small>Forecast total</small></article>
+          <article><span>मिट्टी नमी</span><strong id="soil-moisture">--</strong><small>9-27 cm model estimate</small></article>
+        </section>
+
+        <section class="forecast-section" aria-labelledby="hourly-title">
+          <div class="section-title">
+            <p class="weather-eyebrow">NEXT 12 HOURS</p>
+            <h2 id="hourly-title">बारिश और हवा की खिड़की</h2>
+          </div>
+          <div class="hourly-strip" id="hourly-strip"></div>
+        </section>
+
+        <section class="forecast-section forecast-band" aria-labelledby="daily-title">
+          <div class="section-title">
+            <p class="weather-eyebrow">7 DAY FORECAST</p>
+            <h2 id="daily-title">आने वाले सात दिन</h2>
+          </div>
+          <div class="daily-grid" id="daily-grid"></div>
+        </section>
+
+        <section class="advisory-section" aria-labelledby="advisory-title">
+          <div class="section-title advisory-heading">
+            <div>
+              <p class="weather-eyebrow">FARM WORK CHECK</p>
+              <h2 id="advisory-title">फसल के अनुसार आज का काम</h2>
+            </div>
+            <div class="crop-tabs" id="crop-tabs" role="tablist" aria-label="फसल चुनें">
+              <button type="button" role="tab" aria-selected="true" data-crop="धान">धान</button>
+              <button type="button" role="tab" aria-selected="false" data-crop="गेहूँ">गेहूँ</button>
+              <button type="button" role="tab" aria-selected="false" data-crop="मक्का">मक्का</button>
+              <button type="button" role="tab" aria-selected="false" data-crop="दाल">दाल</button>
+              <button type="button" role="tab" aria-selected="false" data-crop="सब्जी">सब्जी</button>
+            </div>
+          </div>
+          <div class="advisory-grid" id="advisory-grid"></div>
+        </section>
+
+        <aside class="safety-note">
+          <strong>खेत की अंतिम जाँच जरूरी:</strong>
+          मौसम और मिट्टी की नमी model estimate हैं। सिंचाई, दवा और कटाई का निर्णय खेत की वास्तविक स्थिति,
+          packet label, KVK या कृषि अधिकारी की सलाह देखकर लें।
+          <a href="https://open-meteo.com/" target="_blank" rel="noopener">Weather data: Open-Meteo</a>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="weather-footer">
+      <span>बिहार कृषि सेवा</span>
+      <a href="index.html">पूरी कृषि गाइड देखें</a>
+    </footer>
+
+    <script src="mausam.js?v=2"></script>
+  </body>
+</html>
