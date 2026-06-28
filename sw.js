@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v31";
+const CACHE = "lagma-village-v32";
 const ASSETS = [
   "./",
   "./index.html",
@@ -13,10 +13,10 @@ const ASSETS = [
   "./kissan-help/styles.css?v=3",
   "./kissan-help/app.js?v=2",
   "./style.css?v=14",
-  "./gallery.css?v=3",
+  "./gallery.css?v=6",
   "./upload.css?v=1",
   "./web.js?v=23",
-  "./gallery.js?v=5",
+  "./gallery.js?v=7",
   "./upload.js?v=1",
   "./firebase-config.js?v=8",
   "./analytics.js?v=3",
@@ -48,14 +48,18 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
   if (event.request.mode === "navigate") {
-    event.respondWith(fetch(event.request).catch(() => caches.match("./index.html")));
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
+    );
     return;
   }
 
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      const copy = response.clone();
-      caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+      if (response.ok || response.type === "opaque") {
+        const copy = response.clone();
+        caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+      }
       return response;
     }))
   );

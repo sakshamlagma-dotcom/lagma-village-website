@@ -102,7 +102,14 @@ function saveUploadedPhoto(photo) {
 }
 
 function getAllPhotos() {
-  return [...state.cloudPhotos, ...getUploadedPhotos(), ...baseGalleryPhotos];
+  const photosByImage = new Map();
+
+  [...state.cloudPhotos, ...getUploadedPhotos(), ...baseGalleryPhotos].forEach((photo) => {
+    if (!photo?.image || photosByImage.has(photo.image)) return;
+    photosByImage.set(photo.image, photo);
+  });
+
+  return [...photosByImage.values()];
 }
 
 function normalizeText(value) {
