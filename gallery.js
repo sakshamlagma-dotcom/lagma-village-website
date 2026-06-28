@@ -67,6 +67,7 @@ const removePhotoButton = document.querySelector("#remove-gallery-photo");
 const uploadStatus = document.querySelector("#gallery-upload-status");
 const progress = document.querySelector("#inline-progress");
 const progressBar = progress?.querySelector("span");
+const uploadButton = uploadForm?.querySelector("button[type='submit']");
 
 function getUploadedPhotos() {
   try {
@@ -194,25 +195,90 @@ async function loadCloudinaryUploads() {
   }
 }
 
-function clearPreview() {
+function clearPreview(clearSelectedFile = true) {
   if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
   state.previewUrl = "";
-  if (fileInput) fileInput.value = "";
-  if (previewImage) previewImage.src = "";
+  if (clearSelectedFile && fileInput) fileInput.value = "";
+  if (previewImage) {
+    previewImage.onload = null;
+    previewImage.onerror = null;
+    previewImage.src = "";
+    previewImage.hidden = false;
+  }
   if (preview) preview.hidden = true;
 }
 
+function isPhotoFile(file) {
+  if (!file) return false;
+  if (file.type?.startsWith("image/")) return true;
+  return /\.(?:jpe?g|jfif|png|gif|webp|heic|heif|avif|bmp|tiff?|svg)$/i.test(file.name || "");
+}
+
+function loadImageFromFile(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Photo ko process nahi kiya ja saka."));
+    };
+    image.src = url;
+  });
+}
+
+function canvasToBlob(canvas, type, quality) {
+  return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+}
+
+async function preparePhotoForUpload(file) {
+  const compressibleType = ["image/jpeg", "image/png", "image/webp", "image/avif", "image/bmp"].includes(file.type);
+  const compressibleName = /\.(?:jpe?g|jfif|png|webp|avif|bmp)$/i.test(file.name || "");
+  if (file.size <= 2 * 1024 * 1024 || (!compressibleType && !compressibleName)) return file;
+
+  try {
+    const image = await loadImageFromFile(file);
+    const maxEdge = 2000;
+    const scale = Math.min(1, maxEdge / Math.max(image.naturalWidth, image.naturalHeight));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const blob = await canvasToBlob(canvas, "image/jpeg", 0.82);
+    if (!blob || blob.size >= file.size) return file;
+
+    const cleanName = (file.name || "lagma-photo").replace(/\.[^.]+$/, "");
+    return new File([blob], `${cleanName}.jpg`, { type: "image/jpeg", lastModified: Date.now() });
+  } catch (error) {
+    return file;
+  }
+}
+
 function showPreview(file) {
-  clearPreview();
+  clearPreview(false);
   if (!file) return;
-  if (!file.type.startsWith("image/")) {
-    setUploadStatus("Sirf image file upload karein.", "error");
+  if (!isPhotoFile(file)) {
+    setUploadStatus("Yeh photo file nahi hai. Phone se koi photo select karein.", "error");
     return;
   }
 
   state.previewUrl = URL.createObjectURL(file);
   previewImage.src = state.previewUrl;
   previewImage.alt = file.name;
+  previewImage.onerror = () => {
+    previewImage.hidden = true;
+    setUploadStatus(`${file.name} select ho gaya. Upload kar sakte hain.`);
+  };
+  previewImage.onload = () => {
+    previewImage.hidden = false;
+  };
+  previewImage.hidden = false;
   preview.hidden = false;
   setUploadStatus("");
 }
@@ -300,67 +366,76 @@ removePhotoButton?.addEventListener("click", () => {
   setUploadStatus("Photo remove ho gaya.");
 });
 
-uploadForm?.addEventListener("submit", (event) => {
+uploadForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const file = fileInput.files?.[0];
-  const title = document.querySelector("#photo-title")?.value.trim();
-  const category = document.querySelector("#photo-category")?.value;
-  const description = document.querySelector("#photo-description")?.value.trim();
+  const enteredTitle = document.querySelector("#photo-title")?.value.trim() || "";
+  const enteredCategory = document.querySelector("#photo-category")?.value || "";
+  const enteredDescription = document.querySelector("#photo-description")?.value.trim() || "";
+  const fileTitle = (file?.name || "Uploaded Photo").replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim();
+  const title = enteredTitle || fileTitle || "Uploaded Photo";
+  const category = enteredCategory || "People of Lagma";
+  const description = enteredDescription || "Lagma gallery me upload kiya gaya photo.";
 
-  if (!file || !title || !category || !description) {
-    setUploadStatus("Photo, title, category aur description sab bharna zaroori hai.", "error");
+  if (!file) {
+    setUploadStatus("Pehle phone se photo choose karein.", "error");
+    return;
+  }
+
+  if (!isPhotoFile(file)) {
+    setUploadStatus("Yeh photo file nahi hai. Phone se koi photo select karein.", "error");
     return;
   }
 
   startProgress();
-  setUploadStatus("Photo upload ho raha hai...");
+  setUploadStatus("Photo taiyar ho raha hai...");
+  if (uploadButton) uploadButton.disabled = true;
 
-  const cloudinaryData = new FormData();
-  cloudinaryData.append("file", file);
-  cloudinaryData.append("upload_preset", cloudinaryUploadPreset);
-  cloudinaryData.append("tags", `${cloudinaryGalleryTag},website-upload`);
-  cloudinaryData.append("context", [
-    `name=${title}`,
-    `category=${category}`,
-    `description=${description}`,
-    "source=Lagma Village website gallery"
-  ].join("|"));
+  try {
+    const uploadFile = await preparePhotoForUpload(file);
+    setUploadStatus("Photo upload ho raha hai...");
 
-  fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`, {
-    method: "POST",
-    body: cloudinaryData
-  })
-    .then(async (response) => {
-      if (!response.ok) {
-        let message = "Cloud upload failed";
-        try {
-          const result = await response.json();
-          message = result?.error?.message || message;
-        } catch (error) {
-          // Keep default message when Cloudinary response is not JSON.
-        }
-        throw new Error(message);
+    const cloudinaryData = new FormData();
+    cloudinaryData.append("file", uploadFile, uploadFile.name);
+    cloudinaryData.append("upload_preset", cloudinaryUploadPreset);
+    cloudinaryData.append("tags", `${cloudinaryGalleryTag},website-upload`);
+    cloudinaryData.append("context", [
+      `name=${title.replace(/[|=]/g, " ")}`,
+      `category=${category.replace(/[|=]/g, " ")}`,
+      `description=${description.replace(/[|=]/g, " ")}`,
+      "source=Lagma Village website gallery"
+    ].join("|"));
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`, {
+      method: "POST",
+      body: cloudinaryData
+    });
+
+    if (!response.ok) {
+      let message = "Cloud upload failed";
+      try {
+        const errorResult = await response.json();
+        message = errorResult?.error?.message || message;
+      } catch (error) {
+        // Keep the default message when the response is not JSON.
       }
-      return response.json();
-    })
-    .then((result) => {
-      const photo = {
-        title,
-        category,
-        description,
-        image: result.secure_url
-      };
-      state.cloudPhotos.unshift(photo);
-      saveUploadedPhoto(photo);
-      uploadForm.reset();
-      clearPreview();
-      renderGallery();
-      setUploadStatus("Photo upload ho gaya aur gallery me add ho gaya.", "success");
-    })
-    .catch((error) => {
-      setUploadStatus(`Upload nahi ho paya: ${error.message}`, "error");
-    })
-    .finally(stopProgress);
+      throw new Error(message);
+    }
+
+    const result = await response.json();
+    const photo = { title, category, description, image: result.secure_url };
+    state.cloudPhotos.unshift(photo);
+    saveUploadedPhoto(photo);
+    uploadForm.reset();
+    clearPreview();
+    renderGallery();
+    setUploadStatus("Photo upload ho gaya aur gallery me add ho gaya.", "success");
+  } catch (error) {
+    setUploadStatus(`Upload nahi ho paya: ${error.message}`, "error");
+  } finally {
+    if (uploadButton) uploadButton.disabled = false;
+    stopProgress();
+  }
 });
 
 grid?.addEventListener("click", (event) => {
