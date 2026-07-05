@@ -1,6 +1,4 @@
 const baseGalleryPhotos = [
-  { title: "Old Photo 1", category: "Old Memories", image: "1.jpeg", description: "Lagma ka purana gallery photo." },
-  { title: "Old Photo 2", category: "Old Memories", image: "2.jpeg", description: "Purane samay ki Lagma memory." },
   { title: "Old Photo 3", category: "Old Memories", image: "3.jpeg", description: "Village archive se ek photo." },
   { title: "Old Photo 4", category: "Old Memories", image: "4.jpeg", description: "Lagma ke purane photo collection ka hissa." },
   { title: "Old Photo 5", category: "Village Life", image: "5.webp", description: "Gaon ki roj ki zindagi ka photo." },

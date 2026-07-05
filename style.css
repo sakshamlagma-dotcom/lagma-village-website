@@ -2336,12 +2336,12 @@ h3 {
 
 .page-hero::before {
   content: "";
-  background-image: url("1.jpeg");
+  background-image: url("a.webp");
   background-position: center;
 }
 
 .about-hero::before {
-  background-image: url("2.webp");
+  background-image: url("c.webp");
 }
 
 .services-hero::before {
