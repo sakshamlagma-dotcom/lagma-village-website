@@ -77,6 +77,64 @@ img {
   box-shadow: 0 8px 18px rgba(125, 31, 42, 0.22);
 }
 
+/* Premium Lagma identity header */
+.gallery-header {
+  padding: 14px 24px;
+  border-bottom: 3px solid #d4a017;
+  background: linear-gradient(135deg, #063b26, #0f5c3a);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.brand-mark {
+  gap: 14px;
+  text-decoration: none;
+}
+
+.brand-mark .site-logo {
+  width: 70px;
+  height: 70px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.brand-mark .brand-copy {
+  display: grid;
+  width: auto;
+  height: auto;
+  gap: 3px;
+  place-items: initial;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  box-shadow: none;
+}
+
+.brand-mark .brand-copy strong {
+  color: #fff8dc;
+  font: 800 28px/1.05 "Trebuchet MS", sans-serif;
+}
+
+.brand-mark .brand-copy small {
+  color: #f3cf72;
+  font: 700 14px/1.2 "Trebuchet MS", sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.gallery-nav a {
+  color: rgba(255, 248, 220, 0.84);
+}
+
+.gallery-nav a:hover,
+.gallery-nav a[aria-current="page"] {
+  color: #fff8dc;
+  background: rgba(212, 160, 23, 0.24);
+}
+
 .gallery-nav {
   display: flex;
   align-items: center;
@@ -715,6 +773,24 @@ img {
 
 @media (max-width: 720px) {
   .gallery-header {
+    padding: 10px 14px;
+  }
+
+  .brand-mark .site-logo {
+    width: 52px;
+    height: 52px;
+    padding: 3px;
+  }
+
+  .brand-mark .brand-copy strong {
+    font-size: 20px;
+  }
+
+  .brand-mark .brand-copy small {
+    font-size: 11px;
+  }
+
+  .gallery-header {
     align-items: flex-start;
     flex-wrap: wrap;
   }
@@ -731,6 +807,13 @@ img {
   }
 
   .gallery-nav.is-open {
+    padding: 10px;
+    border: 1px solid rgba(243, 207, 114, 0.38);
+    border-radius: 12px;
+    background: #073f29;
+  }
+
+  .gallery-nav.is-open {
     display: flex;
   }
 
@@ -740,7 +823,8 @@ img {
     min-height: 46px;
     gap: 10px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.48);
+    color: #fff8dc;
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .gallery-nav svg,

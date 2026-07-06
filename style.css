@@ -3014,7 +3014,113 @@ svg.lucide {
   color: var(--green);
 }
 
+/* Premium Lagma identity header */
+.site-header {
+  padding: 14px 24px;
+  border-bottom: 3px solid #d4a017;
+  background: linear-gradient(135deg, #063b26, #0f5c3a);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.site-header .brand {
+  gap: 14px;
+  color: #fff8dc;
+}
+
+.brand::before {
+  display: none;
+}
+
+.site-logo {
+  width: 70px;
+  height: 70px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.brand-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.brand-copy strong {
+  color: #fff8dc;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.brand-copy small {
+  color: #f3cf72;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.site-header .site-nav a {
+  color: rgba(255, 248, 220, 0.82);
+}
+
+.site-header .site-nav a:hover,
+.site-header .site-nav a[aria-current="page"] {
+  color: #fff8dc;
+  background: rgba(212, 160, 23, 0.22);
+}
+
+.site-header .menu-toggle {
+  border-color: rgba(243, 207, 114, 0.55);
+  color: #fff8dc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.site-header .install-app-btn {
+  color: #063b26;
+  background: #f3cf72;
+}
+
+.site-header .language-switcher {
+  border-color: rgba(243, 207, 114, 0.5);
+  color: #fff8dc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.site-header .language-switcher select {
+  color: #fff8dc;
+}
+
+.site-header .language-switcher option {
+  color: #1d2e23;
+}
+
 @media (max-width: 640px) {
+  .site-header {
+    padding: 10px 14px;
+  }
+
+  .site-logo {
+    width: 52px;
+    height: 52px;
+    padding: 3px;
+  }
+
+  .brand-copy strong {
+    font-size: 20px;
+  }
+
+  .brand-copy small {
+    font-size: 11px;
+  }
+
+  .site-header .site-nav {
+    background: #073f29;
+    border-color: rgba(243, 207, 114, 0.38);
+  }
+
   .site-nav a {
     min-height: 46px;
     gap: 10px;
