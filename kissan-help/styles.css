@@ -195,6 +195,25 @@ h3 {
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
+@media (max-width: 780px) {
+  .nav-links a {
+    min-height: 46px;
+    gap: 10px;
+  }
+
+  .nav-links svg,
+  .menu-toggle svg,
+  button svg,
+  .btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn {
+    justify-content: center;
+  }
+}
+
 .btn:hover {
   transform: translateY(-2px);
 }
