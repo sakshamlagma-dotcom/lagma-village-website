@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v37";
+const CACHE = "lagma-village-v39";
 const ASSETS = [
   "./",
   "./index.html",
@@ -18,7 +18,7 @@ const ASSETS = [
   "./style.css?v=15",
   "./gallery.css?v=6",
   "./upload.css?v=1",
-  "./web.js?v=24",
+  "./web.js?v=25",
   "./gallery.js?v=9",
   "./upload.js?v=1",
   "./firebase-config.js?v=8",

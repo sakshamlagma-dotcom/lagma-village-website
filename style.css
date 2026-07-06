@@ -2975,6 +2975,13 @@ h3 {
   gap: 8px;
 }
 
+.home-weather-icon {
+  width: 22px;
+  height: 22px;
+  color: #ffd991;
+  flex: 0 0 auto;
+}
+
 svg.lucide {
   flex: 0 0 auto;
 }
