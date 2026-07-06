@@ -2951,3 +2951,58 @@ h3 {
     height: 320px;
   }
 }
+/* Local Lucide icon system */
+.site-nav a,
+.gallery-nav a,
+.btn,
+.text-link,
+.back-link,
+.service-filter,
+.site-like-button,
+.upload-button,
+.footer-links a,
+.social-link-row a,
+.official-links a,
+.feature-card h3,
+.service-card h3,
+.notice-card h3,
+.contact-card h3,
+.connect-card h3,
+.govt-portal-card h3,
+.online-services-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+svg.lucide {
+  flex: 0 0 auto;
+}
+
+.site-nav svg,
+.gallery-nav svg,
+.menu-toggle svg,
+.btn svg,
+.text-link svg,
+.back-link svg,
+.service-filter svg,
+.site-like-button svg,
+.upload-button svg,
+.footer-links svg,
+.social-link-row svg,
+.official-links svg {
+  width: 17px;
+  height: 17px;
+}
+
+.card-icon {
+  width: 21px;
+  height: 21px;
+  color: var(--green);
+}
+
+.service-list-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--green);
+}
