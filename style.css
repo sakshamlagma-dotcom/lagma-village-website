@@ -3013,3 +3013,81 @@ svg.lucide {
   height: 18px;
   color: var(--green);
 }
+
+@media (max-width: 640px) {
+  .site-nav a {
+    min-height: 46px;
+    gap: 10px;
+    padding: 11px 12px;
+  }
+
+  .site-nav a svg,
+  .menu-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn,
+  .text-link,
+  .service-filter,
+  .site-like-button {
+    gap: 7px;
+  }
+
+  .btn svg,
+  .text-link svg,
+  .service-filter svg,
+  .site-like-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .feature-card h3,
+  .service-card h3,
+  .notice-card h3,
+  .contact-card h3,
+  .connect-card h3,
+  .govt-portal-card h3 {
+    align-items: flex-start;
+    gap: 9px;
+  }
+
+  .card-icon {
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+  }
+
+  .online-services-list li {
+    min-height: 50px;
+    gap: 10px;
+    padding: 11px 12px;
+  }
+
+  .online-services-list li::before {
+    display: none;
+  }
+
+  .service-list-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .announcement-bar .home-weather-badge {
+    display: grid;
+    grid-template-columns: 24px auto auto;
+    width: 100%;
+    min-height: 46px;
+    gap: 8px;
+    padding: 9px 11px;
+  }
+
+  .home-weather-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .announcement-bar .home-weather-badge small {
+    justify-self: end;
+  }
+}
