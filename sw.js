@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v31";
+const CACHE = "lagma-village-v33";
 const ASSETS = [
   "./",
   "./index.html",
@@ -12,7 +12,7 @@ const ASSETS = [
   "./kissan-help/index.html",
   "./kissan-help/styles.css?v=3",
   "./kissan-help/app.js?v=2",
-  "./style.css?v=14",
+  "./style.css?v=16",
   "./gallery.css?v=3",
   "./upload.css?v=1",
   "./web.js?v=23",
@@ -22,6 +22,7 @@ const ASSETS = [
   "./analytics.js?v=3",
   "./manifest.webmanifest?v=5",
   "./sj-logo.webp",
+  "./todo-ai-face.webp",
   "./a.webp",
   "./b.webp",
   "./c.webp",

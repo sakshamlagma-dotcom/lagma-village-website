@@ -1,0 +1,12 @@
+{
+  "name": "TODO AI",
+  "short_name": "TODO AI",
+  "description": "Think. Ask. Create.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090b18",
+  "theme_color": "#6c5ce7",
+  "icons": [
+    {"src":"assets/icons/logo.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

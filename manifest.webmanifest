@@ -24,6 +24,11 @@
       "name": "Photo Gallery",
       "short_name": "Gallery",
       "url": "gallery.html"
+    },
+    {
+      "name": "TODO AI Sahayak",
+      "short_name": "TODO AI",
+      "url": "/todo-ai/"
     }
   ],
   "icons": [
