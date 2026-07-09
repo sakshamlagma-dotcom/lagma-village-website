@@ -11,36 +11,42 @@
   <link rel="canonical" href="https://sakshamlagma-dotcom.github.io/lagma-village-website/">
   <meta property="og:title" content="Lagma Village Saharsa Bihar | Official Website">
   <meta property="og:description" content="Lagma Village Saharsa Bihar official website with village history, services, gallery, notices, online services, location, and contact details.">
+  <meta property="og:site_name" content="Lagma Village Official">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sakshamlagma-dotcom.github.io/lagma-village-website/">
   <meta property="og:image" content="https://sakshamlagma-dotcom.github.io/lagma-village-website/a.jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lagma Village Saharsa Bihar | Official Website">
+  <meta name="twitter:description" content="Lagma Village Saharsa Bihar official website with village history, services, gallery, notices, online services, location, and contact details.">
+  <meta name="twitter:image" content="https://sakshamlagma-dotcom.github.io/lagma-village-website/a.jpeg">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Place",
-    "name": "Lagma Village",
-    "alternateName": ["Lagma", "Lagma Saharsa", "Lagma Village Saharsa Bihar"],
-    "description": "Lagma Village in Saharsa, Bihar, India.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Lagma",
-      "addressRegion": "Bihar",
-      "addressCountry": "IN"
-    },
+    "@type": "WebSite",
+    "name": "Lagma Village Official",
+    "alternateName": "Lagma Village Saharsa Bihar",
     "url": "https://sakshamlagma-dotcom.github.io/lagma-village-website/"
   }
   </script>
   <title>Lagma Village Saharsa Bihar | Official Website</title>
-  <link rel="manifest" href="manifest.webmanifest?v=5">
-  <link rel="apple-touch-icon" href="icons/lagma-icon-192.png">
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="manifest" href="manifest.webmanifest?v=6">
+  <link rel="apple-touch-icon" href="assets/images/lagma-logo.png">
+  <link rel="icon" href="assets/images/lagma-logo.png" type="image/png">
+  <link rel="shortcut icon" href="assets/images/lagma-logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css?v=17">
   <script src="firebase-config.js?v=8"></script>
   <script src="analytics.js?v=3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
   <header class="site-header">
-    <a class="brand" href="index.html">Lagma Village</a>
+    <a class="brand" href="index.html" aria-label="Lagma Village home">
+      <img src="assets/images/lagma-logo.png" alt="Lagma Village Official Logo" class="site-logo">
+      <span class="brand-copy">
+        <strong>Lagma Village</strong>
+        <small>Sito ufficiale • Dal 2026</small>
+      </span>
+    </a>
     <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html" aria-current="page">Home</a>
@@ -48,7 +54,7 @@
       <a href="services.html">Services</a>
       <a href="kissan-help/index.html">Kissan Help</a>
       <a href="online-services.html">Online Services</a>
-      <a href="/todo-ai/">TODO AI</a>
+      <a href="https://lagma-village-ai.onrender.com/todo-ai/">TODO AI</a>
       <a href="gallery.html">Gallery</a>
       <a href="notification.html">Notices</a>
       <a href="#contact">Contact</a>
@@ -60,6 +66,12 @@
       <span>Latest Update</span>
       <p>Village information, facilities, photos, and notices are now available in one place.</p>
       <a href="notification.html">View notices</a>
+      <a class="home-weather-badge" href="kissan-help/mausam.html" aria-label="Lagma weather खोलें">
+        <i class="home-weather-icon" data-lucide="cloud-sun" data-weather-icon aria-hidden="true"></i>
+        <span>Lagma</span>
+        <strong id="home-weather-temp">--°C</strong>
+        <small id="home-weather-condition">मौसम</small>
+      </a>
     </section>
 
     <section class="hero">
@@ -188,7 +200,7 @@
           <h3>Kissan Help</h3>
           <p>Crop disease, dairy farming, makhana subsidy, DBT registration, and Bihar scheme links.</p>
         </a>
-        <a class="quick-card" href="/todo-ai/">
+        <a class="quick-card" href="https://lagma-village-ai.onrender.com/todo-ai/">
           <span>07</span>
           <h3>TODO AI Sahayak</h3>
           <p>Hindi ya English mein sawaal poochhein, writing, padhai aur roz ke kaam mein AI madad paayein.</p>
@@ -259,7 +271,7 @@
         <h2>Village highlights</h2>
       </div>
       <div class="gallery-grid gallery-preview">
-        <img src="1.jpeg" alt="Village view in Lagma" loading="lazy">
+        <img src="3.jpeg" alt="Village view in Lagma" loading="lazy">
         <img src="7.webp" alt="Community place in Lagma" loading="lazy">
         <img src="10.webp" alt="Village scene in Lagma" loading="lazy">
       </div>
@@ -467,13 +479,14 @@
     </div>
   </footer>
 
-  <a class="todo-ai-fab" href="/todo-ai/" aria-label="TODO AI Sahayak se baat karein">
+  <a class="todo-ai-fab" href="https://lagma-village-ai.onrender.com/todo-ai/" aria-label="TODO AI Sahayak se baat karein">
     <span class="todo-ai-fab-face" aria-hidden="true"><img src="todo-ai-face.webp" alt="" width="48" height="48"></span>
     <span class="todo-ai-fab-copy"><strong>TODO AI</strong><small>Mujhse poochhein</small></span>
     <span class="todo-ai-fab-online" aria-hidden="true"></span>
   </a>
-
-  <script src="web.js?v=23"></script>
+  <script src="web.js?v=25"></script>
+  <script src="assets/lucide.min.js?v=1"></script>
+  <script src="lagma-icons.js?v=1"></script>
 </body>
 </html>
 

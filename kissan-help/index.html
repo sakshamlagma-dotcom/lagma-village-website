@@ -12,16 +12,19 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sakshamlagma-dotcom.github.io/lagma-village-website/kissan-help/" />
     <meta property="og:image" content="https://sakshamlagma-dotcom.github.io/lagma-village-website/a.jpeg" />
-    <link rel="manifest" href="../manifest.webmanifest?v=5" />
-    <link rel="apple-touch-icon" href="../icons/lagma-icon-192.png" />
+    <link rel="manifest" href="../manifest.webmanifest?v=6" />
+    <link rel="apple-touch-icon" href="../assets/images/lagma-logo.png" />
+    <link rel="icon" href="../icons/lagma-icon-192.png" type="image/png" />
     <title>बिहार कृषि सेवाएँ, फसल, रोग और डेयरी</title>
-    <link rel="stylesheet" href="styles.css?v=3" />
+    <link rel="icon" href="../assets/images/lagma-logo.png" type="image/png" />
+    <link rel="shortcut icon" href="../assets/images/lagma-logo.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css?v=7" />
     <script src="../analytics.js?v=3" defer></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="#home" aria-label="बिहार कृषि सेवा home">
-        <span class="brand-mark">BR</span>
+        <img src="../assets/images/lagma-logo.png" alt="Lagma Village Official Logo" class="site-logo" />
         <span>
           <strong>बिहार कृषि सेवा</strong>
           <small>फसल, रोग, दवा, subsidy और dairy farming</small>
@@ -35,6 +38,7 @@
       </button>
 
       <nav class="nav-links" aria-label="Primary navigation">
+        <a href="mausam.html">मौसम</a>
         <a href="#crops">फसलें</a>
         <a href="#disease">रोग/दवा</a>
         <a href="#subsidy">Subsidy</a>
@@ -55,7 +59,8 @@
             गए हैं ताकि आवेदन, subsidy और advisory सीधे सही जगह से मिल सके.
           </p>
           <div class="hero-actions">
-            <a class="btn primary" href="#subsidy">Subsidy देखें</a>
+            <a class="btn primary" href="mausam.html">आज का मौसम देखें</a>
+            <a class="btn secondary" href="#subsidy">Subsidy देखें</a>
             <a class="btn secondary" href="#makhana">मखाना योजना देखें</a>
           </div>
           <div class="trust-strip" aria-label="Bihar focus">
@@ -481,6 +486,16 @@
             <p>Dairy के लिए जिला गव्य विकास पदाधिकारी. कृषि के लिए किसान सलाहकार, कृषि समन्वयक, BAO या DAO से संपर्क करें.</p>
           </article>
         </div>
+
+        <aside class="local-pacs-contact" id="lagma-pacs-contact" aria-labelledby="lagma-pacs-title">
+          <i data-lucide="phone-call" aria-hidden="true"></i>
+          <div>
+            <span>Local PACS Help</span>
+            <h3 id="lagma-pacs-title">Lagma PACS अध्यक्ष</h3>
+            <p>Sunit Kumar Jha</p>
+          </div>
+          <a href="tel:09431656713" aria-label="Sunit Kumar Jha ko call karein">09431656713</a>
+        </aside>
 
         <div class="link-grid">
           <article class="link-card" data-keywords="dbt bihar farmer registration 13 digit subsidy agriculture">
@@ -916,6 +931,8 @@
       <span>Official portals + practical crop and dairy guide. Use KVK/local officer for final dose and field diagnosis.</span>
     </footer>
 
-    <script src="app.js?v=2"></script>
+    <script src="app.js?v=3"></script>
+    <script src="../assets/lucide.min.js?v=1"></script>
+    <script src="../lagma-icons.js?v=1"></script>
   </body>
 </html>

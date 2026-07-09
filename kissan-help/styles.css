@@ -195,6 +195,25 @@ h3 {
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
+@media (max-width: 780px) {
+  .nav-links a {
+    min-height: 46px;
+    gap: 10px;
+  }
+
+  .nav-links svg,
+  .menu-toggle svg,
+  button svg,
+  .btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn {
+    justify-content: center;
+  }
+}
+
 .btn:hover {
   transform: translateY(-2px);
 }
@@ -320,6 +339,64 @@ h3 {
 .quick-list {
   grid-template-columns: repeat(3, 1fr);
   margin-top: 24px;
+}
+
+.site-logo {
+  width: 70px;
+  height: 70px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.local-pacs-contact {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin: 0 0 24px;
+  padding: 18px 20px;
+  border: 1px solid rgba(47, 111, 78, 0.28);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f2f8ef, #fff9e8);
+}
+
+.local-pacs-contact > svg {
+  width: 28px;
+  height: 28px;
+  padding: 12px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--green);
+}
+
+.local-pacs-contact span {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.local-pacs-contact h3,
+.local-pacs-contact p {
+  margin: 2px 0 0;
+}
+
+.local-pacs-contact a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: var(--white);
+  background: var(--green);
+  font-weight: 900;
+  text-decoration: none;
 }
 
 .scheme-card,
@@ -795,6 +872,11 @@ input:focus {
 }
 
 @media (max-width: 1080px) {
+  .nav-links {
+    gap: 14px;
+    font-size: 14px;
+  }
+
   .hero,
   .link-heading {
     grid-template-columns: 1fr;
@@ -830,6 +912,29 @@ input:focus {
 }
 
 @media (max-width: 780px) {
+  .site-logo {
+    width: 52px;
+    height: 52px;
+    padding: 3px;
+  }
+
+  .local-pacs-contact {
+    grid-template-columns: 48px 1fr;
+    padding: 16px;
+  }
+
+  .local-pacs-contact > svg {
+    width: 24px;
+    height: 24px;
+    padding: 10px;
+  }
+
+  .local-pacs-contact a {
+    grid-column: 1 / -1;
+    justify-content: center;
+    width: 100%;
+  }
+
   .menu-toggle {
     display: block;
   }
@@ -887,4 +992,18 @@ input:focus {
     align-items: flex-start;
     flex-direction: column;
   }
+}
+svg.lucide {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+}
+
+.nav-links a,
+.official-links a,
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }

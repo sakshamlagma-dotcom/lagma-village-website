@@ -291,6 +291,27 @@ textarea:focus {
 }
 
 @media (max-width: 620px) {
+  .back-link,
+  .upload-button,
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .back-link svg,
+  .upload-button svg,
+  button svg {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+  }
+
+  .upload-button {
+    min-height: 50px;
+    justify-content: center;
+  }
+
   .panel-heading,
   .form-grid {
     grid-template-columns: 1fr;

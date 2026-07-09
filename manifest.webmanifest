@@ -26,9 +26,14 @@
       "url": "gallery.html"
     },
     {
+      "name": "Kisan Mausam",
+      "short_name": "Mausam",
+      "url": "kissan-help/mausam.html"
+    },
+    {
       "name": "TODO AI Sahayak",
       "short_name": "TODO AI",
-      "url": "/todo-ai/"
+      "url": "https://lagma-village-ai.onrender.com/todo-ai/"
     }
   ],
   "icons": [

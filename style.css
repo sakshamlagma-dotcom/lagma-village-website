@@ -329,6 +329,34 @@ a {
   text-underline-offset: 4px;
 }
 
+.announcement-bar .home-weather-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-weather-badge strong {
+  color: var(--white);
+  font-size: 1rem;
+}
+
+.announcement-bar .home-weather-badge small {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.announcement-bar .home-weather-badge span {
+  color: #ffd991;
+  font-size: 0.7rem;
+}
+
 .hero {
   position: relative;
   min-height: min(760px, calc(100vh - 116px));
@@ -2379,12 +2407,12 @@ h3 {
 
 .page-hero::before {
   content: "";
-  background-image: url("1.jpeg");
+  background-image: url("a.webp");
   background-position: center;
 }
 
 .about-hero::before {
-  background-image: url("2.webp");
+  background-image: url("c.webp");
 }
 
 .services-hero::before {
@@ -2750,6 +2778,10 @@ h3 {
     text-align: left;
   }
 
+  .announcement-bar .home-weather-badge {
+    margin-top: 7px;
+  }
+
   .hero {
     min-height: 590px;
   }
@@ -2988,5 +3020,251 @@ h3 {
 
   .map-frame {
     height: 320px;
+  }
+}
+/* Local Lucide icon system */
+.site-nav a,
+.gallery-nav a,
+.btn,
+.text-link,
+.back-link,
+.service-filter,
+.site-like-button,
+.upload-button,
+.footer-links a,
+.social-link-row a,
+.official-links a,
+.feature-card h3,
+.service-card h3,
+.notice-card h3,
+.contact-card h3,
+.connect-card h3,
+.govt-portal-card h3,
+.online-services-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.home-weather-icon {
+  width: 22px;
+  height: 22px;
+  color: #ffd991;
+  flex: 0 0 auto;
+}
+
+svg.lucide {
+  flex: 0 0 auto;
+}
+
+.site-nav svg,
+.gallery-nav svg,
+.menu-toggle svg,
+.btn svg,
+.text-link svg,
+.back-link svg,
+.service-filter svg,
+.site-like-button svg,
+.upload-button svg,
+.footer-links svg,
+.social-link-row svg,
+.official-links svg {
+  width: 17px;
+  height: 17px;
+}
+
+.card-icon {
+  width: 21px;
+  height: 21px;
+  color: var(--green);
+}
+
+.service-list-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--green);
+}
+
+/* Premium Lagma identity header */
+.site-header {
+  padding: 14px 24px;
+  border-bottom: 3px solid #d4a017;
+  background: linear-gradient(135deg, #063b26, #0f5c3a);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.site-header .brand {
+  gap: 14px;
+  color: #fff8dc;
+}
+
+.brand::before {
+  display: none;
+}
+
+.site-logo {
+  width: 70px;
+  height: 70px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.brand-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.brand-copy strong {
+  color: #fff8dc;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.brand-copy small {
+  color: #f3cf72;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.site-header .site-nav a {
+  color: rgba(255, 248, 220, 0.82);
+}
+
+.site-header .site-nav a:hover,
+.site-header .site-nav a[aria-current="page"] {
+  color: #fff8dc;
+  background: rgba(212, 160, 23, 0.22);
+}
+
+.site-header .menu-toggle {
+  border-color: rgba(243, 207, 114, 0.55);
+  color: #fff8dc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.site-header .install-app-btn {
+  color: #063b26;
+  background: #f3cf72;
+}
+
+.site-header .language-switcher {
+  border-color: rgba(243, 207, 114, 0.5);
+  color: #fff8dc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.site-header .language-switcher select {
+  color: #fff8dc;
+}
+
+.site-header .language-switcher option {
+  color: #1d2e23;
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    padding: 10px 14px;
+  }
+
+  .site-logo {
+    width: 52px;
+    height: 52px;
+    padding: 3px;
+  }
+
+  .brand-copy strong {
+    font-size: 20px;
+  }
+
+  .brand-copy small {
+    font-size: 11px;
+  }
+
+  .site-header .site-nav {
+    background: #073f29;
+    border-color: rgba(243, 207, 114, 0.38);
+  }
+
+  .site-nav a {
+    min-height: 46px;
+    gap: 10px;
+    padding: 11px 12px;
+  }
+
+  .site-nav a svg,
+  .menu-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn,
+  .text-link,
+  .service-filter,
+  .site-like-button {
+    gap: 7px;
+  }
+
+  .btn svg,
+  .text-link svg,
+  .service-filter svg,
+  .site-like-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .feature-card h3,
+  .service-card h3,
+  .notice-card h3,
+  .contact-card h3,
+  .connect-card h3,
+  .govt-portal-card h3 {
+    align-items: flex-start;
+    gap: 9px;
+  }
+
+  .card-icon {
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+  }
+
+  .online-services-list li {
+    min-height: 50px;
+    gap: 10px;
+    padding: 11px 12px;
+  }
+
+  .online-services-list li::before {
+    display: none;
+  }
+
+  .service-list-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .announcement-bar .home-weather-badge {
+    display: grid;
+    grid-template-columns: 24px auto auto;
+    width: 100%;
+    min-height: 46px;
+    gap: 8px;
+    padding: 9px 11px;
+  }
+
+  .home-weather-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .announcement-bar .home-weather-badge small {
+    justify-self: end;
   }
 }
