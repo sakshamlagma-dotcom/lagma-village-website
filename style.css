@@ -339,6 +339,29 @@ a {
   background: rgba(255, 255, 255, 0.1);
   text-decoration: none;
   white-space: nowrap;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.announcement-bar .home-weather-badge::before,
+.announcement-bar .home-weather-badge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.announcement-bar .home-weather-badge::after {
+  inset: auto;
+  width: 54px;
+  height: 54px;
+  right: -16px;
+  top: -20px;
+  border-radius: 999px;
 }
 
 .home-weather-badge strong {
@@ -355,6 +378,113 @@ a {
 .announcement-bar .home-weather-badge span {
   color: #ffd991;
   font-size: 0.7rem;
+}
+
+.announcement-bar .home-weather-badge.weather-clear {
+  border-color: rgba(255, 217, 145, 0.5);
+  background: linear-gradient(135deg, rgba(255, 217, 145, 0.2), rgba(255, 255, 255, 0.09));
+  box-shadow: 0 0 18px rgba(255, 217, 145, 0.16);
+}
+
+.announcement-bar .home-weather-badge.weather-clear::after {
+  opacity: 0.85;
+  background:
+    radial-gradient(circle, rgba(255, 232, 151, 0.95) 0 22%, rgba(255, 196, 87, 0.28) 23% 48%, transparent 49%),
+    conic-gradient(from 0deg, transparent 0 12deg, rgba(255, 217, 145, 0.62) 13deg 18deg, transparent 19deg 42deg);
+  animation: weatherSunSpin 8s linear infinite;
+}
+
+.announcement-bar .home-weather-badge.weather-partly::before,
+.announcement-bar .home-weather-badge.weather-cloudy::before {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse at 15% 72%, rgba(255, 255, 255, 0.26) 0 16%, transparent 17%),
+    radial-gradient(ellipse at 38% 70%, rgba(255, 255, 255, 0.2) 0 18%, transparent 19%),
+    radial-gradient(ellipse at 68% 74%, rgba(255, 255, 255, 0.18) 0 18%, transparent 19%);
+  background-size: 150% 100%;
+  animation: weatherCloudDrift 8s ease-in-out infinite alternate;
+}
+
+.announcement-bar .home-weather-badge.weather-partly::after {
+  opacity: 0.65;
+  background: radial-gradient(circle, rgba(255, 224, 130, 0.9) 0 28%, rgba(255, 224, 130, 0.24) 29% 55%, transparent 56%);
+  animation: weatherPulse 2.8s ease-in-out infinite;
+}
+
+.announcement-bar .home-weather-badge.weather-fog::before {
+  opacity: 0.9;
+  background: repeating-linear-gradient(0deg, transparent 0 10px, rgba(255, 255, 255, 0.18) 11px 13px, transparent 14px 22px);
+  animation: weatherFog 6s linear infinite;
+}
+
+.announcement-bar .home-weather-badge.weather-rain {
+  border-color: rgba(135, 206, 250, 0.42);
+  background: linear-gradient(135deg, rgba(64, 153, 255, 0.18), rgba(255, 255, 255, 0.08));
+}
+
+.announcement-bar .home-weather-badge.weather-rain::before {
+  opacity: 0.95;
+  background:
+    repeating-linear-gradient(115deg, transparent 0 9px, rgba(159, 218, 255, 0.72) 10px 12px, transparent 13px 20px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
+  background-size: 34px 34px, 100% 100%;
+  animation: weatherRain 0.72s linear infinite;
+}
+
+.announcement-bar .home-weather-badge.weather-storm {
+  border-color: rgba(255, 217, 145, 0.58);
+  background: linear-gradient(135deg, rgba(31, 45, 76, 0.54), rgba(255, 255, 255, 0.08));
+}
+
+.announcement-bar .home-weather-badge.weather-storm::before {
+  opacity: 0.9;
+  background:
+    linear-gradient(115deg, transparent 0 36%, rgba(255, 230, 128, 0.95) 37% 39%, transparent 40% 100%),
+    repeating-linear-gradient(115deg, transparent 0 11px, rgba(159, 218, 255, 0.7) 12px 14px, transparent 15px 24px);
+  background-size: 100% 100%, 42px 42px;
+  animation: weatherStorm 1.45s steps(2, end) infinite, weatherRain 0.68s linear infinite;
+}
+
+.announcement-bar .home-weather-badge.weather-snow::before {
+  opacity: 0.9;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 1.4px, transparent 1.8px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.62) 0 1.2px, transparent 1.6px);
+  background-size: 22px 22px, 34px 34px;
+  animation: weatherSnow 3.8s linear infinite;
+}
+
+@keyframes weatherSunSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes weatherCloudDrift {
+  from { transform: translateX(-8px); }
+  to { transform: translateX(12px); }
+}
+
+@keyframes weatherPulse {
+  50% { transform: scale(1.16); opacity: 0.9; }
+}
+
+@keyframes weatherFog {
+  from { background-position: 0 0; }
+  to { background-position: 42px 0; }
+}
+
+@keyframes weatherRain {
+  from { background-position: 0 -34px, 0 0; }
+  to { background-position: 0 34px, 0 0; }
+}
+
+@keyframes weatherStorm {
+  0%, 55%, 100% { filter: brightness(1); opacity: 0.78; }
+  58%, 62% { filter: brightness(2.6); opacity: 1; }
+}
+
+@keyframes weatherSnow {
+  from { background-position: 0 -24px, 12px -40px; }
+  to { background-position: 0 34px, 12px 28px; }
 }
 
 .hero {

@@ -82,6 +82,21 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!Number.isFinite(Number(weather?.temperature))) return;
       const temperature = Math.round(Number(weather.temperature));
       const condition = conditionLabels[weather.code] || "मौसम";
+      const weatherMood = weather.code === 0
+        ? "clear"
+        : [1, 2].includes(weather.code)
+          ? "partly"
+          : weather.code === 3
+            ? "cloudy"
+            : [45, 48].includes(weather.code)
+              ? "fog"
+              : [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(weather.code)
+                ? "rain"
+                : [71, 73, 75, 77, 85, 86].includes(weather.code)
+                  ? "snow"
+                  : [95, 96, 99].includes(weather.code)
+                    ? "storm"
+                    : "partly";
       const weatherIcon = weather.code === 0
         ? "sun"
         : [1, 2].includes(weather.code)
@@ -102,6 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
         currentIcon.outerHTML = `<i class="home-weather-icon" data-lucide="${weatherIcon}" data-weather-icon aria-hidden="true"></i>`;
         window.lucide?.createIcons({ attrs: { "stroke-width": 1.9 } });
       }
+      homeWeatherBadge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm");
+      homeWeatherBadge.classList.add(`weather-${weatherMood}`);
+      homeWeatherBadge.dataset.weatherMood = weatherMood;
       temperatureNode.textContent = `${temperature}°C`;
       conditionNode.textContent = condition;
       homeWeatherBadge.setAttribute("aria-label", `Lagma ${temperature} degree Celsius, ${condition}. पूरा मौसम खोलें`);
