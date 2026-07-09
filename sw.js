@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v42";
+const CACHE = "lagma-village-v43";
 const ASSETS = [
   "./",
   "./index.html",
