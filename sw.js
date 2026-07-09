@@ -28,6 +28,7 @@ const ASSETS = [
   "./lagma-icons.js?v=1",
   "./manifest.webmanifest?v=6",
   "./sj-logo.webp",
+  "./todo-ai-face.webp",
   "./a.webp",
   "./b.webp",
   "./c.webp",

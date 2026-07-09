@@ -24,6 +24,77 @@
   );
 }
 
+/* TODO AI floating helper */
+.todo-ai-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 164px;
+  padding: 9px 14px 9px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #7968f2, #5144c4);
+  box-shadow: 0 14px 38px rgba(35, 27, 103, 0.34);
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.todo-ai-fab:hover,
+.todo-ai-fab:focus-visible {
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 18px 45px rgba(35, 27, 103, 0.42);
+}
+
+.todo-ai-fab-face {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #eaf4ff;
+  box-shadow: inset 0 0 0 2px rgba(91, 74, 203, 0.12);
+  animation: todo-ai-wave 2.8s ease-in-out infinite;
+}
+
+.todo-ai-fab-face img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform: scale(1.24);
+}
+
+.todo-ai-fab-copy strong,
+.todo-ai-fab-copy small {
+  display: block;
+  line-height: 1.15;
+}
+
+.todo-ai-fab-copy strong { font-size: 13px; letter-spacing: 0.02em; }
+.todo-ai-fab-copy small { margin-top: 3px; color: rgba(255, 255, 255, 0.8); font-size: 10px; }
+.todo-ai-fab-online { position: absolute; top: 8px; left: 43px; width: 10px; height: 10px; border: 2px solid #6554d9; border-radius: 50%; background: #4de0ad; }
+
+@keyframes todo-ai-wave {
+  0%, 75%, 100% { transform: rotate(0deg); }
+  82% { transform: rotate(-8deg) scale(1.06); }
+  90% { transform: rotate(7deg) scale(1.06); }
+}
+
+@media (max-width: 560px) {
+  .todo-ai-fab { right: 12px; bottom: 12px; min-width: 0; padding: 7px; }
+  .todo-ai-fab-copy { display: none; }
+  .todo-ai-fab-face { width: 48px; height: 48px; flex-basis: 48px; }
+  .todo-ai-fab-online { top: 5px; left: 43px; }
+}
+
 * {
   box-sizing: border-box;
 }
