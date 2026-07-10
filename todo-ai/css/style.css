@@ -544,3 +544,218 @@ body[data-page="home"] .list-item:hover{
     width:calc(100% - 34px);
   }
 }
+
+/* Mobile app crop / fullscreen fit */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100dvh;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.shell {
+  min-height: 100dvh;
+}
+
+@media(max-width:640px){
+  .topbar{
+    height: calc(62px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 12px 0;
+  }
+
+  .logo{
+    min-width: 0;
+    gap: 9px;
+  }
+
+  .logo-mark{
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    flex: 0 0 38px;
+  }
+
+  .logo strong,
+  .logo span{
+    min-width: 0;
+  }
+
+  .top-actions{
+    gap: 6px;
+  }
+
+  .icon-btn,
+  .avatar{
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+  }
+
+  .page{
+    width: 100%;
+    padding: 14px 12px calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .page-head{
+    margin-bottom: 16px;
+  }
+
+  .bottom-nav{
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: calc(100% - 18px);
+    height: 64px;
+    border-radius: 22px;
+    padding: 6px;
+  }
+
+  .nav-item{
+    border-radius: 16px;
+    font-size: 9px;
+  }
+
+  .ai-dashboard-hero{
+    min-height: auto;
+    padding: 22px 18px;
+    border-radius: 26px;
+  }
+
+  .ai-dashboard-hero h1{
+    font-size: clamp(38px, 12vw, 50px);
+    line-height: .98;
+  }
+
+  .dashboard-actions{
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .install-card{
+    grid-template-columns: 1fr;
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .install-card .btn{
+    width: 100%;
+  }
+
+  .premium-search{
+    border-radius: 20px;
+  }
+
+  .card,
+  .list-item,
+  .content-card,
+  .detail-hero{
+    border-radius: 20px;
+  }
+}
+
+@media(max-width:640px){
+  .chat-premium-page{
+    height: 100dvh;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .chat-premium-page .page{
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-width: none;
+    padding: 0;
+  }
+
+  .ai-chat-shell{
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .ai-chat-top{
+    min-height: calc(66px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 16px 8px;
+  }
+
+  .ai-menu-dot,
+  .ai-chat-actions a,
+  .ai-chat-actions button{
+    width: 40px;
+    height: 40px;
+    border-radius: 15px;
+  }
+
+  .ai-model-title button{
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 22px;
+  }
+
+  .ai-chat-messages{
+    min-height: 0;
+    padding: 14px 18px calc(112px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+
+  .ai-empty-state{
+    min-height: calc(100dvh - 220px);
+    padding: 8px 0 24px;
+  }
+
+  .ai-empty-state h1{
+    font-size: clamp(30px, 10vw, 42px);
+  }
+
+  .ai-empty-state p{
+    font-size: 15px;
+  }
+
+  .ai-chat-shell .chat-bubble{
+    max-width: 86%;
+    font-size: 16px;
+  }
+
+  .ai-chat-shell .chat-row.assistant .chat-bubble{
+    max-width: 100%;
+    font-size: 17px;
+  }
+
+  .thinking-row{
+    font-size: 18px;
+  }
+
+  .ai-composer{
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    transform: none;
+    width: auto;
+    grid-template-columns: 40px minmax(0, 1fr) 36px 44px;
+    padding: 8px;
+    border-radius: 30px;
+  }
+
+  .ai-composer input{
+    font-size: 18px;
+    padding: 12px 2px;
+  }
+
+  .composer-plus{
+    font-size: 32px;
+  }
+
+  .composer-send{
+    width: 44px;
+    height: 44px;
+    border-radius: 20px;
+  }
+}

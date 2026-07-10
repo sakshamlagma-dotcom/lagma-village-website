@@ -6,6 +6,7 @@
   "start_url": "./service-detail.html?id=chat",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#090b18",
   "theme_color": "#6c5ce7",
   "icons": [
