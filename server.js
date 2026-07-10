@@ -46,6 +46,11 @@ Website knowledge:
 
 app.disable("x-powered-by");
 app.use(express.json({ limit: "1mb" }));
+
+app.get(["/todo-ai", "/todo-ai/"], (_req, res) => {
+  res.redirect(302, "/todo-ai/service-detail.html?id=chat");
+});
+
 app.use("/todo-ai", express.static(todoPublic));
 
 app.get("/api/health", (_req, res) => {

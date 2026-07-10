@@ -1,4 +1,4 @@
-const CACHE = 'todo-ai-v2';
+const CACHE = 'todo-ai-v3';
 const CORE = ['./', './index.html', './home.html', './services.html', './css/style.css', './js/app.js', './assets/icons/logo.svg'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE))));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))));

@@ -32,7 +32,7 @@ else {
 
 function isProtected(name){ return ['home','services','service-detail','notifications','profile','settings','help','search'].includes(name); }
 function initSplash(){
-  setTimeout(()=>{ location.replace('service-detail.html?id=chat'); },1400);
+  location.replace('service-detail.html?id=chat');
 }
 function initLogin(){
   setupPasswordToggle();
