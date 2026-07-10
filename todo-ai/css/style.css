@@ -159,6 +159,47 @@ body[data-page="home"] .list-item:hover{
   color:#dfe8ff;
 }
 
+.install-card{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:18px;
+  align-items:center;
+  margin:18px 0 24px;
+  padding:22px;
+  border:1px solid rgba(96,240,208,.18);
+  border-radius:26px;
+  background:
+    linear-gradient(135deg,rgba(96,240,208,.13),rgba(47,107,255,.09)),
+    rgba(255,255,255,.045);
+}
+
+.install-card h2{
+  margin:8px 0 6px;
+  font:800 22px var(--font-display);
+  letter-spacing:-.025em;
+}
+
+.install-card p{
+  margin:0;
+  color:var(--muted);
+}
+
+.install-badge{
+  display:inline-flex;
+  padding:5px 9px;
+  border-radius:999px;
+  color:#88ffe8;
+  background:rgba(96,240,208,.1);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.1em;
+}
+
+.install-app-action.is-installed{
+  opacity:.72;
+  cursor:default;
+}
+
 .chat-premium-page{
   --bg:#000;
   --surface:#0b0b0d;
@@ -204,7 +245,8 @@ body[data-page="home"] .list-item:hover{
 }
 
 .ai-menu-dot,
-.ai-chat-actions a{
+.ai-chat-actions a,
+.ai-chat-actions button{
   width:44px;
   height:44px;
   display:grid;
@@ -213,6 +255,8 @@ body[data-page="home"] .list-item:hover{
   color:#f2f2f4;
   font-size:28px;
   background:transparent;
+  border:0;
+  cursor:pointer;
 }
 
 .ai-menu-dot::after{
@@ -377,6 +421,13 @@ body[data-page="home"] .list-item:hover{
   flex-basis:100%;
   color:#77777d;
   font-size:14px;
+}
+
+.install-guide ol{
+  margin:14px 0 20px;
+  padding-left:22px;
+  color:var(--muted);
+  line-height:1.7;
 }
 
 .ai-composer{
