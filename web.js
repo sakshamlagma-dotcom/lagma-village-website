@@ -117,6 +117,23 @@ document.addEventListener("DOMContentLoaded", () => {
         currentIcon.outerHTML = `<i class="home-weather-icon" data-lucide="${weatherIcon}" data-weather-icon aria-hidden="true"></i>`;
         window.lucide?.createIcons({ attrs: { "stroke-width": 1.9 } });
       }
+      let weatherScene = homeWeatherBadge.querySelector(".weather-scene");
+      if (!weatherScene) {
+        weatherScene = document.createElement("span");
+        weatherScene.className = "weather-scene";
+        weatherScene.setAttribute("aria-hidden", "true");
+        homeWeatherBadge.prepend(weatherScene);
+      }
+      weatherScene.innerHTML = `
+        <i class="weather-sun"></i>
+        <i class="weather-cloud cloud-a"></i>
+        <i class="weather-cloud cloud-b"></i>
+        <i class="weather-fog-line fog-a"></i>
+        <i class="weather-fog-line fog-b"></i>
+        <i class="weather-bolt"></i>
+        ${Array.from({ length: 12 }, (_, index) => `<i class="weather-drop drop-${index + 1}"></i>`).join("")}
+        ${Array.from({ length: 9 }, (_, index) => `<i class="weather-flake flake-${index + 1}"></i>`).join("")}
+      `;
       homeWeatherBadge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm");
       homeWeatherBadge.classList.add(`weather-${weatherMood}`);
       homeWeatherBadge.dataset.weatherMood = weatherMood;
