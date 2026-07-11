@@ -1,4 +1,4 @@
-const CACHE = 'todo-ai-v11';
+const CACHE = 'todo-ai-v12';
 const CORE = [
   './',
   './index.html',
