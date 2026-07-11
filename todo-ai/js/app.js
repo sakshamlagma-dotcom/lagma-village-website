@@ -7,14 +7,14 @@ const store = {
 };
 
 const services = [
-  { id:'chat', icon:'✦', title:'AI Chat', desc:'Hindi ya English mein kisi bhi topic par smart answers.', info:'TODO AI aapke sawaalon, planning, explanations aur daily tasks mein madad karta hai.' },
-  { id:'write', icon:'✎', title:'Writing Assistant', desc:'Emails, captions aur professional content likhein.', info:'Apna topic aur tone batayein. TODO AI aapke liye clear, polished content taiyar karega.' },
-  { id:'study', icon:'◉', title:'Study Helper', desc:'Mushkil topics ko aasaan bhaasha mein samjhein.', info:'Concept explanations, revision plans aur practice questions ke saath behtar padhaai karein.' },
-  { id:'ideas', icon:'◇', title:'Idea Generator', desc:'Business, content aur projects ke creative ideas.', info:'Naye business, video, project ya social content ke liye useful ideas generate karein.' },
-  { id:'translate', icon:'文', title:'Smart Translator', desc:'Hindi aur English content ko naturally translate karein.', info:'Meaning aur tone preserve karke natural language translation paayein.' },
-  { id:'resume', icon:'▤', title:'Resume Builder', desc:'Professional resume content aur improvements.', info:'Role ke hisaab se impactful summary, skills aur experience bullets banayein.' },
-  { id:'voice', icon:'◖', title:'Voice Assistant', desc:'AI se natural voice conversation.', info:'Voice Assistant abhi development mein hai.', coming:true },
-  { id:'image', icon:'▧', title:'AI Image Studio', desc:'Creative images aur designs generate karein.', info:'AI Image Studio jaldi available hoga.', coming:true }
+  { id:'chat', icon:'💬', title:'AI Chat', desc:'Hindi ya English mein kisi bhi topic par smart answers.', info:'TODO AI aapke sawaalon, planning, explanations aur daily tasks mein madad karta hai.' },
+  { id:'write', icon:'✍️', title:'Writing Assistant', desc:'Emails, captions aur professional content likhein.', info:'Apna topic aur tone batayein. TODO AI aapke liye clear, polished content taiyar karega.' },
+  { id:'study', icon:'📚', title:'Study Helper', desc:'Mushkil topics ko aasaan bhaasha mein samjhein.', info:'Concept explanations, revision plans aur practice questions ke saath behtar padhaai karein.' },
+  { id:'ideas', icon:'💡', title:'Idea Generator', desc:'Business, content aur projects ke creative ideas.', info:'Naye business, video, project ya social content ke liye useful ideas generate karein.' },
+  { id:'translate', icon:'🌐', title:'Smart Translator', desc:'Hindi aur English content ko naturally translate karein.', info:'Meaning aur tone preserve karke natural language translation paayein.' },
+  { id:'resume', icon:'🧾', title:'Resume Builder', desc:'Professional resume content aur improvements.', info:'Role ke hisaab se impactful summary, skills aur experience bullets banayein.' },
+  { id:'voice', icon:'🎙️', title:'Voice Assistant', desc:'AI se natural voice conversation.', info:'Voice Assistant abhi development mein hai.', coming:true },
+  { id:'image', icon:'🖼️', title:'AI Image Studio', desc:'Creative images aur designs generate karein.', info:'AI Image Studio jaldi available hoga.', coming:true }
 ];
 const notices = [
   {id:1,title:'Welcome to TODO AI',date:'7 July 2026',text:'Aapka smart AI workspace taiyar hai. Sabhi tools explore karein.',unread:true},
