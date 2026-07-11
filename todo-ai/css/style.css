@@ -268,10 +268,10 @@ body[data-page="home"] .list-item:hover{
   position:sticky;
   top:0;
   z-index:5;
-  display:flex;
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr) 140px;
   align-items:center;
-  justify-content:space-between;
-  gap:16px;
+  gap:12px;
   min-height:82px;
   padding:18px 26px 12px;
   background:linear-gradient(180deg,#000 70%,rgba(0,0,0,.65));
@@ -304,8 +304,8 @@ body[data-page="home"] .list-item:hover{
 }
 
 .ai-model-title{
-  flex:1;
   min-width:0;
+  overflow:hidden;
 }
 
 .ai-model-title strong{
@@ -318,6 +318,11 @@ body[data-page="home"] .list-item:hover{
 }
 
 .ai-model-title button{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
   border:0;
   padding:0;
   background:none;
@@ -329,7 +334,16 @@ body[data-page="home"] .list-item:hover{
 .ai-chat-actions{
   display:flex;
   align-items:center;
-  gap:4px;
+  justify-content:flex-end;
+  gap:2px;
+  min-width:0;
+  overflow:hidden;
+}
+
+.ai-chat-actions .install-app-action.is-installed{
+  font-size:22px;
+  color:#8dffdf;
+  opacity:1;
 }
 
 .ai-chat-messages{
@@ -751,8 +765,10 @@ body {
   }
 
   .ai-chat-top{
+    grid-template-columns: 40px minmax(0, 1fr) 124px;
+    gap: 8px;
     min-height: calc(66px + env(safe-area-inset-top));
-    padding: env(safe-area-inset-top) 16px 8px;
+    padding: env(safe-area-inset-top) 10px 8px;
   }
 
   .ai-menu-dot,
@@ -764,7 +780,7 @@ body {
   }
 
   .ai-model-title button{
-    max-width: 180px;
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
