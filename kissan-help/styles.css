@@ -399,12 +399,18 @@ h3 {
   text-decoration: none;
 }
 .local-pacs-contact img.pacs-photo {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;   /* गोल फोटो */
   object-fit: cover;
-  border: 1px solid #2e7d32;
+  border: 2px solid #2e7d32;
   margin-top: 10px;
+}
+.local-pacs-contact div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
 }
 
 .scheme-card,
