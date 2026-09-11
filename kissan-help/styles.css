@@ -398,6 +398,14 @@ h3 {
   font-weight: 900;
   text-decoration: none;
 }
+.local-pacs-contact img.pacs-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;   /* गोल फोटो */
+  object-fit: cover;
+  border: 2px solid #2e7d32;
+  margin-top: 10px;
+}
 
 .scheme-card,
 .quick-list article {
