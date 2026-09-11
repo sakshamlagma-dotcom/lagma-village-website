@@ -399,8 +399,8 @@ h3 {
   text-decoration: none;
 }
 .local-pacs-contact img.pacs-photo {
-  width: 60px;
-  height: 60px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;   /* गोल फोटो */
   object-fit: cover;
   border: 2px solid #2e7d32;
