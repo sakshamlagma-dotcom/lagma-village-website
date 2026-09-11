@@ -38,6 +38,10 @@ img {
   max-width: 100%;
 }
 
+/* =========================
+   HEADER
+========================= */
+
 .site-header {
   position: sticky;
   top: 0;
@@ -113,6 +117,10 @@ img {
   background: var(--ink);
 }
 
+/* =========================
+   HERO
+========================= */
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
@@ -182,6 +190,10 @@ h3 {
   margin-top: 32px;
 }
 
+/* =========================
+   BUTTONS
+========================= */
+
 .btn {
   display: inline-flex;
   min-height: 48px;
@@ -192,26 +204,10 @@ h3 {
   padding: 12px 20px;
   font-weight: 850;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
-}
-
-@media (max-width: 780px) {
-  .nav-links a {
-    min-height: 46px;
-    gap: 10px;
-  }
-
-  .nav-links svg,
-  .menu-toggle svg,
-  button svg,
-  .btn svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .btn {
-    justify-content: center;
-  }
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
 }
 
 .btn:hover {
@@ -230,6 +226,10 @@ h3 {
   background: var(--white);
 }
 
+/* =========================
+   TRUST
+========================= */
+
 .trust-strip {
   display: flex;
   flex-wrap: wrap;
@@ -246,6 +246,10 @@ h3 {
   font-size: 14px;
   font-weight: 800;
 }
+
+/* =========================
+   HERO IMAGE
+========================= */
 
 .hero-media {
   position: relative;
@@ -274,6 +278,10 @@ h3 {
   background: var(--saffron);
 }
 
+/* =========================
+   STATS
+========================= */
+
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -300,6 +308,10 @@ h3 {
   color: var(--muted);
   font-weight: 780;
 }
+
+/* =========================
+   NOTES / ALERTS
+========================= */
 
 .data-note {
   margin: 18px clamp(18px, 5vw, 72px) 0;
@@ -328,6 +340,10 @@ h3 {
   color: #3f2a08;
 }
 
+/* =========================
+   SCHEME / QUICK LIST
+========================= */
+
 .scheme-grid,
 .quick-list {
   display: grid;
@@ -341,6 +357,10 @@ h3 {
   margin-top: 24px;
 }
 
+/* =========================
+   LOGO
+========================= */
+
 .site-logo {
   width: 70px;
   height: 70px;
@@ -351,6 +371,10 @@ h3 {
   padding: 4px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
 }
+
+/* =========================
+   PACS CONTACT
+========================= */
 
 .local-pacs-contact {
   display: grid;
@@ -398,6 +422,17 @@ h3 {
   font-weight: 900;
   text-decoration: none;
 }
+
+.local-pacs-contact div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =========================
+   PACS PHOTO
+========================= */
+
 .pacs-photo {
   width: 110px;
   height: 140px;
@@ -421,31 +456,9 @@ h3 {
   border: 1px solid var(--line);
 }
 
-.local-pacs-contact div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* 📱 Mobile view adjustments */
-@media (max-width: 600px) {
-  .pacs-photo,
-  .local-pacs-contact img.pacs-photo {
-    width: 90px;
-    height: 115px;
-    max-width: 90px;
-  }
-
-  .local-pacs-contact div {
-    align-items: center;
-    text-align: center;
-  }
-
-  .local-pacs-contact a {
-    margin-top: 10px;
-    width: 100%;   /* कॉल बटन मोबाइल पर full width */
-    justify-content: center;
-  }
+/* =========================
+   SCHEME CARDS
+========================= */
 
 .scheme-card,
 .quick-list article {
@@ -504,6 +517,10 @@ h3 {
   color: #eaf6e5;
 }
 
+/* =========================
+   MODEL STRIP
+========================= */
+
 .model-strip {
   display: grid;
   grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1fr);
@@ -523,6 +540,10 @@ h3 {
   font-size: clamp(22px, 3vw, 32px);
   line-height: 1.14;
 }
+
+/* =========================
+   MAKHANA
+========================= */
 
 .makhana-section {
   background: linear-gradient(180deg, #f8faf4 0%, #eff8ec 100%);
@@ -585,6 +606,10 @@ h3 {
   font-weight: 800;
 }
 
+/* =========================
+   SECTIONS
+========================= */
+
 .section {
   padding: clamp(58px, 8vw, 100px) clamp(18px, 5vw, 72px);
 }
@@ -601,6 +626,10 @@ h3 {
 .compact-heading {
   margin-bottom: 22px;
 }
+
+/* =========================
+   SEASON / DAIRY
+========================= */
 
 .season-grid,
 .dairy-grid {
@@ -640,6 +669,10 @@ h3 {
 .guide-card li {
   color: var(--muted);
 }
+
+/* =========================
+   CROP PHOTOS
+========================= */
 
 .crop-photo-panel {
   margin: 30px 0 34px;
@@ -695,6 +728,10 @@ h3 {
   line-height: 1.55;
 }
 
+/* =========================
+   SERVICES
+========================= */
+
 .service-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -731,6 +768,10 @@ h3 {
   background: #dff0d6;
   font-weight: 900;
 }
+
+/* =========================
+   TABLES
+========================= */
 
 .table-wrap {
   overflow-x: auto;
@@ -785,6 +826,10 @@ td:first-child {
   color: var(--green-dark);
   font-weight: 850;
 }
+
+/* =========================
+   LINKS
+========================= */
 
 .link-heading {
   display: grid;
@@ -857,6 +902,10 @@ input:focus {
   margin-top: 18px;
 }
 
+/* =========================
+   GUIDE CARDS
+========================= */
+
 .guide-card {
   min-height: 320px;
   padding: 24px;
@@ -872,6 +921,10 @@ input:focus {
 .guide-card li::marker {
   color: var(--green);
 }
+
+/* =========================
+   STATE LIST
+========================= */
 
 .state-list {
   display: grid;
@@ -904,6 +957,10 @@ input:focus {
   grid-template-columns: repeat(4, 1fr);
 }
 
+/* =========================
+   FOOTER
+========================= */
+
 .site-footer {
   display: flex;
   align-items: center;
@@ -918,6 +975,29 @@ input:focus {
   margin: 0;
   font-weight: 900;
 }
+
+/* =========================
+   ICONS
+========================= */
+
+svg.lucide {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+}
+
+.nav-links a,
+.official-links a,
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================
+   TABLET
+========================= */
 
 @media (max-width: 1080px) {
   .nav-links {
@@ -958,6 +1038,10 @@ input:focus {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 780px) {
   .site-logo {
@@ -1009,6 +1093,16 @@ input:focus {
 
   .nav-links a {
     padding: 13px 12px;
+    min-height: 46px;
+    gap: 10px;
+  }
+
+  .nav-links svg,
+  .menu-toggle svg,
+  button svg,
+  .btn svg {
+    width: 20px;
+    height: 20px;
   }
 
   .brand {
@@ -1040,18 +1134,32 @@ input:focus {
     align-items: flex-start;
     flex-direction: column;
   }
-}
-svg.lucide {
-  flex: 0 0 auto;
-  width: 18px;
-  height: 18px;
+
+  .btn {
+    justify-content: center;
+  }
 }
 
-.nav-links a,
-.official-links a,
-button,
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .pacs-photo,
+  .local-pacs-contact img.pacs-photo {
+    width: 90px;
+    height: 115px;
+    max-width: 90px;
+  }
+
+  .local-pacs-contact div {
+    align-items: center;
+    text-align: center;
+  }
+
+  .local-pacs-contact a {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
+  }
 }
