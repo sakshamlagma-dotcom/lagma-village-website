@@ -399,19 +399,19 @@ h3 {
   text-decoration: none;
 }
 .local-pacs-contact img.pacs-photo {
-  width: 100px;
-  height: 100px;
+  width: 80px;          /* छोटा size हर जगह */
+  height: 80px;
   border-radius: 50%;   /* गोल फोटो */
   object-fit: cover;
   border: 2px solid #2e7d32;
-  margin-top: 10px;
 }
+
 .local-pacs-contact div {
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
+
 /* 📱 Mobile view adjustments */
 @media (max-width: 600px) {
   .local-pacs-contact div {
@@ -419,16 +419,11 @@ h3 {
     text-align: center;
   }
 
-  .local-pacs-contact img.pacs-photo {
-    width: 80px;
-    height: 80px;
-  }
-
   .local-pacs-contact a {
     margin-top: 10px;
+    width: 100%;   /* कॉल बटन मोबाइल पर full width */
+    justify-content: center;
   }
-}
-
 
 .scheme-card,
 .quick-list article {
