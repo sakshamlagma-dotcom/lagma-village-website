@@ -403,7 +403,7 @@ h3 {
   height: 10px;
   border-radius: 50%;   /* गोल फोटो */
   object-fit: cover;
-  border: 2px solid #2e7d32;
+  border: 1px solid #2e7d32;
   margin-top: 10px;
 }
 
