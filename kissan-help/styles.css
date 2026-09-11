@@ -399,11 +399,11 @@ h3 {
   text-decoration: none;
 }
 .local-pacs-contact img.pacs-photo {
-  width: 80px;          /* छोटा size हर जगह */
-  height: 80px;
+  width: 20px;          /* छोटा size हर जगह */
+  height: 20px;
   border-radius: 50%;   /* गोल फोटो */
   object-fit: cover;
-  border: 2px solid #2e7d32;
+  border: 1px solid #2e7d32;
 }
 
 .local-pacs-contact div {
