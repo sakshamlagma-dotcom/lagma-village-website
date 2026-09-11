@@ -398,12 +398,27 @@ h3 {
   font-weight: 900;
   text-decoration: none;
 }
+.pacs-photo {
+  width: 110px;
+  height: 140px;
+  max-width: 110px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
 .local-pacs-contact img.pacs-photo {
-  width: 20px;          /* छोटा size हर जगह */
-  height: 20px;
-  border-radius: 50%;   /* गोल फोटो */
-  object-fit: cover;
-  border: 1px solid #2e7d32;
+  width: 110px;
+  height: 140px;
+  max-width: 110px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 10px;
+  border: 1px solid var(--line);
 }
 
 .local-pacs-contact div {
@@ -414,6 +429,13 @@ h3 {
 
 /* 📱 Mobile view adjustments */
 @media (max-width: 600px) {
+  .pacs-photo,
+  .local-pacs-contact img.pacs-photo {
+    width: 90px;
+    height: 115px;
+    max-width: 90px;
+  }
+
   .local-pacs-contact div {
     align-items: center;
     text-align: center;
