@@ -412,6 +412,23 @@ h3 {
   align-items: center;
 
 }
+/* 📱 Mobile view adjustments */
+@media (max-width: 600px) {
+  .local-pacs-contact div {
+    align-items: center;
+    text-align: center;
+  }
+
+  .local-pacs-contact img.pacs-photo {
+    width: 80px;
+    height: 80px;
+  }
+
+  .local-pacs-contact a {
+    margin-top: 10px;
+  }
+}
+
 
 .scheme-card,
 .quick-list article {
