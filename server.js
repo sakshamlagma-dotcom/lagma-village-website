@@ -46,6 +46,21 @@ Website knowledge:
 `.trim();
 
 app.disable("x-powered-by");
+app.use((req, res, next) => {
+  const allowedOrigins = new Set([
+    "https://sakshamlagma-dotcom.github.io",
+    "https://lagma-village-ai.onrender.com",
+  ]);
+  const origin = req.headers.origin;
+  if (allowedOrigins.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
 app.use(express.json({ limit: "1mb" }));
 
 app.get(["/todo-ai", "/todo-ai/"], (_req, res) => {
