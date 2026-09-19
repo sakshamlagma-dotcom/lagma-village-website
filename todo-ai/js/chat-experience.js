@@ -175,7 +175,12 @@
       await animateReply(assistant, data.reply || 'I could not generate a response.');
       if ((state.liveMode || settings.autoSpeak) && assistant.text) speak(assistant.text);
     } catch (error) {
-      if (error.name !== 'AbortError') { assistant.text = `Sorry, ${error.message}`; assistant.error = true; }
+      if (error.name !== 'AbortError') {
+        assistant.text = error.message.includes('GEMINI_API_KEY')
+          ? 'AI service is not configured on this local server yet.\n\nAdd `GEMINI_API_KEY` to a local `.env` file, restart the server, and try again. Your key stays server-side and is never sent to the browser.'
+          : `Sorry, ${error.message}`;
+        assistant.error = true;
+      }
       else state.messages = state.messages.filter((message) => message !== assistant);
     } finally {
       assistant.pending = false; state.controller = null; setGenerating(false); persist(); renderMessages();
