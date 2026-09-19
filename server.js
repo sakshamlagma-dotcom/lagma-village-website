@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
-const primaryModel = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+const primaryModel = process.env.GEMINI_MODEL || "gemini-2.0-flash-lite";
 const fallbackModels = [
   primaryModel,
   "gemini-2.5-flash-lite",
