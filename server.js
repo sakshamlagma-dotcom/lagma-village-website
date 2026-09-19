@@ -98,10 +98,30 @@ app.post("/api/chat", async (req, res) => {
 
     res.json({ reply, model });
   } catch (error) {
-    console.error("Chat request failed:", error.message);
-    const timedOut = error.name === "TimeoutError";
+    console.error("Chat request failed:", {
+      message: error.message,
+      status: error.status || null,
+      model: error.model || null,
+    });
+    const timedOut = error.name === "TimeoutError" || error.name === "AbortError";
+    const upstreamStatus = Number(error.status) || 0;
+    let message = "Gemini abhi busy hai. Thodi der baad dobara try karein.";
+
+    if ([401, 403].includes(upstreamStatus)) {
+      message = "AI service authorization needs attention. Please check the server-side Gemini configuration.";
+    } else if (upstreamStatus === 404) {
+      message = "The configured AI model is unavailable. Please update GEMINI_MODEL on the server.";
+    } else if (upstreamStatus === 429) {
+      message = "AI usage limit reached temporarily. Please wait a moment and try again.";
+    } else if ([400, 413].includes(upstreamStatus)) {
+      message = "That request could not be processed. Please shorten it and try again.";
+    } else if (timedOut) {
+      message = "AI response mein zyada samay laga. Dobara try karein.";
+    }
+
     res.status(502).json({
-      error: timedOut ? "AI response mein zyada samay laga. Dobara try karein." : "Gemini abhi busy hai. Thodi der baad dobara try karein.",
+      error: message,
+      code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : "AI_UNAVAILABLE",
     });
   }
 });
@@ -157,11 +177,15 @@ async function generateWithFallback(apiKey, messages) {
       const data = await response.json();
       if (response.ok) return { data, model };
 
-      lastError = new Error(data?.error?.message || `Gemini API error ${response.status}`);
+      const error = new Error(data?.error?.message || `Gemini API error ${response.status}`);
+      error.status = response.status;
+      error.model = model;
+      lastError = error;
       console.error("Gemini API error:", response.status, model, data?.error?.message);
 
       if (![400, 429, 503].includes(response.status)) break;
     } catch (error) {
+      error.model = model;
       lastError = error;
       console.error("Gemini request failed:", model, error.message);
     }
