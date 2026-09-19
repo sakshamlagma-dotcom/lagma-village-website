@@ -1015,3 +1015,109 @@ html[data-theme=dark] .chat-experience-page {
     animation: none;
   }
 }
+
+/* Shared inline icon system for the chat surface. */
+.ui-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.chat-icon-button,
+.composer-button,
+.send-button,
+.talk-live-button,
+.live-start-button,
+.new-chat-button,
+.drawer-nav button,
+.chat-bottom-nav button,
+.jump-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.chat-icon-button,
+.composer-button {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.send-button .ui-icon {
+  width: 19px;
+  height: 19px;
+}
+
+.rail-action {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.rail-action .ui-icon,
+.drawer-nav .ui-icon,
+.chat-bottom-nav .ui-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.tool-icon .ui-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.message-actions .ui-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.message-actions button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+}
+
+.history-search > .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.new-chat-button {
+  min-height: 40px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.live-start-button .ui-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.chat-bottom-nav button {
+  min-width: 58px;
+  min-height: 44px;
+}
+
+@media (max-width: 430px) {
+  .chat-icon-button,
+  .composer-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .send-button {
+    width: 44px;
+    height: 44px;
+  }
+}
