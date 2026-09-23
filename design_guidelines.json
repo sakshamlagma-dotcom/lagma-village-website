@@ -1,0 +1,177 @@
+{
+  "project_name": "Lagma Village Heritage & Community Portal",
+  "archetype": "ORGANIC & EARTHY / HERITAGE EDITORIAL",
+  "theme": "Light theme default with rich terracotta, deep emerald, and warm ochre accents celebrating Mithila culture and rural vibrancy",
+  "file_format": ".js / .jsx",
+  "typography": {
+    "heading_font": "Cormorant Garamond, serif (or Playfair Display)",
+    "body_font": "Plus Jakarta Sans, sans-serif",
+    "accent_mono_font": "IBM Plex Mono, monospace",
+    "font_weights": {
+      "heading_hero": "font-semibold (600) or font-bold (700)",
+      "heading_section": "font-medium (500) to font-bold (700)",
+      "body_text": "font-normal (400)",
+      "label_accent": "font-semibold (600) tracking-[0.2em] uppercase"
+    },
+    "hierarchy_scale": {
+      "h1_hero": "text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.1]",
+      "h2_section": "text-2xl sm:text-3xl lg:text-4xl tracking-tight leading-snug",
+      "h3_card": "text-xl sm:text-2xl font-semibold leading-snug",
+      "body_large": "text-lg text-stone-700 leading-relaxed",
+      "body_base": "text-base text-stone-600 leading-relaxed",
+      "caption_label": "text-xs sm:text-sm uppercase tracking-widest text-emerald-800"
+    }
+  },
+  "colors": {
+    "brand_primary": {
+      "hex": "#C85A32",
+      "name": "Terracotta Clay",
+      "usage": "Primary buttons, active indicators, hero highlight accents"
+    },
+    "brand_secondary": {
+      "hex": "#1B4D3E",
+      "name": "Mithila Forest Emerald",
+      "usage": "Header accents, section subheadings, badges, primary typography accents"
+    },
+    "brand_accent": {
+      "hex": "#D99B26",
+      "name": "Mustard Ochre Gold",
+      "usage": "Icons, subtle highlight borders, festival badges"
+    },
+    "backgrounds": {
+      "primary_bg": "#F9F6F0",
+      "card_bg": "#FFFFFF",
+      "card_tint_bg": "#F2ECE1",
+      "footer_bg": "#14231E"
+    },
+    "typography_colors": {
+      "heading_text": "#1C2421",
+      "body_text": "#3A4742",
+      "muted_text": "#6B7B74",
+      "footer_text": "#E2ECE8"
+    },
+    "borders_and_dividers": {
+      "default_border": "rgba(27, 77, 62, 0.12)",
+      "hover_border": "rgba(200, 90, 50, 0.35)",
+      "glass_border": "rgba(255, 255, 255, 0.6)"
+    }
+  },
+  "spacing_and_layout": {
+    "container_padding": "px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto",
+    "section_spacing": "py-16 sm:py-24 lg:py-32",
+    "bento_grid_mode": "MODE A: TETRIS GRID (12 columns on desktop: col-span-full, col-span-8, col-span-4)",
+    "card_padding": "p-6 sm:p-8"
+  },
+  "visual_enhancers": {
+    "heritage_motifs": "Subtle traditional Mithila geometric border frames (1px terracotta stroke), soft warm shadows (shadow-[0_10px_30px_rgba(27,77,62,0.06)])",
+    "glassmorphism": "Navigation bar with backdrop-blur-md bg-[#F9F6F0]/85 border-b border-emerald-950/10 z-50 sticky top-0",
+    "grain_overlay": "Optional background CSS radial subtle warm texture or noise filter to remove flat digital sterility"
+  },
+  "navigation_and_header": {
+    "structure": "Sticky header with blur, brand logo ('Lagma Village | लगमा गाँव'), 5 main navigation links (About, Heritage & Culture, Landmarks, Community & News, Governance & Contact), and a 'Explore Village Map' CTA button",
+    "data_testids": {
+      "header_container": "header-navbar",
+      "brand_logo": "brand-logo-link",
+      "nav_links": "nav-link-about, nav-link-heritage, nav-link-landmarks, nav-link-news, nav-link-contact",
+      "explore_cta": "header-explore-button"
+    }
+  },
+  "page_sections_architecture": [
+    {
+      "section_id": "hero",
+      "name": "Hero - Spirit of Lagma",
+      "description": "Large editorial hero section featuring a panoramic imagery layer, warm terracotta badge ('Heart of Mithila Culture'), emotional headline ('Lagma Village: Where Ancient Heritage Meets Vibrant Living'), description, and dual CTAs ('Explore Landmarks', 'Village Directory')",
+      "data_testids": {
+        "section": "hero-section",
+        "title": "hero-heading",
+        "subtitle": "hero-subheading",
+        "cta_primary": "hero-cta-landmarks",
+        "cta_secondary": "hero-cta-directory"
+      }
+    },
+    {
+      "section_id": "stats_banner",
+      "name": "Key Village Highlights",
+      "description": "High-density stat counter banner showing village metrics (e.g. '500+ Years Heritage', '12+ Sacred Ponds & Temples', '98% Literacy Drive', '10,000+ Resident & Diaspora Community')",
+      "data_testids": {
+        "stat_item": "village-stat-card"
+      }
+    },
+    {
+      "section_id": "about_essence",
+      "name": "Essence & Story of Lagma",
+      "description": "Asymmetrical two-column editorial spread showcasing the rich history, agricultural roots, ponds (Pokhar), and peaceful community life in Bihar",
+      "data_testids": {
+        "story_container": "about-story-container"
+      }
+    },
+    {
+      "section_id": "landmarks_bento",
+      "name": "Landmarks & Sacred Pokhars Bento Grid",
+      "description": "Bento grid displaying key places: Central Village Pond, Historical Temple, Community Chopal, Primary School & Library, Organic Agricultural Fields",
+      "data_testids": {
+        "grid_container": "landmarks-bento-grid",
+        "landmark_card": "landmark-card-item"
+      }
+    },
+    {
+      "section_id": "heritage_mithila_art",
+      "name": "Mithila Heritage & Traditions Showcase",
+      "description": "Interactive gallery and tabbed showcase for local art forms, seasonal festivals (Chhath Puja, Durga Puja, Sama Chakeva), and folk music traditions",
+      "data_testids": {
+        "art_section": "heritage-art-section",
+        "festival_tab": "festival-tab-button",
+        "art_card": "art-card-item"
+      }
+    },
+    {
+      "section_id": "community_news",
+      "name": "Village Updates & Community Feed",
+      "description": "Recent announcements, development news, village panchayat initiatives, and cultural gatherings",
+      "data_testids": {
+        "news_feed": "community-news-feed",
+        "news_item": "news-feed-item"
+      }
+    },
+    {
+      "section_id": "directory_contact",
+      "name": "Village Directory & Civic Contact",
+      "description": "Interactive search or tabbed directory for Emergency Services, Panchayat Representatives, Post Office, and Youth Committee contacts",
+      "data_testids": {
+        "directory_search": "directory-search-input",
+        "contact_card": "directory-contact-card"
+      }
+    },
+    {
+      "section_id": "footer",
+      "name": "Village Portal Footer",
+      "description": "Deep forest green dark footer with big typography 'LAGMA', quick navigation links, emergency contact numbers, and cultural quote",
+      "data_testids": {
+        "footer_container": "footer-container",
+        "footer_copyright": "footer-copyright-text"
+      }
+    }
+  ],
+  "image_urls": {
+    "hero_village_landscape": "https://images.unsplash.com/photo-1788976865623-9e7abbda4d95?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "pond_greenery": "https://images.unsplash.com/photo-1788976864982-094415d2c54e?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "lush_fields": "https://images.pexels.com/photos/39198174/pexels-photo-39198174.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "community_gathering": "https://images.pexels.com/photos/37495850/pexels-photo-37495850.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "village_life_culture": "https://images.pexels.com/photos/11444459/pexels-photo-11444459.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "scenic_path": "https://images.unsplash.com/photo-1788976864837-42329ba21af1?crop=entropy&cs=srgb&fm=jpg&q=85"
+  },
+  "motion_guidelines": {
+    "smooth_scrolling": "Use lenis or native smooth scrolling behavior",
+    "entrance_animations": "Framer motion initial {{ opacity: 0, y: 20 }} animate {{ opacity: 1, y: 0 }} transition {{ duration: 0.5, ease: 'easeOut' }}",
+    "stagger_children": "Stagger children elements by 0.1s for list items and bento grid cards",
+    "hover_effects": "Cards hover: -translate-y-1 shadow-xl transition-all duration-300 border-[#C85A32]/30"
+  },
+  "GENERAL_UI_UX_DESIGN_GUIDELINES": [
+    "Never use generic raw dark AI slop gradients or default Vercel dark mode aesthetics for community heritage sites.",
+    "Prioritize legibility, contrast (APCA AA compliant text), and human warmth.",
+    "All interactive elements (buttons, links, search inputs, tabs, cards) MUST include kebab-case `data-testid` attributes.",
+    "Do NOT use pure transparent backgrounds on sticky headers or popups - always use solid or glassmorphism with backdrop blur.",
+    "Ensure responsive layout for mobile (grid-cols-1) up to desktop (grid-cols-12 / grid-cols-4).",
+    "Provide clear JavaScript (.js / .jsx) component guidance, using Shadcn primitives customized with Tailwind CSS classes."
+  ]
+}
