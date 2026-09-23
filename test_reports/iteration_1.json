@@ -1,0 +1,61 @@
+{
+  "passed": 6,
+  "failed": 0,
+  "bugs": [],
+  "action_items": [
+    "Assistant replies are MOCKED deterministic local UI responses by design; no external AI provider integration was tested.",
+    "Backend pytest suite completed with no tests collected; no API-bearing acceptance criterion required a backend artifact in this matrix. The template status endpoint remains outside the tested UI flow."
+  ],
+  "retest_needed": false,
+  "checks": [
+    {
+      "criterion": "TODO AI workspace renders at the public preview root",
+      "name": "todo-ai-preview-renders",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Root rendered todo-ai-app, TODO AI brand, chat heading, sidebar navigation, composer form, and AI tools rail; screenshot captured."
+    },
+    {
+      "criterion": "New chat and suggested prompts work",
+      "name": "todo-ai-suggestions-reset-chat",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Suggested prompt produced a user message and planning assistant reply; New chat restored the starter assistant state and suggestions."
+    },
+    {
+      "criterion": "Composer sends a message",
+      "name": "todo-ai-composer-sends-message",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Filled composer with a unique message, submitted via send control, observed user message, MOCKED assistant reply, thinking indicator, and cleared input."
+    },
+    {
+      "criterion": "AI tool shortcut interaction works",
+      "name": "todo-ai-tool-shortcut-prefills-composer",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Smart Translator card selected; composer value became 'Smart Translator: ' and visible toast confirmed selection."
+    },
+    {
+      "criterion": "Theme and responsive navigation controls work",
+      "name": "todo-ai-theme-toggle",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Theme button toggled Light mode to Dark mode and back without breaking the workspace."
+    },
+    {
+      "criterion": "Theme and responsive navigation controls work",
+      "name": "todo-ai-mobile-navigation",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "At 390x844 viewport, Open navigation displayed the sidebar close control; close returned to the mobile menu control."
+    },
+    {
+      "criterion": "Public preview has no failed requests or console errors during the core flow",
+      "name": "todo-ai-core-flow-no-errors",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Core prompt, tool, and theme flow completed with no response status >= 400 and no console error messages observed."
+    }
+  ]
+}

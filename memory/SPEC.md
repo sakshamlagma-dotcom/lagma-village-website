@@ -1,17 +1,17 @@
-# Lagma Village Heritage & Community Portal
+# TODO AI Workspace
 
 ## What it does
-The app is a responsive, single-page heritage and community portal for Lagma Village, Bihar. It presents the village story, highlights, landmarks, Mithila heritage, community updates and a searchable local directory.
+The app is a responsive TODO AI chat workspace inspired by the `todo-ai` feature in the Lagma Village repository. It provides a focused AI chat surface, prompt suggestions, quick AI tool shortcuts, new-chat reset, theme toggle and responsive navigation.
 
 ## Data model
-The homepage currently uses curated static content for village sections, landmarks, heritage stories, community updates and directory contacts. The existing `StatusCheck` API remains a non-blocking connectivity probe and is not required for the page to render.
+The chat uses local UI state for messages. The assistant reply is currently **MOCKED** with deterministic local copy because this request is a design-only change and no external AI integration was requested. The existing `StatusCheck` API remains available as a template connectivity endpoint.
 
 ## Key flows
-- Browse the hero, village highlights and story sections.
-- Use sticky navigation or hero CTAs to jump to landmarks, heritage, updates and directory sections.
-- Switch between Festivals, Mithila art and Folk music story tabs.
-- Search the directory by contact name or service; contact cards open the device phone dialer.
-- Open the mobile menu on narrow viewports.
+- Start a new chat or choose a suggested prompt.
+- Send a message with Enter and receive a local assistant response.
+- Select AI tool shortcuts to prefill the composer.
+- Toggle light/dark presentation mode and open/close the tools rail.
+- Use the responsive mobile navigation.
 
 ## Auth and roles
 No authentication or gated areas.
