@@ -61,6 +61,16 @@ test("root favicon.ico contains a valid multi-size icon image", async () => {
   }
 });
 
+test("IndexNow verification key is published at the site root", async () => {
+  const key = "d1a6d675dbd7b27b145faa509209c9d6";
+  assert.equal(
+    (await readFile(path.join(root, `${key}.txt`), "utf8")).trim(),
+    key,
+  );
+  const sitemap = await readFile(path.join(root, "sitemap.xml"), "utf8");
+  assert.match(sitemap, /<loc>https:\/\/lagma\.online\/<\/loc>\s*<lastmod>2026-10-01<\/lastmod>/);
+});
+
 test("manifest declares the transparent Lagma app icon", async () => {
   const manifest = JSON.parse(await readFile(path.join(root, "manifest.webmanifest"), "utf8"));
   assert.deepEqual(
