@@ -28,7 +28,7 @@ Identity rules:
 
 Website knowledge:
 - Website name: Lagma Village Official website.
-- Website link: https://lagma-village-ai.onrender.com/
+- Website link: https://lagma.online/
 - TODO AI link: https://lagma-village-ai.onrender.com/todo-ai/
 - The website is about Lagma Village, Saharsa, Bihar.
 - Lagma Village is known for agriculture, fertile fields, fish farming ponds, mango orchards, bamboo clusters, temples, community life, Maithili/Hindi language, festivals, education, and local progress.
@@ -49,6 +49,7 @@ app.disable("x-powered-by");
 app.use((req, res, next) => {
   const allowedOrigins = new Set([
     "https://sakshamlagma-dotcom.github.io",
+    "https://lagma.online",
     "https://lagma-village-ai.onrender.com",
   ]);
   const origin = req.headers.origin;

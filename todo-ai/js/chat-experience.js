@@ -220,7 +220,7 @@
     state.messages.push(assistant); renderMessages();
     state.controller = new AbortController();
     try {
-      const response = await fetch(`${location.hostname.endsWith('github.io') ? 'https://lagma-village-ai.onrender.com' : ''}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: state.messages.filter((item) => !item.pending).slice(-20).map(({ role, text }) => ({ role, text })) }), signal: state.controller.signal });
+      const response = await fetch(`${location.hostname === 'lagma-village-ai.onrender.com' ? '' : 'https://lagma-village-ai.onrender.com'}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: state.messages.filter((item) => !item.pending).slice(-20).map(({ role, text }) => ({ role, text })) }), signal: state.controller.signal });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'AI response unavailable.');
       await animateReply(assistant, data.reply || 'I could not generate a response.');

@@ -5,7 +5,7 @@ const store = {
   get(key, fallback = null) { try { return JSON.parse(localStorage.getItem(`todo_${key}`)) ?? fallback; } catch { return fallback; } },
   set(key, value) { localStorage.setItem(`todo_${key}`, JSON.stringify(value)); }
 };
-const apiBase = location.hostname.endsWith("github.io") ? "https://lagma-village-ai.onrender.com" : "";
+const apiBase = location.hostname === "lagma-village-ai.onrender.com" ? "" : "https://lagma-village-ai.onrender.com";
 
 const services = [
   { id:'chat', icon:'💬', title:'AI Chat', desc:'Hindi ya English mein kisi bhi topic par smart answers.', info:'TODO AI aapke sawaalon, planning, explanations aur daily tasks mein madad karta hai.' },
