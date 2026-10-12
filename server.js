@@ -86,6 +86,45 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
+    if (req.body?.stream === true) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => {
+        const error = new Error("Gemini streaming request timed out");
+        error.name = "TimeoutError";
+        controller.abort(error);
+      }, 45_000);
+      const abortWhenDisconnected = () => {
+        if (!res.writableEnded) controller.abort();
+      };
+      req.once("aborted", abortWhenDisconnected);
+      res.once("close", abortWhenDisconnected);
+
+      try {
+        const { response, model } = await openGeminiStream(apiKey, messages, controller.signal);
+        res.status(200);
+        res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+        res.setHeader("Cache-Control", "no-cache, no-transform");
+        res.setHeader("Connection", "keep-alive");
+        res.setHeader("X-Accel-Buffering", "no");
+        res.flushHeaders();
+
+        const reply = await forwardGeminiStream(response.body, res);
+        if (!reply.trim()) {
+          const error = new Error("AI ne khaali response diya. Dobara try karein.");
+          error.status = 502;
+          error.model = model;
+          throw error;
+        }
+        res.write(`data: ${JSON.stringify({ done: true, model })}\n\n`);
+        res.end();
+      } finally {
+        clearTimeout(timeout);
+        req.off("aborted", abortWhenDisconnected);
+        res.off("close", abortWhenDisconnected);
+      }
+      return;
+    }
+
     const { data, model } = await generateWithFallback(apiKey, messages);
 
     const reply = data?.candidates?.[0]?.content?.parts
@@ -104,26 +143,15 @@ app.post("/api/chat", async (req, res) => {
       status: error.status || null,
       model: error.model || null,
     });
-    const timedOut = error.name === "TimeoutError" || error.name === "AbortError";
-    const upstreamStatus = Number(error.status) || 0;
-    let message = "Gemini abhi busy hai. Thodi der baad dobara try karein.";
-
-    if ([401, 403].includes(upstreamStatus)) {
-      message = "AI service authorization needs attention. Please check the server-side Gemini configuration.";
-    } else if (upstreamStatus === 404) {
-      message = "The configured AI model is unavailable. Please update GEMINI_MODEL on the server.";
-    } else if (upstreamStatus === 429) {
-      message = "AI usage limit reached temporarily. Please wait a moment and try again.";
-    } else if ([400, 413].includes(upstreamStatus)) {
-      message = "That request could not be processed. Please shorten it and try again.";
-    } else if (timedOut) {
-      message = "AI response mein zyada samay laga. Dobara try karein.";
+    const details = chatErrorDetails(error);
+    if (res.headersSent) {
+      if (!res.destroyed && !res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ error: details.error, code: details.code })}\n\n`);
+        res.end();
+      }
+      return;
     }
-
-    res.status(502).json({
-      error: message,
-      code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : "AI_UNAVAILABLE",
-    });
+    res.status(502).json(details);
   }
 });
 
@@ -195,6 +223,148 @@ async function generateWithFallback(apiKey, messages) {
   throw lastError || new Error("Gemini request failed");
 }
 
-app.listen(port, () => {
-  console.log(`TODO AI chal raha hai: http://localhost:${port}`);
-});
+async function openGeminiStream(apiKey, messages, signal) {
+  let lastError;
+
+  for (const model of fallbackModels) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
+          },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: systemPrompt }],
+            },
+            contents: messages.map(({ role, text }) => ({
+              role: role === "assistant" ? "model" : "user",
+              parts: [{ text }],
+            })),
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 1200,
+            },
+          }),
+          signal,
+        },
+      );
+
+      if (response.ok) {
+        if (!response.body) throw new Error("Gemini stream returned an empty body");
+        return { response, model };
+      }
+
+      const data = await response.json().catch(() => ({}));
+      const error = new Error(data?.error?.message || `Gemini API error ${response.status}`);
+      error.status = response.status;
+      error.model = model;
+      lastError = error;
+      console.error("Gemini streaming API error:", response.status, model);
+
+      if (![400, 429, 503].includes(response.status)) break;
+    } catch (error) {
+      error.model = model;
+      lastError = error;
+      console.error("Gemini streaming request failed:", model, error.message);
+      if (signal.aborted) break;
+    }
+  }
+
+  throw lastError || new Error("Gemini streaming request failed");
+}
+
+async function forwardGeminiStream(body, res) {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let dataLines = [];
+  let reply = "";
+
+  function dispatchEvent() {
+    if (!dataLines.length) return;
+    const data = dataLines.join("\n");
+    dataLines = [];
+    if (data === "[DONE]") return;
+
+    const chunk = JSON.parse(data);
+    const text = chunk?.candidates?.[0]?.content?.parts
+      ?.map((part) => part.text || "")
+      .join("");
+    if (!text) return;
+
+    reply += text;
+    res.write(`data: ${JSON.stringify({ text })}\n\n`);
+  }
+
+  function consumeLine(line) {
+    if (line === "") {
+      dispatchEvent();
+    } else if (line.startsWith("data:")) {
+      dataLines.push(line.slice(5).replace(/^ /, ""));
+    }
+  }
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      buffer += decoder.decode(value, { stream: !done });
+
+      let newline = buffer.indexOf("\n");
+      while (newline !== -1) {
+        consumeLine(buffer.slice(0, newline).replace(/\r$/, ""));
+        buffer = buffer.slice(newline + 1);
+        newline = buffer.indexOf("\n");
+      }
+
+      if (done) {
+        if (buffer) consumeLine(buffer.replace(/\r$/, ""));
+        dispatchEvent();
+        break;
+      }
+    }
+  } catch (error) {
+    await reader.cancel(error).catch(() => {});
+    throw error;
+  } finally {
+    reader.releaseLock();
+  }
+
+  return reply;
+}
+
+function chatErrorDetails(error) {
+  const timedOut = error.name === "TimeoutError" || error.name === "AbortError";
+  const upstreamStatus = Number(error.status) || 0;
+  let message = "Gemini abhi busy hai. Thodi der baad dobara try karein.";
+
+  if ([401, 403].includes(upstreamStatus)) {
+    message = "AI service authorization needs attention. Please check the server-side Gemini configuration.";
+  } else if (upstreamStatus === 404) {
+    message = "The configured AI model is unavailable. Please update GEMINI_MODEL on the server.";
+  } else if (upstreamStatus === 429) {
+    message = "AI usage limit reached temporarily. Please wait a moment and try again.";
+  } else if ([400, 413].includes(upstreamStatus)) {
+    message = "That request could not be processed. Please shorten it and try again.";
+  } else if (timedOut) {
+    message = "AI response mein zyada samay laga. Dobara try karein.";
+  } else if (error.message === "AI ne khaali response diya. Dobara try karein.") {
+    message = error.message;
+  }
+
+  return {
+    error: message,
+    code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : "AI_UNAVAILABLE",
+  };
+}
+
+export { app };
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  app.listen(port, () => {
+    console.log(`TODO AI chal raha hai: http://localhost:${port}`);
+  });
+}
