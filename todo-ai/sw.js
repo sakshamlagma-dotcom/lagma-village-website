@@ -1,4 +1,4 @@
-const CACHE = 'todo-ai-v13';
+const CACHE = 'todo-ai-v14';
 const CORE = [
   './',
   './index.html',
@@ -11,8 +11,11 @@ const CORE = [
   './js/app.js',
   './js/chat-experience.js',
   './assets/icons/logo.svg',
+  './assets/icons/logo-primary.svg',
+  './assets/icons/dodo-mascot.svg',
   './assets/icons/logo-192.png',
   './assets/icons/logo-512.png',
+  './assets/icons/favicon.ico',
 ];
 
 self.addEventListener('install', event => {

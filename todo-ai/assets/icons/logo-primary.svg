@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" role="img" aria-labelledby="title">
+  <title id="title">TODO AI — dodo mascot logo</title>
+  <g transform="translate(0 0) scale(.5)">
+    <path d="M235 78c14-25 41-36 69-31 36 6 57 34 57 68 0 31-13 53-35 72 31 4 61 20 82 45 28 33 37 75 19 111-18 37-53 58-96 65-43 8-83-2-110-23-24 11-53 3-72-18-22-24-27-58-15-89 10-25 29-45 53-59 12-12 19-27 19-44-2-16-7-34-6-51 0-19 12-36 35-46Z" fill="#81766D" stroke="#403A38" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M225 237c-31 16-52 39-59 67-8 31 3 61 25 79 17 14 38 18 58 11 22 21 55 31 89 25-30-25-45-57-42-91 2-32 16-58 41-79-39-20-79-24-112-12Z" fill="#B8AA98"/>
+    <path d="M398 258c21 7 39 26 48 48l-22 42c-20-3-37-16-48-34 13-14 20-34 22-56Z" fill="#B7AA99" stroke="#403A38" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M433 274c15-19 28-22 43-19-6 15-8 28-5 40 3 13-2 26-15 38-11-16-20-34-23-59Z" fill="#D3C5B2" stroke="#403A38" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M242 92c-33-9-70-27-105-34-25-5-47 5-52 25-5 18 7 35 28 42 35 11 78 2 122-9 12-3 17-17 7-24Z" fill="#E4C8A0" stroke="#403A38" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M113 125c34 8 76-1 122-12-11 20-31 34-58 41-30 8-57 3-72-10-8-7-4-17 8-19Z" fill="#C0A07E" stroke="#403A38" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M91 83c-10 11-13 26-6 39 6 12 17 19 29 22-10 12-14 24-12 36-18-10-32-27-36-47-5-23 5-45 25-57Z" fill="#433B3A" stroke="#403A38" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M183 274c23-18 49-27 75-28 20 0 40 5 58 14-26 7-43 19-57 36 27-11 52-13 75-6-18 9-33 21-44 38 25-8 47-6 66 3-21 13-40 27-57 42-37 12-74 5-100-17-20-17-29-43-16-82Z" fill="#685F59" stroke="#49413E" stroke-width="4" stroke-linejoin="round"/>
+    <g fill="none" stroke="#B8AA99" stroke-width="5" stroke-linecap="round">
+      <path d="M203 279c12 2 20 10 23 23m5-37c14 3 22 12 24 26m6-28c13 5 19 14 18 28m11-21c12 6 17 16 14 29m-93 11c11 0 20 7 24 20m7-33c13 1 21 9 24 22m8-24c13 3 21 12 21 25m11-19c12 4 19 13 18 25m-103 15c11-1 21 5 26 17m8-28c13 0 22 7 27 19m6-19c13 1 22 8 27 18"/>
+    </g>
+    <path d="M239 380c-2 21-5 38-9 52m68-52c2 21 6 38 12 52" fill="none" stroke="#D99B49" stroke-width="17" stroke-linecap="round"/>
+    <path d="M226 430c-16 8-28 13-42 14-13 2-22 8-25 17 15 5 31 5 46 1 16-4 26-10 38-19m70-13c15 8 27 13 41 14 13 2 22 8 25 17-15 5-31 5-46 1-16-4-26-10-38-19" fill="none" stroke="#D99B49" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M185 443c-10-1-19 2-26 8m-7 10c-10 0-18 4-23 10m179-28c10-1 19 2 26 8m7 10c10 0 18 4 23 10" fill="none" stroke="#4A403A" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="293" cy="109" r="12" fill="#EAF8FA" stroke="#28BDE5" stroke-width="4"/>
+    <circle cx="294" cy="109" r="6.5" fill="#20272A"/>
+    <circle cx="296" cy="106" r="2.2" fill="#FFFFFF"/>
+    <path d="M199 314c-8 17-6 34 3 45m127-11c9-2 16-1 23 3" fill="none" stroke="#38C9EC" stroke-linecap="round" stroke-width="7"/>
+  </g>
+  <text x="268" y="145" fill="#18212B" font-family="Inter, Avenir, Arial, sans-serif" font-size="86" font-weight="800" letter-spacing="2">TODO</text>
+  <text x="550" y="145" fill="#08BEEA" font-family="Inter, Avenir, Arial, sans-serif" font-size="86" font-weight="800" letter-spacing="2">AI</text>
+  <text x="274" y="184" fill="#66717A" font-family="Inter, Avenir, Arial, sans-serif" font-size="21" font-weight="600" letter-spacing="4">THINK. ASK. CREATE.</text>
+</svg>

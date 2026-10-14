@@ -19,6 +19,56 @@
 @media(max-width:850px){.auth-page{grid-template-columns:1fr}.auth-art{display:none}.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(2,1fr)}.hero{padding:32px}.page{width:min(100% - 28px,1180px)}.topbar{padding:0 16px}}
 @media(max-width:560px){.topbar{height:68px}.logo small{display:none}.page{padding-top:20px}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.hero{min-height:350px;padding:27px;border-radius:24px}.hero h1{font-size:38px}.hero:after{font-size:130px;right:-10%}.bottom-nav{bottom:8px;height:66px;border-radius:21px}.nav-item span:first-child{font-size:18px}.page-head{align-items:flex-start}.detail-hero{display:block;padding:24px}.detail-hero .feature-icon{margin-bottom:18px}.detail-actions{flex-wrap:wrap}.chat-box{height:62vh}.auth-panel{padding:24px}.onboarding{padding:18px}.slide-visual{width:175px;height:175px;font-size:60px}.card{border-radius:18px}.profile-layout{display:block!important}}
 
+.logo-mark{
+  overflow:hidden;
+  border:1px solid rgba(8,190,234,.12);
+  background:#F2F8FA;
+  box-shadow:none;
+}
+
+.logo-mark img,
+.ai-face img,
+.ai-orb-card > span img,
+.voice-orb img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.logo em,
+.ai-model-title strong em,
+.ai-orb-card strong em{
+  color:#08BEEA;
+}
+
+.ai-face{
+  width:116px;
+  height:116px;
+  overflow:hidden;
+  border:1px solid rgba(8,190,234,.12);
+  border-radius:30px;
+  background:#F2F8FA;
+  box-shadow:none;
+}
+
+.ai-orb-card > span{
+  overflow:hidden;
+  border:1px solid rgba(8,190,234,.12);
+  border-radius:28px;
+  background:#F2F8FA;
+  box-shadow:none;
+}
+
+.voice-orb{
+  overflow:hidden;
+  border:1px solid rgba(8,190,234,.12);
+  border-radius:16px;
+  background:#F2F8FA;
+  box-shadow:none;
+}
+
+
 /* Premium TODO AI dashboard + chat */
 body[data-page="home"]{
   --bg:#050506;
@@ -40,13 +90,6 @@ body[data-page="home"]{
 body[data-page="home"] .topbar{
   background:linear-gradient(180deg,rgba(5,5,6,.92),rgba(5,5,6,.58));
   border-bottom:1px solid rgba(255,255,255,.06);
-}
-
-body[data-page="home"] .logo-mark,
-.ai-face,
-.ai-orb-card span{
-  background:linear-gradient(135deg,#ff4d2e,#ff7a3d 52%,#ffb020);
-  box-shadow:0 0 36px rgba(47,107,255,.32);
 }
 
 .ai-dashboard-hero{
