@@ -130,6 +130,7 @@ app.post("/api/chat", async (req, res) => {
     }
     const timedOut = error.name === "TimeoutError" || error.name === "AbortError";
     const upstreamStatus = Number(error.status) || 0;
+    const invalidApiKey = upstreamStatus === 400 && /api.?key.{0,30}(invalid|not valid)|invalid.{0,30}api.?key|api_key_invalid/i.test(error.providerMessage || "");
     let message = "Gemini abhi busy hai. Thodi der baad dobara try karein.";
 
     if ([401, 403].includes(upstreamStatus)) {
@@ -138,16 +139,18 @@ app.post("/api/chat", async (req, res) => {
       message = "The configured AI model is unavailable. Please update GEMINI_MODEL on the server.";
     } else if (upstreamStatus === 429) {
       message = "AI usage limit reached temporarily. Please wait a moment and try again.";
+    } else if (invalidApiKey) {
+      message = "The AI service rejected its server API key. Please contact the site administrator.";
     } else if ([400, 413].includes(upstreamStatus)) {
-      message = "That request could not be processed. Please shorten it and try again.";
+      message = "The AI service rejected this request. Please try again later.";
     } else if (timedOut) {
       message = "AI response mein zyada samay laga. Dobara try karein.";
     }
 
-    const status = upstreamStatus === 401 || upstreamStatus === 403 ? 503 : upstreamStatus === 429 ? 429 : timedOut ? 504 : 502;
+    const status = upstreamStatus === 401 || upstreamStatus === 403 || invalidApiKey ? 503 : upstreamStatus === 429 ? 429 : timedOut ? 504 : 502;
     res.status(status).json({
       error: message,
-      code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : "AI_UNAVAILABLE",
+      code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 || invalidApiKey ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : upstreamStatus === 400 ? "AI_REQUEST_ERROR" : "AI_UNAVAILABLE",
     });
   } finally {
     clearTimeout(timeout);
@@ -190,6 +193,8 @@ async function streamReply(apiKey, messages, signal, res) {
   if (!response.ok) {
     const error = new Error("Gemini request failed");
     error.status = response.status;
+    const details = await response.json().catch(() => ({}));
+    error.providerMessage = typeof details?.error?.message === "string" ? details.error.message.slice(0, 500) : "";
     throw error;
   }
   if (!response.body) throw new Error("Streaming response unavailable");
@@ -251,7 +256,8 @@ async function generateReply(apiKey, messages, signal) {
   if (!response.ok) {
     const error = new Error("Gemini request failed");
     error.status = response.status;
-    await response.body?.cancel();
+    const details = await response.json().catch(() => ({}));
+    error.providerMessage = typeof details?.error?.message === "string" ? details.error.message.slice(0, 500) : "";
     throw error;
   }
   const data = await response.json();
