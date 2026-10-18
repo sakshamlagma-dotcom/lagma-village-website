@@ -6,7 +6,7 @@
   const key = 'todo_chat_sessions_v2';
   const settingsKey = 'todo_voice_settings_v2';
   const state = {
-    sessions: read(key, []),
+    sessions: normalizeSessions(read(key, [])),
     sessionId: null,
     messages: [],
     controller: null,
@@ -49,6 +49,20 @@
   function write(name, value) {
     try { localStorage.setItem(name, JSON.stringify(value)); } catch { /* storage is optional */ }
   }
+  function normalizeSessions(input) {
+    if (!Array.isArray(input)) return [];
+    return input.filter((session) => session && typeof session.id === 'string' && typeof session.title === 'string')
+      .slice(0, 30)
+      .map((session) => ({
+        id: session.id,
+        title: session.title.slice(0, 80),
+        updatedAt: Number(session.updatedAt) || Date.now(),
+        messages: (Array.isArray(session.messages) ? session.messages : [])
+          .filter((message) => message && ['user', 'assistant'].includes(message.role) && typeof message.text === 'string')
+          .slice(-60)
+          .map((message) => ({ role: message.role, text: message.text.slice(0, 8000), id: typeof message.id === 'string' ? message.id : makeId() })),
+      }));
+  }
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   }
@@ -88,8 +102,11 @@
     write(key, state.sessions.slice(0, 30));
   }
   function createSession() {
+    if (state.controller) { toast('Stop the current response before starting a new chat.'); return; }
+    if (state.sessions.length >= 30 && !window.confirm('This browser keeps up to 30 conversations. Starting a new chat will remove the oldest one. Continue?')) return;
     const session = { id: makeId(), title: 'New conversation', updatedAt: Date.now(), messages: [] };
     state.sessions.unshift(session);
+    if (state.sessions.length > 30) state.sessions.pop();
     state.sessionId = session.id;
     state.messages = [];
     persist();
@@ -97,6 +114,7 @@
     renderHistory();
   }
   function selectSession(id) {
+    if (state.controller) { toast('Stop the current response before switching chats.'); return; }
     const session = state.sessions.find((item) => item.id === id);
     if (!session) return;
     state.sessionId = id;
@@ -114,21 +132,31 @@
         <header class="chat-header">
           <button class="chat-icon-button mobile-history-button" id="historyButton" type="button" aria-label="Open chat history" aria-expanded="false">${icon('menu')}</button>
           <div class="chat-brand"><span class="chat-brand-mark">T</span><div><strong>TODO AI</strong><span><i class="brand-status"></i> Think. Ask. Create.</span></div></div>
-          <div class="chat-header-actions"><span class="connection-status" id="connectionStatus"><i></i><span>Online</span></span><button class="chat-icon-button" id="themeButton" type="button" aria-label="Toggle theme">${icon('moon')}</button><button class="chat-icon-button header-new-chat" id="headerNewChat" type="button" aria-label="Start a new chat">${icon('plus')}</button><button class="chat-profile" type="button" aria-label="Profile">TU</button></div>
+          <div class="chat-header-actions"><span class="connection-status" id="connectionStatus"><i></i><span>Checking connection</span></span><button class="chat-icon-button" id="themeButton" type="button" aria-label="Toggle theme">${icon('moon')}</button><button class="chat-icon-button header-new-chat" id="headerNewChat" type="button" aria-label="Start a new chat">${icon('plus')}</button></div>
         </header>
-        <div class="chat-workspace"><aside class="tools-rail" aria-label="Chat tools"><button class="rail-action active" type="button">${icon('send')}<span>Chat</span></button><button class="rail-action" type="button">${icon('copy')}<span>Write</span></button><button class="rail-action" type="button">${icon('search')}<span>Study</span></button><button class="rail-action" type="button">${icon('plus')}<span>Ideas</span></button><button class="rail-action" type="button">${icon('volume')}<span>Translate</span></button></aside><section class="chat-scroll" id="chatScroll" aria-live="polite"><div class="chat-content" id="chatMessages"></div><button class="jump-button" id="jumpButton" type="button">${icon('arrowDown')}<span>New messages</span></button></section><aside class="tools-panel" id="toolsPanel" aria-label="Assistant tools"><section class="live-card"><span class="tool-kicker">VOICE ASSISTANT</span><h2>Talk Live</h2><p>Have a natural conversation with TODO AI.</p><button class="live-start-button" type="button" data-open-live>${icon('mic')}<span>Start voice chat</span></button></section><section class="quick-actions"><div class="panel-heading"><h2>Quick Actions</h2><button type="button" aria-label="More quick actions" disabled>${icon('more')}</button></div><div class="quick-action-grid"><button type="button" data-prompt="Create an image prompt for me"><span class="tool-icon">${icon('plus')}</span><span>Create Image</span></button><button type="button" data-prompt="Generate clean code for this task"><span class="tool-icon">${icon('copy')}</span><span>Generate Code</span></button><button type="button" data-prompt="Write polished content for me"><span class="tool-icon">${icon('copy')}</span><span>Write Content</span></button><button type="button" data-prompt="Give me five creative ideas"><span class="tool-icon">${icon('plus')}</span><span>Get Ideas</span></button></div></section><section class="recent-tools"><div class="panel-heading"><h2>Recent Chats</h2><button id="clearRecentButton" type="button">Clear all</button></div><div id="recentToolsList"></div></section></aside></div>
-        <section class="chat-composer-wrap"><div class="attachment-preview" id="attachmentPreview" hidden></div><div class="talk-live-banner" id="liveBanner" hidden><span class="pulse-dot"></span><span>Talk Live is listening…</span><button id="stopLiveButton" type="button">Stop</button></div><form class="chat-composer" id="chatForm"><input id="fileInput" type="file" hidden multiple accept="image/*,.txt,.md,.pdf"><button class="composer-button" id="attachButton" type="button" aria-label="Attach a file">${icon('paperclip')}</button><textarea id="chatInput" rows="1" maxlength="6000" placeholder="Ask anything…" aria-label="Message TODO AI"></textarea><button class="composer-button mic-button" id="micButton" type="button" aria-label="Use microphone">${icon('mic')}</button><button class="talk-live-button" id="liveButton" type="button">${icon('volume')}<span>Talk Live</span></button><button class="send-button" id="sendButton" type="submit" aria-label="Send message">${icon('send')}</button></form><p class="composer-note">AI can make mistakes. Check important information.</p></section>
+        <div class="chat-workspace"><aside class="tools-rail" aria-label="Chat tools"><button class="rail-action active" type="button" data-prompt="Help me write something clearly"><span>Write</span></button><button class="rail-action" type="button" data-prompt="Explain this topic simply"><span>Study</span></button><button class="rail-action" type="button" data-prompt="Give me five creative ideas"><span>Ideas</span></button><button class="rail-action" type="button" data-prompt="Translate this into Hindi"><span>Translate</span></button></aside><section class="chat-scroll" id="chatScroll" aria-live="polite"><div class="chat-content" id="chatMessages"></div><button class="jump-button" id="jumpButton" type="button">${icon('arrowDown')}<span>New messages</span></button></section><aside class="tools-panel" id="toolsPanel" aria-label="Assistant tools"><section class="live-card"><span class="tool-kicker">BROWSER VOICE</span><h2>Voice chat</h2><p>Uses browser speech recognition and spoken replies. Availability depends on your browser.</p><button class="live-start-button" type="button" data-open-live>${icon('mic')}<span>Start voice chat</span></button></section><section class="quick-actions"><div class="panel-heading"><h2>Quick Actions</h2><button type="button" aria-label="More quick actions" disabled>${icon('more')}</button></div><div class="quick-action-grid"><button type="button" data-prompt="Write polished content for me"><span class="tool-icon">${icon('copy')}</span><span>Writing</span></button><button type="button" data-prompt="Generate clean code for this task"><span class="tool-icon">${icon('copy')}</span><span>Code</span></button><button type="button" data-prompt="Give me five creative ideas"><span class="tool-icon">${icon('plus')}</span><span>Ideas</span></button><button type="button" data-prompt="Create a short quiz with answers about this topic"><span class="tool-icon">${icon('search')}</span><span>Quiz</span></button></div></section><section class="recent-tools"><div class="panel-heading"><h2>Recent Chats</h2><button id="clearRecentButton" type="button">Clear all</button></div><div id="recentToolsList"></div></section></aside></div>
+        <section class="chat-composer-wrap"><div class="attachment-preview" id="attachmentPreview" hidden></div><div class="talk-live-banner" id="liveBanner" hidden><span class="pulse-dot"></span><span>Voice listening…</span><button id="stopLiveButton" type="button">Stop</button></div><form class="chat-composer" id="chatForm"><input id="fileInput" type="file" hidden multiple accept="image/*,.txt,.md,.pdf"><button class="composer-button" id="attachButton" type="button" aria-label="Attach a file">${icon('paperclip')}</button><textarea id="chatInput" rows="1" maxlength="6000" placeholder="Ask anything…" aria-label="Message TODO AI"></textarea><button class="composer-button mic-button" id="micButton" type="button" aria-label="Use microphone">${icon('mic')}</button><button class="talk-live-button" id="liveButton" type="button">${icon('volume')}<span>Voice</span></button><button class="send-button" id="sendButton" type="submit" aria-label="Send message">${icon('send')}</button></form><p class="composer-note">AI can make mistakes. Check important information. Attachments are not supported yet.</p></section>
         <nav class="chat-bottom-nav" aria-label="Chat navigation"><button class="active" type="button" data-nav="chat">${icon('send')}<span>Chat</span></button><button type="button" data-nav="history">${icon('search')}<span>History</span></button><button type="button" data-nav="tools">${icon('plus')}<span>Tools</span></button><button type="button" data-nav="settings">${icon('more')}<span>Settings</span></button></nav>
         <aside class="history-drawer" id="historyDrawer" aria-hidden="true"><div class="drawer-brand"><span class="chat-brand-mark">T</span><div><strong>TODO AI</strong><small>Think. Ask. Create.</small></div><button class="chat-icon-button drawer-menu-button" type="button" aria-label="Toggle navigation">${icon('menu')}</button></div><nav class="drawer-nav" aria-label="Assistant navigation"><button class="active" type="button" data-drawer-action="chat">${icon('send')}<span>Chat</span></button><button type="button" data-drawer-action="voice">${icon('mic')}<span>Voice Chat</span></button><button type="button" data-drawer-action="create">${icon('plus')}<span>Create</span></button><button type="button" data-drawer-action="history">${icon('search')}<span>History</span></button><button type="button" data-drawer-action="settings">${icon('more')}<span>Settings</span></button></nav><div class="drawer-head"><strong>Recent conversations</strong><button class="chat-icon-button" id="closeHistoryButton" type="button" aria-label="Close history">${icon('close')}</button></div><button class="new-chat-button" id="newChatButton" type="button">${icon('plus')}<span>New conversation</span></button><label class="history-search"><span aria-hidden="true">${icon('search')}</span><input id="historySearch" type="search" placeholder="Search chats" aria-label="Search chat history"></label><div id="historyList"></div><div class="premium-promo"><span>TODO AI Pro</span><strong>Unlock your creative flow</strong><button type="button" disabled>Explore plan</button></div><div class="drawer-footer"><button type="button" id="drawerThemeButton">Dark mode</button><span>TODO AI v1.0</span></div></aside>
         <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
       </main>`;
+    const promo = page.querySelector('.premium-promo');
+    if (promo) promo.innerHTML = '<span>ON THIS DEVICE</span><strong>Your chats stay in this browser</strong><small>History is local and is not synced to an account.</small>';
+    page.querySelector('.drawer-menu-button')?.remove();
+    page.querySelectorAll('.chat-brand-mark').forEach((mark) => {
+      const logo = document.createElement('img');
+      logo.src = 'assets/icons/logo.svg';
+      logo.alt = '';
+      logo.setAttribute('aria-hidden', 'true');
+      mark.replaceChildren(logo);
+    });
     wire();
   }
   function wire() {
     document.querySelector('#historyButton').onclick = openHistory;
     document.querySelector('#closeHistoryButton').onclick = closeHistory;
     document.querySelector('#drawerBackdrop').onclick = closeHistory;
-    document.querySelector('#newChatButton').onclick = createSession;
+    document.querySelector('#newChatButton').onclick = () => { createSession(); closeHistory(); };
     document.querySelector('#headerNewChat').onclick = createSession;
     document.querySelector('#themeButton').onclick = toggleTheme;
     document.querySelector('#historySearch').addEventListener('input', renderHistory);
@@ -136,18 +164,26 @@
     document.querySelectorAll('[data-drawer-action]').forEach((button) => button.onclick = () => {
       const action = button.dataset.drawerAction;
       if (action === 'voice') document.querySelector('#liveButton').click();
-      if (action === 'create') document.querySelector('#chatInput').focus();
+      if (action === 'create') { closeHistory(); document.querySelector('#chatInput').focus(); }
       if (action === 'settings') location.href = 'settings.html';
       if (action === 'history') document.querySelector('#historySearch').focus();
       if (action === 'chat') closeHistory();
     });
     document.querySelectorAll('[data-open-live]').forEach((button) => button.onclick = () => document.querySelector('#liveButton').click());
     document.querySelectorAll('.quick-action-grid [data-prompt]').forEach((button) => button.onclick = () => {
+      document.querySelector('#toolsPanel').classList.remove('open');
+      document.querySelector('#chatInput').value = button.dataset.prompt;
+      autoSize();
+      document.querySelector('#chatInput').focus();
+    });
+    document.querySelectorAll('.tools-rail [data-prompt]').forEach((button) => button.onclick = () => {
       document.querySelector('#chatInput').value = button.dataset.prompt;
       autoSize();
       document.querySelector('#chatInput').focus();
     });
     document.querySelector('#clearRecentButton').onclick = () => {
+      if (state.controller) { toast('Stop the current response before clearing history.'); return; }
+      if (!window.confirm('Delete all saved conversations from this browser? This cannot be undone.')) return;
       state.sessions = [];
       state.sessionId = null;
       state.messages = [];
@@ -157,14 +193,16 @@
     document.querySelector('#chatForm').onsubmit = (event) => { event.preventDefault(); send(); };
     document.querySelector('#chatInput').addEventListener('input', autoSize);
     document.querySelector('#chatInput').addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); send(); } });
-    document.querySelector('#attachButton').onclick = () => document.querySelector('#fileInput').click();
+    document.querySelector('#attachButton').onclick = () => toast('File and image analysis is not available yet. No file was uploaded.');
     document.querySelector('#fileInput').onchange = handleFiles;
     document.querySelector('#micButton').onclick = toggleRecognition;
     document.querySelector('#liveButton').onclick = toggleLive;
     document.querySelector('#stopLiveButton').onclick = stopLive;
     document.querySelector('#jumpButton').onclick = () => scrollToBottom(true);
+    document.querySelectorAll('[data-nav="chat"]').forEach((button) => button.onclick = () => document.querySelector('#chatInput').focus());
     document.querySelectorAll('[data-nav="history"]').forEach((button) => button.onclick = openHistory);
-    document.querySelectorAll('[data-nav="tools"]').forEach((button) => button.onclick = () => document.querySelector('.tools-rail').classList.toggle('open'));
+    document.querySelectorAll('[data-nav="tools"]').forEach((button) => button.onclick = () => document.querySelector('#toolsPanel').classList.toggle('open'));
+    document.querySelectorAll('[data-nav="settings"]').forEach((button) => button.onclick = () => { location.href = 'settings.html'; });
     document.querySelector('#chatScroll').addEventListener('scroll', () => {
       const box = document.querySelector('#chatScroll');
       state.nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 120;
@@ -182,7 +220,7 @@
       box.innerHTML = `<div class="welcome-state"><div class="welcome-orb">T</div><p class="eyebrow">YOUR EVERYDAY AI</p><h1>Hello, Saksham <span>👋</span></h1><p class="welcome-copy">What would you like to create today? Ask in Hindi, English, or Hinglish.</p><div class="suggestions"><button type="button" data-prompt="Mere liye aaj ka simple productivity plan banao">Plan my day</button><button type="button" data-prompt="Is concept ko simple Hindi mein samjhao">Explain a concept</button><button type="button" data-prompt="Ek professional email draft karo">Write an email</button></div></div>`;
       box.querySelectorAll('[data-prompt]').forEach((button) => button.onclick = () => { document.querySelector('#chatInput').value = button.dataset.prompt; autoSize(); document.querySelector('#chatInput').focus(); });
     } else {
-      box.innerHTML = state.messages.map((message, index) => `<article class="message-row ${message.role === 'user' ? 'user-message' : 'assistant-message'}" data-index="${index}"><div class="message-avatar">${message.role === 'user' ? 'You' : 'T'}</div><div class="message-column"><div class="message-bubble">${message.pending ? '<span class="typing-indicator" aria-label="TODO AI is typing"><i></i><i></i><i></i></span>' : message.role === 'assistant' ? markdown(message.text) : escapeHtml(message.text).replace(/\n/g, '<br>')}</div>${message.pending ? '<div class="message-status">TODO AI is thinking…</div>' : `<div class="message-actions"><span>${message.role === 'assistant' ? 'TODO AI' : 'You'}</span>${message.role === 'assistant' ? `<button type="button" data-action="speak" aria-label="Read response aloud">${icon('volume')}</button>` : ''}<button type="button" data-action="copy" aria-label="Copy response">${icon('copy')}</button></div>`}</div></article>`).join('');
+      box.innerHTML = state.messages.map((message, index) => `<article class="message-row ${message.role === 'user' ? 'user-message' : 'assistant-message'}" data-index="${index}"><div class="message-avatar">${message.role === 'user' ? 'You' : 'T'}</div><div class="message-column"><div class="message-bubble">${message.pending ? '<span class="typing-indicator" aria-label="TODO AI is typing"><i></i><i></i><i></i></span>' : message.role === 'assistant' ? markdown(message.text) : escapeHtml(message.text).replace(/\n/g, '<br>')}</div>${message.pending ? '<div class="message-status">TODO AI is thinking…</div>' : `<div class="message-actions"><span>${message.role === 'assistant' ? 'TODO AI' : 'You'}</span>${message.role === 'assistant' ? `<button type="button" data-action="speak" aria-label="Read response aloud">${icon('volume')}</button>${message.error ? '<button type="button" data-action="retry">Retry</button>' : ''}` : ''}<button type="button" data-action="copy" aria-label="Copy response">${icon('copy')}</button></div>`}</div></article>`).join('');
       scrollToBottom(false);
     }
   }
@@ -190,21 +228,63 @@
     const list = document.querySelector('#historyList');
     if (!list) return;
     const query = document.querySelector('#historySearch')?.value.trim().toLowerCase() || '';
-    const sessions = state.sessions.filter((session) => !query || session.title.toLowerCase().includes(query));
-    list.innerHTML = sessions.length ? sessions.map((session) => `<button type="button" class="history-item ${session.id === state.sessionId ? 'active' : ''}" data-session="${session.id}"><span>${escapeHtml(session.title)}</span><small>${new Date(session.updatedAt).toLocaleDateString()}</small></button>`).join('') : '<p class="empty-history">No matching conversations.</p>';
+    const sessions = state.sessions.filter((session) => !query || `${session.title} ${session.messages.map((message) => message.text).join(' ')}`.toLowerCase().includes(query));
+    list.innerHTML = sessions.length ? sessions.map((session) => `<div class="history-item-wrap"><button type="button" class="history-item ${session.id === state.sessionId ? 'active' : ''}" data-session="${session.id}"><span>${escapeHtml(session.title)}</span><small>${new Date(session.updatedAt).toLocaleDateString()}</small></button><span class="history-item-actions"><button type="button" data-rename="${session.id}" aria-label="Rename ${escapeHtml(session.title)}">Rename</button><button type="button" data-delete="${session.id}" aria-label="Delete ${escapeHtml(session.title)}">Delete</button><button type="button" data-export="${session.id}" aria-label="Export ${escapeHtml(session.title)}">Export</button></span></div>`).join('') : '<p class="empty-history">No matching conversations.</p>';
     list.querySelectorAll('[data-session]').forEach((button) => button.onclick = () => selectSession(button.dataset.session));
+    list.querySelectorAll('[data-rename]').forEach((button) => button.onclick = () => renameSession(button.dataset.rename));
+    list.querySelectorAll('[data-delete]').forEach((button) => button.onclick = () => deleteSession(button.dataset.delete));
+    list.querySelectorAll('[data-export]').forEach((button) => button.onclick = () => exportSession(button.dataset.export));
     const recent = document.querySelector('#recentToolsList');
     if (recent) {
       recent.innerHTML = state.sessions.slice(0, 3).map((session) => `<button type="button" class="tool-recent-item" data-session="${session.id}"><span>${escapeHtml(session.title)}</span><small>${new Date(session.updatedAt).toLocaleDateString()}</small></button>`).join('') || '<p class="empty-history">No recent chats yet.</p>';
       recent.querySelectorAll('[data-session]').forEach((button) => button.onclick = () => selectSession(button.dataset.session));
     }
   }
+  function renameSession(id) {
+    if (state.controller) { toast('Stop the current response before editing history.'); return; }
+    const session = state.sessions.find((item) => item.id === id);
+    if (!session) return;
+    const title = window.prompt('Conversation name:', session.title);
+    if (title === null || !title.trim()) return;
+    session.title = title.trim().slice(0, 80);
+    write(key, state.sessions);
+    renderHistory();
+  }
+  function deleteSession(id) {
+    if (state.controller) { toast('Stop the current response before editing history.'); return; }
+    const session = state.sessions.find((item) => item.id === id);
+    if (!session || !window.confirm(`Delete “${session.title}” from this browser?`)) return;
+    state.sessions = state.sessions.filter((item) => item.id !== id);
+    if (state.sessionId === id) {
+      state.sessionId = null;
+      state.messages = [];
+      if (state.sessions.length) selectSession(state.sessions[0].id);
+      else createSession();
+    }
+    write(key, state.sessions);
+    renderHistory();
+  }
+  function exportSession(id) {
+    const session = state.sessions.find((item) => item.id === id);
+    if (!session) return;
+    const format = window.prompt('Export format: type md or txt', 'md');
+    if (!format || !['md', 'txt'].includes(format.trim().toLowerCase())) return;
+    const markdownText = `# ${session.title}\n\n${session.messages.map((message) => `## ${message.role === 'user' ? 'You' : 'TODO AI'}\n\n${message.text}`).join('\n\n---\n\n')}`;
+    const extension = format.trim().toLowerCase();
+    const content = extension === 'txt' ? `${session.title}\n\n${session.messages.map((message) => `${message.role === 'user' ? 'You' : 'TODO AI'}:\n${message.text}`).join('\n\n')}` : markdownText;
+    const url = URL.createObjectURL(new Blob([content], { type: extension === 'md' ? 'text/markdown;charset=utf-8' : 'text/plain;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${session.title.replace(/[^\p{L}\p{N}-]+/gu, '-').slice(0, 60) || 'conversation'}.${extension}`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
   function openHistory() { document.querySelector('#historyDrawer').setAttribute('aria-hidden', 'false'); document.querySelector('#drawerBackdrop').hidden = false; document.querySelector('#historyButton').setAttribute('aria-expanded', 'true'); }
   function closeHistory() { document.querySelector('#historyDrawer').setAttribute('aria-hidden', 'true'); document.querySelector('#drawerBackdrop').hidden = true; document.querySelector('#historyButton').setAttribute('aria-expanded', 'false'); }
   function autoSize() { const input = document.querySelector('#chatInput'); input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 140)}px`; }
   function scrollToBottom(force) { const box = document.querySelector('#chatScroll'); if (force || state.nearBottom) requestAnimationFrame(() => { box.scrollTop = box.scrollHeight; }); }
-  function updateConnection() { const online = navigator.onLine; document.querySelector('#connectionStatus').classList.toggle('offline', !online); document.querySelector('#connectionStatus span').textContent = online ? 'Online' : 'Offline'; }
-  function toggleTheme() { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; write('todo_theme', next); document.querySelector('#themeButton').innerHTML = icon(next === 'dark' ? 'sun' : 'moon'); }
+  function updateConnection() { const online = navigator.onLine; document.querySelector('#connectionStatus').classList.toggle('offline', !online); document.querySelector('#connectionStatus span').textContent = online ? 'Internet connected' : 'Offline'; }
+  function toggleTheme() { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; const stored = read('todo_settings', {}); const preferences = stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {}; preferences.theme = next; write('todo_settings', preferences); document.querySelector('#themeButton').innerHTML = icon(next === 'dark' ? 'sun' : 'moon'); document.querySelector('#themeButton').setAttribute('aria-label', `Switch to ${next === 'dark' ? 'light' : 'dark'} mode`); document.querySelector('#drawerThemeButton').textContent = next === 'dark' ? 'Light mode' : 'Dark mode'; document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#11151d' : '#6c5ce7'); }
   function handleFiles(event) { const files = Array.from(event.target.files || []).slice(0, 4); const preview = document.querySelector('#attachmentPreview'); preview.hidden = !files.length; preview.innerHTML = files.map((file) => `<span>${escapeHtml(file.name)} <button type="button" data-remove-file="${escapeHtml(file.name)}" aria-label="Remove ${escapeHtml(file.name)}">${icon('close')}</button></span>`).join(''); preview.querySelectorAll('[data-remove-file]').forEach((button) => button.onclick = () => { event.target.value = ''; preview.hidden = true; preview.innerHTML = ''; }); }
   async function send() {
     if (state.controller) { state.controller.abort(); return; }
@@ -215,15 +295,44 @@
     state.messages.push({ role: 'user', text: prompt, id: makeId() });
     const session = activeSession();
     if (session && session.title === 'New conversation') session.title = prompt.slice(0, 42);
-    input.value = ''; autoSize(); renderMessages(); persist(); setGenerating(true);
-    const assistant = { role: 'assistant', text: '', id: makeId(), pending: true };
+    input.value = ''; autoSize(); renderMessages(); renderHistory(); persist(); setGenerating(true);
+    const assistant = { role: 'assistant', text: '', id: makeId(), pending: true, prompt };
     state.messages.push(assistant); renderMessages();
     state.controller = new AbortController();
     try {
-      const response = await fetch(`${location.hostname.endsWith('github.io') ? 'https://lagma-village-ai.onrender.com' : ''}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: state.messages.filter((item) => !item.pending).slice(-20).map(({ role, text }) => ({ role, text })) }), signal: state.controller.signal });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || 'AI response unavailable.');
-      await animateReply(assistant, data.reply || 'I could not generate a response.');
+      const response = await fetch(`${location.hostname.endsWith('github.io') ? 'https://lagma-village-ai.onrender.com' : ''}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'text/event-stream' }, body: JSON.stringify({ messages: state.messages.filter((item) => !item.pending).slice(-20).map(({ role, text }) => ({ role, text })) }), signal: state.controller.signal });
+      const contentType = response.headers.get('content-type') || '';
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || 'AI response unavailable.');
+      }
+      if (contentType.includes('text/event-stream') && response.body) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let streamComplete = false;
+        while (true) {
+          const { done, value } = await reader.read();
+          buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+          const events = buffer.split(/\r?\n\r?\n/);
+          buffer = events.pop() || '';
+          for (const event of events) {
+            const line = event.split(/\r?\n/).find((item) => item.startsWith('data:'));
+            if (!line) continue;
+            try {
+              const data = JSON.parse(line.slice(5).trim());
+              if (data.text) { assistant.text += data.text; assistant.pending = false; renderMessages(); persist(); }
+              if (data.done === true) streamComplete = true;
+            } catch { /* Ignore malformed stream events. */ }
+          }
+          if (done) break;
+        }
+        if (!assistant.text || !streamComplete) throw new Error('The response ended unexpectedly. Please retry.');
+      } else {
+        const data = await response.json();
+        assistant.text = data.reply || '';
+        if (!assistant.text) throw new Error('The AI returned an empty response. Please retry.');
+      }
       if ((state.liveMode || settings.autoSpeak) && assistant.text) speak(assistant.text);
     } catch (error) {
       if (error.name !== 'AbortError') {
@@ -232,17 +341,13 @@
           : `Sorry, ${error.message}`;
         assistant.error = true;
       }
-      else state.messages = state.messages.filter((message) => message !== assistant);
+      else if (assistant.text) {
+        assistant.text += '\n\n(Generation stopped.)';
+        assistant.error = true;
+      } else state.messages = state.messages.filter((message) => message !== assistant);
     } finally {
       assistant.pending = false; state.controller = null; setGenerating(false); persist(); renderMessages();
     }
-  }
-  function animateReply(message, text) {
-    return new Promise((resolve) => {
-      const chunks = String(text).match(/\S+\s*/g) || ['']; let index = 0;
-      const tick = () => { message.text += chunks[index++]; renderMessages(); if (index < chunks.length) setTimeout(tick, 28); else resolve(); };
-      tick();
-    });
   }
   function setGenerating(active) { const button = document.querySelector('#sendButton'); button.classList.toggle('stop', active); button.innerHTML = icon(active ? 'stop' : 'send'); button.setAttribute('aria-label', active ? 'Stop generating' : 'Send message'); }
   function handleMessageAction(event) {
@@ -250,6 +355,16 @@
     if (copyCode) { navigator.clipboard?.writeText(decodeURIComponent(copyCode.dataset.copyCode)); copyCode.textContent = 'Copied'; return; }
     const button = event.target.closest('[data-action]'); if (!button) return;
     const row = button.closest('.message-row'); const message = state.messages[Number(row.dataset.index)];
+    if (button.dataset.action === 'retry') {
+      const prompt = message.prompt;
+      const index = state.messages.indexOf(message);
+      if (index > 0) state.messages.splice(index - 1, 2);
+      persist(); renderMessages();
+      document.querySelector('#chatInput').value = prompt || '';
+      autoSize();
+      send();
+      return;
+    }
     if (button.dataset.action === 'copy') { navigator.clipboard?.writeText(message.text); button.textContent = 'Copied'; }
     if (button.dataset.action === 'speak') speak(message.text);
   }
@@ -278,7 +393,10 @@
     state.messages = activeSession()?.messages?.slice() || [];
     build(); renderMessages(); renderHistory();
     if (!state.sessionId) createSession();
-    document.querySelector('#themeButton').innerHTML = icon(document.documentElement.dataset.theme === 'dark' ? 'sun' : 'moon');
+    const dark = document.documentElement.dataset.theme === 'dark';
+    document.querySelector('#themeButton').innerHTML = icon(dark ? 'sun' : 'moon');
+    document.querySelector('#themeButton').setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
+    document.querySelector('#drawerThemeButton').textContent = dark ? 'Light mode' : 'Dark mode';
   }
   init();
 })();

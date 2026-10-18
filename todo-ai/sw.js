@@ -1,4 +1,4 @@
-const CACHE = 'todo-ai-v12';
+const CACHE = 'todo-ai-v13';
 const CORE = [
   './',
   './index.html',
@@ -8,6 +8,8 @@ const CORE = [
   './manifest.webmanifest',
   './css/style.css',
   './js/app.js',
+  './js/chat-experience.js',
+  './css/chat-experience.css',
   './assets/icons/logo.svg',
   './assets/icons/logo-192.png',
   './assets/icons/logo-512.png',
