@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Latest notices and announcements from Lagma Village.">
+  <meta name="description" content="Find and read published notices, community updates, events, and public information for Lagma Village.">
   <meta name="robots" content="index, follow">
   <meta name="google-analytics-id" content="G-PZQ45J2B8G">
   <link rel="canonical" href="https://lagma.online/notification.html">
-  <meta property="og:title" content="Notices | Lagma Village Official">
-  <meta property="og:description" content="Latest notices and announcements from Lagma Village.">
+  <meta property="og:title" content="Lagma Village Notice Board">
+  <meta property="og:description" content="Published notices, community updates, events, and public information for Lagma Village.">
   <meta property="og:site_name" content="Lagma Village Official">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://lagma.online/notification.html">
   <meta property="og:image" content="https://lagma.online/a.jpeg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Notices | Lagma Village Official">
-  <meta name="twitter:description" content="Latest notices and announcements from Lagma Village.">
+  <meta name="twitter:title" content="Lagma Village Notice Board">
+  <meta name="twitter:description" content="Published notices, community updates, events, and public information for Lagma Village.">
   <meta name="twitter:image" content="https://lagma.online/a.jpeg">
-  <title>Notices | Lagma Village Official</title>
+  <title>Lagma Village Notice Board | Official Website</title>
   <link rel="manifest" href="manifest.webmanifest?v=8">
   <link rel="icon" href="favicon.ico?v=1" type="image/x-icon">
   <link rel="icon" href="icons/lagma-icon-512.png?v=2" type="image/png" sizes="512x512">
   <link rel="icon" href="icons/lagma-icon-192.png?v=2" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="icons/lagma-icon-192.png?v=2" sizes="192x192">
-  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="style.css?v=23">
   <script src="firebase-config.js?v=8"></script>
   <script src="analytics.js?v=3" defer></script>
 </head>
@@ -52,21 +52,34 @@
 
   <main>
     <section class="page-hero notice-hero">
-      <div>
-        <p class="eyebrow">Notice board</p>
-        <h1>Latest village updates</h1>
-        <p>Important announcements, public information, and community updates for residents and visitors.</p>
+      <div class="notice-hero-content">
+        <p class="eyebrow"><i data-lucide="bell-ring" aria-hidden="true"></i> Notice board</p>
+        <h1>Lagma Village Notice Board</h1>
+        <p>Published notices, public information, and community updates for residents. Check the source and dates before acting.</p>
+        <form class="notice-search" id="notice-search-form" role="search">
+          <label class="sr-only" for="notice-search">Search notices</label>
+          <i data-lucide="search" aria-hidden="true"></i>
+          <input id="notice-search" name="q" type="search" maxlength="120" placeholder="Search notices, category, or keyword" autocomplete="off">
+          <button class="btn btn-outline" id="clear-notice-search" type="button" hidden>Clear search</button>
+        </form>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section notice-section">
+      <div class="notice-summary-grid" aria-label="Notice summary">
+        <article class="notice-summary-card"><span>Published notices loaded</span><strong id="notice-count-total" aria-live="polite">—</strong></article>
+        <article class="notice-summary-card"><span>Active</span><strong id="notice-count-active" aria-live="polite">—</strong></article>
+        <article class="notice-summary-card"><span>Upcoming</span><strong id="notice-count-upcoming" aria-live="polite">—</strong></article>
+        <article class="notice-summary-card"><span>Archived</span><strong id="notice-count-archived" aria-live="polite">—</strong></article>
+      </div>
+
       <div class="notice-publisher" aria-labelledby="add-note-title">
         <div>
           <p class="eyebrow">Community note</p>
           <h2 id="add-note-title">Apna note bhejein</h2>
-          <p>Visitor apna chhota note bhej sakte hain. Public notice board par dikhane se pehle note review kiya jayega.</p>
+          <p>Visitor apna chhota note review ke liye bhej sakte hain. Approval se pehle koi submission public notice nahi hota. Password, OTP, ya private jaankari na bhejein.</p>
         </div>
-        <form class="notice-form" id="visitor-note-form">
+        <form class="notice-form" id="visitor-note-form" novalidate>
           <label>
             Aapka naam
             <input id="visitor-note-name" name="name" type="text" maxlength="40" placeholder="Naam likhein" autocomplete="name">
@@ -79,33 +92,109 @@
             Note
             <textarea id="visitor-note-message" name="message" rows="4" maxlength="300" placeholder="Apna note yahan type karein..." required></textarea>
           </label>
+          <label class="notice-consent full-field"><input id="visitor-note-consent" type="checkbox" required> Main samajhta/samajhti hoon ki is note ko review kiya jayega aur approval par public kiya ja sakta hai.</label>
           <div class="notice-form-actions">
             <button class="btn" type="submit">Review ke liye bhejein</button>
-            <button class="btn btn-outline" type="button" id="clear-visitor-notes">Mere notes clear karein</button>
+            <button class="btn btn-outline" type="button" id="clear-visitor-notes">Mere device ke notes clear karein</button>
           </div>
           <p class="notice-status" id="visitor-note-status" aria-live="polite"></p>
         </form>
       </div>
 
-      <div class="notice-list" id="notice-list">
-        <article class="notice-card highlight-notice">
-          <span>Welcome</span>
-          <h2>Lagma Village website is live</h2>
-          <p>Residents can use this website to learn about village history, services, gallery updates, and contact information.</p>
-        </article>
-        <article class="notice-card">
-          <span>May 2026</span>
-          <h3>Development meeting</h3>
-          <p>Discussion planned around roads, drainage, education, and village cleanliness.</p>
-        </article>
-        <article class="notice-card">
-          <span>April 2026</span>
-          <h3>Festival preparation</h3>
-          <p>Community cleaning and decoration activities were completed with local participation.</p>
-        </article>
+      <div class="notice-toolbar" aria-label="Filter and sort notices">
+        <div class="notice-status-filters" role="group" aria-label="Notice status">
+          <button type="button" data-status-filter="all" aria-pressed="true">All notices</button>
+          <button type="button" data-status-filter="important" aria-pressed="false">Pinned</button>
+          <button type="button" data-status-filter="active" aria-pressed="false">Active</button>
+          <button type="button" data-status-filter="upcoming" aria-pressed="false">Upcoming</button>
+          <button type="button" data-status-filter="expired" aria-pressed="false">Expired</button>
+          <button type="button" data-status-filter="archived" aria-pressed="false">Archived</button>
+        </div>
+        <div class="notice-filter-fields">
+          <label>Category
+            <select id="notice-category-filter">
+              <option value="all">All categories</option>
+              <option value="panchayat">Panchayat Notices</option>
+              <option value="education">Education</option>
+              <option value="schemes">Government Schemes</option>
+              <option value="agriculture">Agriculture</option>
+              <option value="health">Health</option>
+              <option value="utilities">Electricity and Water</option>
+              <option value="employment">Employment</option>
+              <option value="culture">Social and Cultural Events</option>
+              <option value="important">Important Announcements</option>
+              <option value="other">Other Notices</option>
+            </select>
+          </label>
+          <label>Published from <input id="notice-date-from" type="date"></label>
+          <label>Published to <input id="notice-date-to" type="date"></label>
+          <label>Sort by
+            <select id="notice-sort">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="updated">Recently updated</option>
+              <option value="upcoming">Upcoming date</option>
+            </select>
+          </label>
+          <button class="btn btn-outline" id="clear-notice-filters" type="button">Clear filters</button>
+        </div>
       </div>
 
-      <div class="center">
+      <div class="notice-results-heading">
+        <h2 id="notice-results-title" tabindex="-1">Notices</h2>
+        <p id="notice-results-count" aria-live="polite" aria-atomic="true">Notice list load ho rahi hai…</p>
+      </div>
+
+      <section id="pinned-notices" class="notice-pinned" aria-labelledby="pinned-notices-title" hidden>
+        <h2 id="pinned-notices-title">Pinned notice</h2>
+        <div id="pinned-notice-list" class="notice-pinned-list"></div>
+      </section>
+
+      <p id="notice-board-status" class="notice-board-status" role="status" aria-live="polite">Notice list load ho rahi hai…</p>
+      <button class="btn btn-outline notice-retry" id="notice-retry" type="button" hidden>Retry online notices</button>
+      <div class="notice-list" id="notice-list" aria-live="polite" aria-busy="true" tabindex="-1">
+        <article class="notice-card highlight-notice">
+          <span>Welcome</span><h3>Lagma Village website is live</h3>
+          <p>Residents can use this website to learn about village history, services, gallery updates, and contact information.</p>
+        </article>
+        <article class="notice-card"><span>May 2026</span><h3>Development meeting</h3><p>Discussion planned around roads, drainage, education, and village cleanliness.</p></article>
+        <article class="notice-card"><span>April 2026</span><h3>Festival preparation</h3><p>Community cleaning and decoration activities were completed with local participation.</p></article>
+      </div>
+      <div class="notice-empty" id="notice-empty" hidden>
+        <i data-lucide="search-x" aria-hidden="true"></i>
+        <h3>No matching notices</h3>
+        <p>Search ya filters ko badal kar dobara dekhein.</p>
+        <button class="btn btn-outline" id="reset-notice-empty" type="button">Search aur filters reset karein</button>
+      </div>
+      <div class="notice-pagination">
+        <button class="btn btn-outline" id="notice-load-more" type="button" hidden>Load more notices</button>
+      </div>
+
+      <section class="notice-detail" id="notice-detail" aria-live="polite" aria-labelledby="notice-detail-title" hidden>
+        <button class="btn btn-outline notice-back-button" id="notice-back" type="button">← Back to notices</button>
+        <article id="notice-detail-content"></article>
+        <div class="notice-detail-actions">
+          <button class="btn" id="notice-share" type="button">Share notice</button>
+          <button class="btn btn-outline" id="notice-copy-link" type="button">Copy notice link</button>
+          <button class="btn btn-outline" id="notice-print" type="button">Print notice</button>
+        </div>
+        <label class="notice-copy-fallback" id="notice-copy-fallback-label" hidden>Notice link
+          <input id="notice-copy-fallback" type="url" readonly>
+        </label>
+        <p class="notice-status" id="notice-share-status" role="status" aria-live="polite"></p>
+        <section class="notice-related" id="notice-related" hidden aria-labelledby="notice-related-title">
+          <h2 id="notice-related-title">Related notices</h2>
+          <div id="notice-related-list" class="notice-list"></div>
+        </section>
+      </section>
+
+      <section class="notice-local-notes" id="local-note-section" aria-labelledby="local-note-title" hidden>
+        <h2 id="local-note-title">Your device-only notes</h2>
+        <p>These notes are saved only in this browser and are not submitted or visible to others.</p>
+        <div id="local-note-list" class="notice-list"></div>
+      </section>
+
+      <div class="center notice-home-link">
         <a class="btn" href="index.html">Back to Home</a>
       </div>
     </section>
@@ -132,7 +221,9 @@
     </div>
   </footer>
 
-  <script src="web.js?v=27"></script>
+  <script src="notice-data.js?v=2"></script>
+  <script src="notice-board.js?v=3"></script>
+  <script src="web.js?v=30"></script>
   <script src="assets/lucide.min.js?v=1"></script>
   <script src="lagma-icons.js?v=1"></script>
 </body>

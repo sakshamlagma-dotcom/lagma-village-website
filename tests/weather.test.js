@@ -333,7 +333,7 @@ test("weather page CSS retains narrow layouts, visible focus, and reduced-motion
   const home = await readFile(path.join(root, "index.html"), "utf8");
   assert.match(home, /weather-home\.js\?v=2/);
   const worker = await readFile(path.join(root, "sw.js"), "utf8");
-  assert.match(worker, /lagma-village-v53/);
+  assert.match(worker, /lagma-village-v55/);
   const page = await readFile(path.join(root, "kissan-help", "mausam.html"), "utf8");
   const script = await readFile(path.join(root, "kissan-help", "mausam.js"), "utf8");
   assert.match(script, /id = "retry-weather"/);

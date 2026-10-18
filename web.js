@@ -282,6 +282,48 @@ document.addEventListener("DOMContentLoaded", () => {
     "Development Work": { hi: "विकास कार्य", mai: "विकास काज" },
     "People of Lagma": { hi: "लगमा के लोग", mai: "लगमा के लोक" }
   });
+  Object.assign(staticTranslations, {
+    "Notice board": { hi: "सूचना पट्ट", mai: "सूचना पट्ट" },
+    "Lagma Village Notice Board": { hi: "लगमा गांव सूचना पट्ट", mai: "लगमा गाम सूचना पट्ट" },
+    "Published notices, public information, and community updates for residents. Check the source and dates before acting.": { hi: "निवासियों के लिए प्रकाशित सूचनाएं और सामुदायिक अपडेट। कोई कदम उठाने से पहले स्रोत और तारीख जांचें।", mai: "निवासी लेल प्रकाशित सूचना आ सामुदायिक अपडेट। कोनो कदम उठेबासँ पहिने स्रोत आ तिथि जांचू।" },
+    "Search notices": { hi: "सूचनाएं खोजें", mai: "सूचना खोजू" },
+    "Search notices, category, or keyword": { hi: "सूचना, श्रेणी या शब्द खोजें", mai: "सूचना, श्रेणी वा शब्द खोजू" },
+    "Clear search": { hi: "खोज मिटाएं", mai: "खोज हटाउ" },
+    "Published notices loaded": { hi: "लोड की गई प्रकाशित सूचनाएं", mai: "लोड भेल प्रकाशित सूचना" },
+    "Active": { hi: "सक्रिय", mai: "सक्रिय" },
+    "Upcoming": { hi: "आगामी", mai: "आगामी" },
+    "Archived": { hi: "संग्रहित", mai: "संग्रहित" },
+    "Apna note bhejein": { hi: "अपना संदेश भेजें", mai: "अपन संदेश पठाउ" },
+    "All notices": { hi: "सभी सूचनाएं", mai: "सभ सूचना" },
+    "All categories": { hi: "सभी श्रेणियां", mai: "सभ श्रेणी" },
+    "Panchayat Notices": { hi: "पंचायत सूचनाएं", mai: "पंचायत सूचना" },
+    "Education": { hi: "शिक्षा", mai: "शिक्षा" },
+    "Government Schemes": { hi: "सरकारी योजनाएं", mai: "सरकारी योजना" },
+    "Agriculture": { hi: "कृषि", mai: "खेती" },
+    "Health": { hi: "स्वास्थ्य", mai: "स्वास्थ्य" },
+    "Electricity and Water": { hi: "बिजली और पानी", mai: "बिजली आ पानि" },
+    "Employment": { hi: "रोजगार", mai: "रोजगार" },
+    "Social and Cultural Events": { hi: "सामाजिक और सांस्कृतिक आयोजन", mai: "सामाजिक आ सांस्कृतिक आयोजन" },
+    "Important Announcements": { hi: "महत्वपूर्ण घोषणाएं", mai: "महत्वपूर्ण घोषणा" },
+    "Other Notices": { hi: "अन्य सूचनाएं", mai: "आन सूचना" },
+    "Sort by": { hi: "क्रम चुनें", mai: "क्रम चुनू" },
+    "Newest first": { hi: "नवीनतम पहले", mai: "नवीनतम पहिने" },
+    "Oldest first": { hi: "सबसे पुरानी पहले", mai: "पुरान सबसँ पहिने" },
+    "Recently updated": { hi: "हाल में अपडेट", mai: "हालहि अपडेट" },
+    "Upcoming date": { hi: "आगामी तारीख", mai: "आगामी तिथि" },
+    "Clear filters": { hi: "फिल्टर हटाएं", mai: "फिल्टर हटाउ" },
+    "Notices": { hi: "सूचनाएं", mai: "सूचना" },
+    "Pinned notice": { hi: "महत्वपूर्ण पिन सूचना", mai: "महत्वपूर्ण पिन सूचना" },
+    "No matching notices": { hi: "कोई मेल खाती सूचना नहीं", mai: "कोनो मिलैत सूचना नहि" },
+    "Search aur filters reset karein": { hi: "खोज और फिल्टर रीसेट करें", mai: "खोज आ फिल्टर रीसेट करू" },
+    "Load more notices": { hi: "और सूचनाएं देखें", mai: "आओर सूचना देखू" },
+    "Back to notices": { hi: "सूचनाओं पर वापस जाएं", mai: "सूचना पर वापस जाउ" },
+    "Share notice": { hi: "सूचना साझा करें", mai: "सूचना साझा करू" },
+    "Copy notice link": { hi: "सूचना लिंक कॉपी करें", mai: "सूचना लिंक कॉपी करू" },
+    "Print notice": { hi: "सूचना प्रिंट करें", mai: "सूचना प्रिंट करू" },
+    "Related notices": { hi: "संबंधित सूचनाएं", mai: "सम्बन्धित सूचना" },
+    "Back to Home": { hi: "होम पर वापस जाएं", mai: "मुख्य पृष्ठ पर वापस जाउ" }
+  });
 
   const textSources = [];
   const attrSources = [];
@@ -320,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!parent || ["SCRIPT", "STYLE"].includes(parent.tagName)) {
           return NodeFilter.FILTER_REJECT;
         }
-        if (parent.closest("[data-i18n], [data-i18n-html]")) {
+        if (parent.closest('[data-i18n], [data-i18n-html], [translate="no"]')) {
           return NodeFilter.FILTER_REJECT;
         }
         return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
@@ -337,6 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     root.querySelectorAll?.("[placeholder], [aria-label], [title]").forEach((element) => {
+      if (element.closest('[translate="no"]')) return;
       if (seenAttrElements.has(element)) return;
       seenAttrElements.add(element);
       attrSources.push({
@@ -991,7 +1034,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const visitorNoteForm = document.querySelector("#visitor-note-form");
   const visitorNoteList = document.querySelector("#notice-list");
-  if (visitorNoteForm && visitorNoteList) {
+  if (visitorNoteForm && visitorNoteList && !window.LagmaNoticeBoard) {
     const noteStorageKey = "lagma-visitor-notes";
     const status = document.querySelector("#visitor-note-status");
     const clearButton = document.querySelector("#clear-visitor-notes");
