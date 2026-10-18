@@ -20,6 +20,7 @@ globalThis.fetch = async (url, options = {}) => {
   if (payload.generationConfig?.temperature !== undefined) throw new Error('Gemini temperature override must be omitted.');
   const prompt = payload.contents?.at(-1)?.parts?.[0]?.text || '';
   if (!String(url).includes('gemini-3.5-flash-lite')) return new Response('{}', { status: 404 });
+  if (prompt === 'provider-invalid-key') return Response.json({ error: { message: 'API_KEY_INVALID: API key not valid.' } }, { status: 400 });
   if (prompt === 'provider-401') return new Response('{"error":{"message":"private provider detail"}}', { status: 401 });
   if (prompt === 'provider-429') return new Response('{"error":{"message":"quota provider detail"}}', { status: 429 });
   const makeEvent = (text) => 'data: ' + JSON.stringify({ candidates: [{ content: { parts: [{ text }] } }] }) + '\\n\\n';
@@ -148,6 +149,13 @@ test('aborting a streaming response cancels the upstream generation', async () =
 });
 
 test('provider authentication and quota errors are safe and use suitable status codes', async () => {
+  const invalidKey = await chatRequest('provider-invalid-key', { ip: '192.0.2.19' });
+  assert.equal(invalidKey.status, 503);
+  const invalidKeyBody = await invalidKey.text();
+  assert.match(invalidKeyBody, /AI_AUTH_ERROR/);
+  assert.match(invalidKeyBody, /contact the site administrator/);
+  assert.doesNotMatch(invalidKeyBody, /API_KEY_INVALID|API key not valid/);
+
   const auth = await chatRequest('provider-401', { ip: '192.0.2.13' });
   assert.equal(auth.status, 503);
   const authBody = await auth.text();
