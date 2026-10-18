@@ -19,7 +19,7 @@ globalThis.fetch = async (url, options = {}) => {
   const payload = JSON.parse(options.body || '{}');
   if (payload.generationConfig?.temperature !== undefined) throw new Error('Gemini temperature override must be omitted.');
   const prompt = payload.contents?.at(-1)?.parts?.[0]?.text || '';
-  if (!String(url).includes('gemini-3.5-flash-lite')) return new Response('{}', { status: 404 });
+  if (!String(url).includes('/models/gemini-3.5-flash-lite:')) return new Response('{}', { status: 404 });
   if (prompt === 'provider-generic-400') return Response.json({ error: { message: 'Invalid argument: unsupported request field.' } }, { status: 400 });
   if (prompt === 'provider-invalid-key') return Response.json({ error: { message: 'API_KEY_INVALID: API key not valid.' } }, { status: 400 });
   if (prompt === 'provider-401') return new Response('{"error":{"message":"private provider detail"}}', { status: 401 });
@@ -67,7 +67,7 @@ before(async () => {
       ...process.env,
       PORT: String(port),
       GEMINI_API_KEY: 'test-only-key',
-      GEMINI_MODEL: 'gemini-3.5-flash-lite',
+      GEMINI_MODEL: 'publishers/google/models/gemini-3.5-flash-lite',
       NODE_OPTIONS: `--import=${pathToFileURL(mockPath).href}`,
       NODE_ENV: 'test',
     },

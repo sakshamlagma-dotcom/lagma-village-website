@@ -6,7 +6,13 @@ import { fileURLToPath } from "node:url";
 const app = express();
 app.set("trust proxy", 1);
 const port = Number(process.env.PORT) || 3000;
-const primaryModel = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+const DEFAULT_MODEL = "gemini-3.5-flash-lite";
+const configuredModel = (process.env.GEMINI_MODEL || DEFAULT_MODEL).trim().replace(/^["'`]+|["'`]+$/g, "");
+const modelPathIndex = configuredModel.lastIndexOf("/models/");
+const modelCandidate = modelPathIndex >= 0
+  ? configuredModel.slice(modelPathIndex + 8)
+  : configuredModel.replace(/^models\//i, "");
+const primaryModel = /^[a-z][a-z0-9._-]{0,99}$/i.test(modelCandidate) ? modelCandidate : DEFAULT_MODEL;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const todoPublic = path.join(__dirname, "todo-ai");
 const lagmaPublic = __dirname;
