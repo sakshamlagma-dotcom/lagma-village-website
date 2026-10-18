@@ -1453,7 +1453,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (copySiteLinkButton) {
     const copyStatus = document.querySelector("#copy-site-link-status");
     copySiteLinkButton.addEventListener("click", async () => {
-      const siteUrl = "https://sakshamlagma-dotcom.github.io/lagma-village-website/";
+      const siteUrl = "https://lagma.online/";
       try {
         await navigator.clipboard.writeText(siteUrl);
         if (copyStatus) copyStatus.textContent = "Website link copied.";

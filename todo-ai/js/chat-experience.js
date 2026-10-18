@@ -144,11 +144,7 @@
     if (promo) promo.innerHTML = '<span>ON THIS DEVICE</span><strong>Your chats stay in this browser</strong><small>History is local and is not synced to an account.</small>';
     page.querySelector('.drawer-menu-button')?.remove();
     page.querySelectorAll('.chat-brand-mark').forEach((mark) => {
-      const logo = document.createElement('img');
-      logo.src = 'assets/icons/logo.svg';
-      logo.alt = '';
-      logo.setAttribute('aria-hidden', 'true');
-      mark.replaceChildren(logo);
+      mark.innerHTML = '<img src="assets/icons/logo.svg" alt="" aria-hidden="true">';
     });
     wire();
   }
@@ -319,11 +315,14 @@
           for (const event of events) {
             const line = event.split(/\r?\n/).find((item) => item.startsWith('data:'));
             if (!line) continue;
+            let data;
             try {
-              const data = JSON.parse(line.slice(5).trim());
-              if (data.text) { assistant.text += data.text; assistant.pending = false; renderMessages(); persist(); }
-              if (data.done === true) streamComplete = true;
+              data = JSON.parse(line.slice(5).trim());
             } catch { /* Ignore malformed stream events. */ }
+            if (!data) continue;
+            if (data.error) throw new Error(data.error);
+            if (data.text) { assistant.text += data.text; assistant.pending = false; renderMessages(); persist(); }
+            if (data.done === true) streamComplete = true;
           }
           if (done) break;
         }

@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "check": "node --check server.js && node --check todo-ai/js/app.js && node --check todo-ai/js/chat-experience.js && node --check todo-ai/sw.js",
-    "test": "node --test todo-ai/api.test.js"
+    "test": "node --test",
+    "check": "node --check server.js && node --check todo-ai/js/app.js && node --check todo-ai/js/chat-experience.js && node --check todo-ai/sw.js"
   },
   "engines": {
     "node": ">=20"

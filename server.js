@@ -109,11 +109,11 @@ app.post("/api/chat", async (req, res) => {
   req.on("aborted", () => abortController.abort());
   res.on("close", () => { if (!res.writableEnded) abortController.abort(); });
   try {
-    if (req.get("accept")?.includes("text/event-stream")) {
+    if (req.body?.stream === true || req.get("accept")?.includes("text/event-stream")) {
       await streamReply(apiKey, messages, abortController.signal, res);
     } else {
       const reply = await generateReply(apiKey, messages, abortController.signal);
-      res.json({ reply });
+      res.json({ reply, model: primaryModel });
     }
   } catch (error) {
     if (abortController.signal.aborted && !res.headersSent) {
@@ -122,7 +122,10 @@ app.post("/api/chat", async (req, res) => {
     }
     console.error("Chat request failed", { status: error.status || null });
     if (res.headersSent) {
-      res.destroy(error);
+      if (!res.destroyed && !res.writableEnded) {
+        res.write(`data: ${JSON.stringify({ error: "Gemini abhi busy hai. Thodi der baad dobara try karein.", code: "AI_UNAVAILABLE" })}\n\n`);
+        res.end();
+      }
       return;
     }
     const timedOut = error.name === "TimeoutError" || error.name === "AbortError";
@@ -261,6 +264,10 @@ async function generateReply(apiKey, messages, signal) {
   return reply;
 }
 
-app.listen(port, () => {
-  console.log(`TODO AI chal raha hai: http://localhost:${port}`);
-});
+export { app };
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  app.listen(port, () => {
+    console.log(`TODO AI chal raha hai: http://localhost:${port}`);
+  });
+}

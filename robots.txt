@@ -1,5 +1,4 @@
-﻿User-agent: *
+User-agent: *
 Allow: /
 
-Sitemap: https://sakshamlagma-dotcom.github.io/lagma-village-website/sitemap.xml
-
+Sitemap: https://lagma.online/sitemap.xml
