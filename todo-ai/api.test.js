@@ -20,6 +20,7 @@ globalThis.fetch = async (url, options = {}) => {
   if (payload.generationConfig?.temperature !== undefined) throw new Error('Gemini temperature override must be omitted.');
   const prompt = payload.contents?.at(-1)?.parts?.[0]?.text || '';
   if (!String(url).includes('gemini-3.5-flash-lite')) return new Response('{}', { status: 404 });
+  if (prompt === 'provider-generic-400') return Response.json({ error: { message: 'Invalid argument: unsupported request field.' } }, { status: 400 });
   if (prompt === 'provider-invalid-key') return Response.json({ error: { message: 'API_KEY_INVALID: API key not valid.' } }, { status: 400 });
   if (prompt === 'provider-401') return new Response('{"error":{"message":"private provider detail"}}', { status: 401 });
   if (prompt === 'provider-429') return new Response('{"error":{"message":"quota provider detail"}}', { status: 429 });
@@ -149,6 +150,10 @@ test('aborting a streaming response cancels the upstream generation', async () =
 });
 
 test('provider authentication and quota errors are safe and use suitable status codes', async () => {
+  const invalidRequest = await chatRequest('provider-generic-400', { ip: '192.0.2.18' });
+  assert.equal(invalidRequest.status, 502);
+  assert.equal((await invalidRequest.json()).diagnostic, 'Invalid argument: unsupported request field.');
+
   const invalidKey = await chatRequest('provider-invalid-key', { ip: '192.0.2.19' });
   assert.equal(invalidKey.status, 503);
   const invalidKeyBody = await invalidKey.text();
