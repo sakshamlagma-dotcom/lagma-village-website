@@ -1,4 +1,4 @@
-const CACHE = "lagma-village-v55";
+const CACHE = "lagma-village-v56";
 const ASSETS = [
   "./",
   "./index.html",
@@ -18,8 +18,8 @@ const ASSETS = [
   "./kissan-help/mausam.css?v=2",
   "./kissan-help/mausam.js?v=3",
   "./weather-utils.js?v=1",
-  "./weather-home.js?v=2",
-  "./style.css?v=23",
+  "./weather-home.js?v=3",
+  "./style.css?v=22",
   "./gallery.css?v=8",
   "./upload.css?v=2",
   "./web.js?v=30",
@@ -29,6 +29,12 @@ const ASSETS = [
   "./analytics.js?v=3",
   "./assets/lucide.min.js?v=1",
   "./assets/images/lagma-logo.png",
+  "./assets/weather/sunset-frames.png",
+  "./assets/weather/moon-phase-0.webp",
+  "./assets/weather/moon-phase-1.webp",
+  "./assets/weather/moon-phase-2.webp",
+  "./assets/weather/moon-phase-3.webp",
+  "./assets/weather/moon-phase-4.webp",
   "./lagma-icons.js?v=1",
   "./manifest.webmanifest?v=8",
   "./favicon.ico?v=1",

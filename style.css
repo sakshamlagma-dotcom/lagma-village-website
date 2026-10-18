@@ -415,6 +415,11 @@ a {
     animation: none !important;
   }
 
+  .announcement-bar .home-weather-badge .weather-sunset-film,
+  .announcement-bar .home-weather-badge .weather-moon-photo {
+    animation: none !important;
+  }
+
   .announcement-bar .home-weather-badge.weather-storm .weather-bolt { opacity: 0; }
 }
 
@@ -436,6 +441,53 @@ a {
   position: absolute;
   display: block;
   pointer-events: none;
+}
+
+.weather-sunset-film {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background-image: url("assets/weather/sunset-frames.png");
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 100% auto;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.weather-moon-photo {
+  left: 3px;
+  top: 3px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(0 0 6px rgba(204, 226, 255, 0.82));
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.announcement-bar .home-weather-badge.weather-golden-hour .weather-sunset-film {
+  animation: weatherSunsetFrames 3.6s steps(8, end) infinite;
+  opacity: 0.72;
+}
+
+.announcement-bar .home-weather-badge.weather-night.weather-clear .weather-moon-photo {
+  animation: moonFloat 4.4s ease-in-out infinite;
+  opacity: 0.96;
+}
+
+.announcement-bar .home-weather-badge.weather-night.weather-clear .weather-moon-photo[data-direction="waxing"] {
+  scale: -1 1;
+}
+
+.announcement-bar .home-weather-badge.weather-night.weather-clear .home-weather-icon {
+  opacity: 0;
 }
 
 .announcement-bar .home-weather-badge > :not(.weather-scene) {
@@ -639,6 +691,10 @@ a {
 
 @keyframes weatherRays {
   to { transform: rotate(360deg); }
+}
+
+@keyframes weatherSunsetFrames {
+  to { background-position: 0 100%; }
 }
 
 @keyframes starTwinkle {

@@ -5,6 +5,16 @@
   const CACHE_MAX_AGE = 15 * 60 * 1000;
   const REQUEST_TIMEOUT = 12000;
   const LOCATION = Object.freeze({ latitude: 25.7489959, longitude: 86.6731798 });
+  const LUNAR_CYCLE_DAYS = 29.530588853;
+  const REFERENCE_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14);
+
+  function lunarAppearance(now = Date.now()) {
+    const cycle = LUNAR_CYCLE_DAYS * 24 * 60 * 60 * 1000;
+    const phase = ((now - REFERENCE_NEW_MOON) % cycle + cycle) % cycle / cycle;
+    const waxing = phase < 0.5;
+    const illumination = waxing ? phase * 2 : (1 - phase) * 2;
+    return { index: Math.max(0, Math.min(4, Math.round(illumination * 4))), waxing };
+  }
 
   function validWeather(weather) {
     return weather && LagmaWeather.numberOrNull(weather.temperature) !== null && LagmaWeather.isWeatherCode(weather.code);
@@ -56,6 +66,9 @@
       if (!validWeather(weather)) return false;
       const info = LagmaWeather.weatherInfo(weather.code);
       const day = isDaytime(weather);
+      const hour = localHour(weather.time);
+      const goldenHour = day && [5, 6, 17, 18].includes(hour) && ["clear", "partly"].includes(info.mood);
+      const moon = lunarAppearance();
       const icon = !day && ["clear", "partly"].includes(info.mood) ? "moon" : info.icon;
       const temperature = Math.round(Number(weather.temperature));
       if (currentIcon && currentIconName !== icon) {
@@ -72,16 +85,22 @@
         badge.prepend(scene);
       }
       if (!scene.dataset?.initialized) scene.innerHTML = `
-        <i class="weather-sun"></i><i class="weather-cloud cloud-a"></i><i class="weather-cloud cloud-b"></i>
+        <i class="weather-sunset-film"></i><i class="weather-moon-photo"></i><i class="weather-sun"></i><i class="weather-cloud cloud-a"></i><i class="weather-cloud cloud-b"></i>
         <i class="weather-fog-line fog-a"></i><i class="weather-fog-line fog-b"></i><i class="weather-bolt"></i>
         ${Array.from({ length: 5 }, (_, index) => `<i class="weather-drop drop-${index + 1}"></i>`).join("")}
         ${Array.from({ length: 5 }, (_, index) => `<i class="weather-flake flake-${index + 1}"></i>`).join("")}
         <i class="weather-star star-a"></i><i class="weather-star star-b"></i><i class="weather-star star-c"></i>`;
       if (scene.dataset) scene.dataset.initialized = "true";
+      const moonPhoto = scene.querySelector(".weather-moon-photo");
+      if (moonPhoto) {
+        moonPhoto.style.backgroundImage = `url("assets/weather/moon-phase-${moon.index}.webp")`;
+        moonPhoto.dataset.direction = moon.waxing ? "waxing" : "waning";
+      }
       badge.dataset.dayPeriod = day ? "day" : "night";
-      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown", "weather-day", "weather-night");
+      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown", "weather-day", "weather-night", "weather-golden-hour");
       badge.classList.add(`weather-${info.mood}`);
       badge.classList.add(day ? "weather-day" : "weather-night");
+      if (goldenHour) badge.classList.add("weather-golden-hour");
       temperatureNode.textContent = `${temperature}°C`;
       setState(freshness === "stale" ? "stale" : "loaded", freshness === "stale" ? `${info.label} · पुराना डेटा` : info.label);
       return true;
@@ -144,5 +163,5 @@
     });
   }
 
-  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
+  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
 })(typeof window === "undefined" ? globalThis : window);
