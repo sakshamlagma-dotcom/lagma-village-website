@@ -1,7 +1,7 @@
 (function exposeHomeWeather(root) {
   "use strict";
 
-  const CACHE_KEY = "lagma-home-weather-v3";
+  const CACHE_KEY = "lagma-home-weather-v4";
   const CACHE_MAX_AGE = 15 * 60 * 1000;
   const REQUEST_TIMEOUT = 12000;
   const LOCATION = Object.freeze({ latitude: 25.7489959, longitude: 86.6731798 });
@@ -38,6 +38,25 @@
     return !Number.isFinite(hour) ? true : hour >= 6 && hour < 18;
   }
 
+  function minutesOfDay(value) {
+    const match = typeof value === "string" ? value.match(/T(\d{2}):(\d{2})/) : null;
+    return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+  }
+
+  function skyPeriod(weather, now = new Date()) {
+    const current = minutesOfDay(weather?.time);
+    const sunrise = minutesOfDay(weather?.sunrise);
+    const sunset = minutesOfDay(weather?.sunset);
+    if (current !== null && sunrise !== null && current >= sunrise - 45 && current <= sunrise + 75) return "dawn";
+    if (current !== null && sunset !== null && current >= sunset - 75 && current <= sunset + 75) return "dusk";
+    if (current === null) {
+      const hour = localHour(weather?.time, now);
+      if (hour >= 5 && hour < 7) return "dawn";
+      if (hour >= 17 && hour < 19) return "dusk";
+    }
+    return isDaytime(weather, now) ? "day" : "night";
+  }
+
   function readCache(storage, now) {
     try {
       const cached = JSON.parse(storage.getItem(CACHE_KEY) || "null");
@@ -66,10 +85,10 @@
       if (!validWeather(weather)) return false;
       const info = LagmaWeather.weatherInfo(weather.code);
       const day = isDaytime(weather);
-      const hour = localHour(weather.time);
-      const goldenHour = day && [5, 6, 17, 18].includes(hour) && ["clear", "partly"].includes(info.mood);
+      const period = skyPeriod(weather);
+      const goldenHour = ["dawn", "dusk"].includes(period) && ["clear", "partly", "cloudy"].includes(info.mood);
       const moon = lunarAppearance();
-      const icon = !day && ["clear", "partly"].includes(info.mood) ? "moon" : info.icon;
+      const icon = period === "night" && ["clear", "partly"].includes(info.mood) ? "moon" : info.icon;
       const temperature = Math.round(Number(weather.temperature));
       if (currentIcon && currentIconName !== icon) {
         currentIcon.outerHTML = `<i class="home-weather-icon" data-lucide="${icon}" data-weather-icon aria-hidden="true"></i>`;
@@ -89,7 +108,8 @@
         <i class="weather-fog-line fog-a"></i><i class="weather-fog-line fog-b"></i><i class="weather-bolt"></i>
         ${Array.from({ length: 5 }, (_, index) => `<i class="weather-drop drop-${index + 1}"></i>`).join("")}
         ${Array.from({ length: 5 }, (_, index) => `<i class="weather-flake flake-${index + 1}"></i>`).join("")}
-        <i class="weather-star star-a"></i><i class="weather-star star-b"></i><i class="weather-star star-c"></i>`;
+        <i class="weather-star star-a"></i><i class="weather-star star-b"></i><i class="weather-star star-c"></i>
+        <i class="weather-star star-d"></i><i class="weather-star star-e"></i>`;
       if (scene.dataset) scene.dataset.initialized = "true";
       const moonPhoto = scene.querySelector(".weather-moon-photo");
       if (moonPhoto) {
@@ -97,9 +117,10 @@
         moonPhoto.dataset.direction = moon.waxing ? "waxing" : "waning";
       }
       badge.dataset.dayPeriod = day ? "day" : "night";
-      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown", "weather-day", "weather-night", "weather-golden-hour");
+      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown", "weather-day", "weather-night", "weather-golden-hour", "weather-sky-dawn", "weather-sky-day", "weather-sky-dusk", "weather-sky-night");
       badge.classList.add(`weather-${info.mood}`);
       badge.classList.add(day ? "weather-day" : "weather-night");
+      badge.classList.add(`weather-sky-${period}`);
       if (goldenHour) badge.classList.add("weather-golden-hour");
       temperatureNode.textContent = `${temperature}°C`;
       setState(freshness === "stale" ? "stale" : "loaded", freshness === "stale" ? `${info.label} · पुराना डेटा` : info.label);
@@ -113,6 +134,8 @@
         latitude: String(LOCATION.latitude),
         longitude: String(LOCATION.longitude),
         current: "temperature_2m,weather_code,is_day",
+        daily: "sunrise,sunset",
+        forecast_days: "1",
         timezone: "Asia/Kolkata",
         temperature_unit: "celsius"
       });
@@ -124,7 +147,9 @@
           temperature: LagmaWeather.numberOrNull(data?.current?.temperature_2m),
           code: data?.current?.weather_code,
           isDay: data?.current?.is_day === 0 || data?.current?.is_day === 1 ? data.current.is_day : null,
-          time: typeof data?.current?.time === "string" ? data.current.time : null
+          time: typeof data?.current?.time === "string" ? data.current.time : null,
+          sunrise: typeof data?.daily?.sunrise?.[0] === "string" ? data.daily.sunrise[0] : null,
+          sunset: typeof data?.daily?.sunset?.[0] === "string" ? data.daily.sunset[0] : null
         };
         if (!validWeather(weather)) throw new Error("Weather response is incomplete");
         return weather;
@@ -163,5 +188,5 @@
     });
   }
 
-  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
+  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, minutesOfDay, skyPeriod, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
 })(typeof window === "undefined" ? globalThis : window);
