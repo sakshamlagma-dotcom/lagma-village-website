@@ -497,12 +497,17 @@ a {
   opacity: 0.8;
 }
 
+.announcement-bar .home-weather-badge.weather-sky-dusk .weather-moon-photo[data-visible="true"] {
+  animation: moonFloat 4.4s ease-in-out infinite;
+  opacity: 0.82;
+}
+
 .announcement-bar .home-weather-badge.weather-show-moon .home-weather-icon {
   opacity: 0;
 }
 
-.announcement-bar .home-weather-badge.weather-sky-night.weather-cloudy .weather-moon-photo[data-visible="true"],
-.announcement-bar .home-weather-badge.weather-sky-night.weather-fog .weather-moon-photo[data-visible="true"] {
+.announcement-bar .home-weather-badge.weather-cloudy .weather-moon-photo[data-visible="true"],
+.announcement-bar .home-weather-badge.weather-fog .weather-moon-photo[data-visible="true"] {
   opacity: 0.42;
 }
 
@@ -511,6 +516,10 @@ a {
 }
 
 .announcement-bar .home-weather-badge.weather-sky-night.weather-clear .home-weather-icon {
+  opacity: 0;
+}
+
+.announcement-bar .home-weather-badge.weather-sky-dusk.weather-show-moon .home-weather-icon {
   opacity: 0;
 }
 

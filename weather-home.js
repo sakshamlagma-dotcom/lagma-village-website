@@ -145,7 +145,7 @@
       const period = skyPeriod(weather);
       const goldenHour = ["dawn", "dusk"].includes(period) && ["clear", "partly", "cloudy"].includes(info.mood);
       const moon = lunarAppearance();
-      const moonVisible = period === "night" && ["clear", "partly", "cloudy", "fog"].includes(info.mood);
+      const moonVisible = ["night", "dusk"].includes(period) && ["clear", "partly", "cloudy", "fog"].includes(info.mood);
       const icon = moonVisible ? "moon" : info.icon;
       const temperature = Math.round(Number(weather.temperature));
       if (currentIcon && currentIconName !== icon) {
@@ -227,6 +227,10 @@
     };
 
     const storage = (() => { try { return root.localStorage; } catch { return null; } })();
+    root.setInterval(() => {
+      if (!lastWeather) return;
+      render(refreshedWeatherTime(lastWeather), lastFreshness);
+    }, 60 * 1000);
     const now = Date.now();
     const cached = readCache(storage, now);
     if (cached && render(cached.weather, cached.fresh ? "live" : "stale") && cached.fresh) return;
@@ -255,10 +259,6 @@
       setState(cached ? "stale" : "error", cached ? "पुराना डेटा · अपडेट नहीं हुआ · फिर से खोलें" : "मौसम नहीं मिला · फिर से खोलें");
     });
 
-    root.setInterval(() => {
-      if (!lastWeather) return;
-      render(refreshedWeatherTime(lastWeather), lastFreshness);
-    }, 60 * 1000);
   }
 
   root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, minutesOfDay, skyPeriod, skyPosition, currentLocalTime, refreshedWeatherTime, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
