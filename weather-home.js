@@ -1,7 +1,7 @@
 (function exposeHomeWeather(root) {
   "use strict";
 
-  const CACHE_KEY = "lagma-home-weather-v4";
+  const CACHE_KEY = "lagma-home-weather-v5";
   const CACHE_MAX_AGE = 15 * 60 * 1000;
   const REQUEST_TIMEOUT = 12000;
   const LOCATION = Object.freeze({ latitude: 25.7489959, longitude: 86.6731798 });
@@ -33,6 +33,10 @@
   }
 
   function isDaytime(weather, now = new Date()) {
+    const current = minutesOfDay(weather?.time);
+    const sunrise = minutesOfDay(weather?.sunrise);
+    const sunset = minutesOfDay(weather?.sunset);
+    if (current !== null && sunrise !== null && sunset !== null) return current >= sunrise && current < sunset;
     if (weather?.isDay === 0 || weather?.isDay === 1) return weather.isDay === 1;
     const hour = localHour(weather?.time, now);
     return !Number.isFinite(hour) ? true : hour >= 6 && hour < 18;
@@ -41,6 +45,41 @@
   function minutesOfDay(value) {
     const match = typeof value === "string" ? value.match(/T(\d{2}):(\d{2})/) : null;
     return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+  }
+
+  function currentLocalTime(now = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+    }).formatToParts(now).reduce((values, part) => {
+      if (part.type !== "literal") values[part.type] = part.value;
+      return values;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+  }
+
+  function skyPosition(weather, now = new Date()) {
+    const current = minutesOfDay(weather?.time) ?? localHour(weather?.time, now) * 60 + now.getMinutes();
+    const sunrise = minutesOfDay(weather?.sunrise);
+    const sunset = minutesOfDay(weather?.sunset);
+    if (sunrise === null || sunset === null) return { sun: [50, 50], moon: [50, 42] };
+    const clamp = (value) => Math.max(0, Math.min(1, value));
+    const position = (progress, fromRight = false) => {
+      const arc = clamp(progress);
+      return [
+        fromRight ? 94 - 88 * arc : 6 + 88 * arc,
+        59 - 37 * Math.sin(Math.PI * arc)
+      ];
+    };
+    const dayLength = Math.max(1, sunset - sunrise);
+    const dayProgress = (current - sunrise) / dayLength;
+    let nightProgress;
+    if (current < sunrise) nightProgress = (current + 1440 - sunset) / (sunrise + 1440 - sunset);
+    else nightProgress = (current - sunset) / (1440 + sunrise - sunset);
+    return {
+      sun: position(dayProgress),
+      moon: position(nightProgress, true)
+    };
   }
 
   function skyPeriod(weather, now = new Date()) {
@@ -74,6 +113,8 @@
     const weatherIconNode = badge.querySelector("[data-weather-icon]");
     let currentIcon = weatherIconNode;
     let currentIconName = null;
+    let lastWeather = null;
+    let lastFreshness = "live";
 
     const setState = (name, label) => {
       badge.dataset.weatherState = name;
@@ -83,6 +124,9 @@
 
     const render = (weather, freshness = "live") => {
       if (!validWeather(weather)) return false;
+      lastWeather = weather;
+      lastFreshness = freshness;
+      weather = { ...weather, time: currentLocalTime() };
       const info = LagmaWeather.weatherInfo(weather.code);
       const day = isDaytime(weather);
       const period = skyPeriod(weather);
@@ -112,7 +156,15 @@
         <i class="weather-star star-d"></i><i class="weather-star star-e"></i>`;
       if (scene.dataset) scene.dataset.initialized = "true";
       const moonPhoto = scene.querySelector(".weather-moon-photo");
+      const sun = scene.querySelector(".weather-sun");
+      const positions = skyPosition(weather);
+      if (sun) {
+        sun.style.setProperty("--sky-body-x", `${positions.sun[0]}%`);
+        sun.style.setProperty("--sky-body-y", `${positions.sun[1]}%`);
+      }
       if (moonPhoto) {
+        moonPhoto.style.setProperty("--sky-body-x", `${positions.moon[0]}%`);
+        moonPhoto.style.setProperty("--sky-body-y", `${positions.moon[1]}%`);
         moonPhoto.style.backgroundImage = `url("assets/weather/moon-phase-${moon.index}.webp")`;
         moonPhoto.dataset.direction = moon.waxing ? "waxing" : "waning";
       }
@@ -186,7 +238,12 @@
       root.clearTimeout(timeoutGuard);
       setState(cached ? "stale" : "error", cached ? "पुराना डेटा · अपडेट नहीं हुआ · फिर से खोलें" : "मौसम नहीं मिला · फिर से खोलें");
     });
+
+    root.setInterval(() => {
+      if (!lastWeather) return;
+      render({ ...lastWeather, time: currentLocalTime() }, lastFreshness);
+    }, 60 * 1000);
   }
 
-  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, minutesOfDay, skyPeriod, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
+  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, minutesOfDay, skyPeriod, skyPosition, currentLocalTime, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
 })(typeof window === "undefined" ? globalThis : window);
