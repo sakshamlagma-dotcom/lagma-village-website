@@ -249,6 +249,61 @@ h2 {
   background: #fff2f0;
 }
 
+.weather-status.is-warning {
+  color: #70520b;
+  border-color: #ead8a0;
+  background: #fff9e8;
+}
+
+.weather-status .weather-retry,
+.location-choice {
+  min-height: 44px;
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 9px 14px;
+  color: var(--green-dark);
+  background: var(--white);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.weather-status .weather-retry:focus-visible,
+.location-choice:focus-visible,
+.search-row button:focus-visible,
+.weather-nav a:focus-visible,
+.weather-menu:focus-visible {
+  outline: 3px solid #287b42;
+  outline-offset: 3px;
+}
+
+.location-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.location-results[hidden] { display: none; }
+
+.location-results-prompt {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.location-choice {
+  text-align: left;
+}
+
+.forecast-unavailable {
+  grid-column: 1 / -1;
+  margin: 8px 0;
+  color: var(--muted);
+}
+
 .weather-status.is-error .status-spinner {
   display: none;
 }
@@ -802,4 +857,6 @@ h2 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+
+  .status-spinner { animation: none; }
 }

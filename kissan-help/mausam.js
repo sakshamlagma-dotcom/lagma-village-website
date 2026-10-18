@@ -4,29 +4,9 @@ const DEFAULT_LOCATION = {
   longitude: 86.6731798
 };
 
-const WEATHER_CODES = {
-  0: { label: "साफ मौसम", symbol: "☀" },
-  1: { label: "ज्यादातर साफ", symbol: "☀" },
-  2: { label: "हल्के बादल", symbol: "◒" },
-  3: { label: "बादल", symbol: "☁" },
-  45: { label: "कोहरा", symbol: "≋" },
-  48: { label: "घना कोहरा", symbol: "≋" },
-  51: { label: "हल्की बूंदाबांदी", symbol: "☂" },
-  53: { label: "बूंदाबांदी", symbol: "☂" },
-  55: { label: "तेज बूंदाबांदी", symbol: "☂" },
-  61: { label: "हल्की बारिश", symbol: "☂" },
-  63: { label: "बारिश", symbol: "☂" },
-  65: { label: "तेज बारिश", symbol: "☂" },
-  71: { label: "हल्की बर्फ", symbol: "❄" },
-  73: { label: "बर्फबारी", symbol: "❄" },
-  75: { label: "तेज बर्फबारी", symbol: "❄" },
-  80: { label: "बारिश की बौछार", symbol: "☂" },
-  81: { label: "तेज बौछार", symbol: "☂" },
-  82: { label: "बहुत तेज बौछार", symbol: "☂" },
-  95: { label: "आंधी-तूफान", symbol: "⚡" },
-  96: { label: "ओले के साथ तूफान", symbol: "⚡" },
-  99: { label: "तेज ओलावृष्टि", symbol: "⚡" }
-};
+const WEATHER_CODES = LagmaWeather.WEATHER_CODES;
+const WEATHER_CACHE_MAX_AGE = 15 * 60 * 1000;
+const WEATHER_TIMEOUT = 14000;
 
 const CROP_NOTES = {
   "धान": "धान के खेत में पानी का स्तर और निकास दोनों देखें; केवल forecast देखकर खेत न भरें।",
@@ -41,6 +21,7 @@ const elements = {
   nav: document.querySelector(".weather-nav"),
   form: document.querySelector("#location-form"),
   input: document.querySelector("#location-input"),
+  results: document.querySelector("#location-results"),
   locate: document.querySelector("#current-location"),
   status: document.querySelector("#weather-status"),
   content: document.querySelector("#weather-content"),
@@ -51,37 +32,91 @@ const elements = {
 const state = {
   location: DEFAULT_LOCATION,
   weather: null,
-  crop: "धान"
+  crop: "धान",
+  requestId: 0,
+  searchId: 0,
+  weatherController: null,
+  searchController: null,
+  lastRequest: null
 };
 
 function weatherInfo(code) {
-  return WEATHER_CODES[code] || { label: "मौसम जानकारी", symbol: "◌" };
+  return LagmaWeather.weatherInfo(code);
 }
 
-function finiteNumber(value, fallback = 0) {
-  const number = Number(value);
-  return Number.isFinite(number) ? number : fallback;
+function finiteNumber(value) {
+  return LagmaWeather.numberOrNull(value);
 }
 
-function round(value, fallback = "--") {
-  const number = Number(value);
-  return Number.isFinite(number) ? Math.round(number) : fallback;
+function rangedNumber(value, minimum, maximum) {
+  const number = finiteNumber(value);
+  return number !== null && number >= minimum && number <= maximum ? number : null;
+}
+
+function temperatureNumber(value) { return rangedNumber(value, -90, 70); }
+function percentNumber(value) { return rangedNumber(value, 0, 100); }
+function amountNumber(value) { return rangedNumber(value, 0, 100000); }
+function windNumber(value) { return rangedNumber(value, 0, 600); }
+function soilNumber(value) { return rangedNumber(value, 0, 1); }
+
+function round(value) {
+  const number = finiteNumber(value);
+  return number === null ? "उपलब्ध नहीं" : Math.round(number);
+}
+
+function formatted(value, unit = "", digits = 0, validate = finiteNumber) {
+  const number = validate(value);
+  if (number === null) return "उपलब्ध नहीं";
+  return `${digits ? number.toFixed(digits) : Math.round(number)}${unit}`;
+}
+
+function validForecast(data) {
+  return Boolean(data && typeof data === "object" && data.current &&
+    temperatureNumber(data.current.temperature_2m) !== null && LagmaWeather.isWeatherCode(data.current.weather_code));
+}
+
+function locationCacheKey(location) {
+  return `lagma-weather-v2:${Number(location.latitude).toFixed(4)}:${Number(location.longitude).toFixed(4)}`;
+}
+
+function readWeatherCache(location) {
+  try {
+    const record = JSON.parse(localStorage.getItem(locationCacheKey(location)) || "null");
+    if (!record || !Number.isFinite(record.savedAt) || record.savedAt > Date.now() || !validForecast(record.data)) return null;
+    return { ...record, fresh: Date.now() - record.savedAt <= WEATHER_CACHE_MAX_AGE };
+  } catch {
+    return null;
+  }
+}
+
+function saveWeatherCache(location, data) {
+  try { localStorage.setItem(locationCacheKey(location), JSON.stringify({ savedAt: Date.now(), data })); } catch { /* Weather works without storage. */ }
 }
 
 function formatHour(value) {
-  const date = new Date(value);
-  return new Intl.DateTimeFormat("hi-IN", { hour: "numeric", minute: "2-digit" }).format(date);
+  const date = parseWeatherTime(value);
+  return date ? new Intl.DateTimeFormat("hi-IN", { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" }).format(date) : "समय उपलब्ध नहीं";
 }
 
 function formatDay(value, index) {
   if (index === 0) return "आज";
   if (index === 1) return "कल";
-  return new Intl.DateTimeFormat("hi-IN", { weekday: "short" }).format(new Date(`${value}T12:00:00`));
+  const date = parseWeatherTime(`${value}T12:00:00`);
+  return date ? new Intl.DateTimeFormat("hi-IN", { weekday: "short", timeZone: "Asia/Kolkata" }).format(date) : "दिन उपलब्ध नहीं";
+}
+
+function parseWeatherTime(value) {
+  if (typeof value !== "string" || !value) return null;
+  const zoned = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value) ? value : `${value}+05:30`;
+  const date = new Date(zoned);
+  return Number.isFinite(date.getTime()) ? date : null;
 }
 
 function windDirection(degrees) {
+  const number = finiteNumber(degrees);
+  if (number === null) return "दिशा उपलब्ध नहीं";
   const labels = ["उत्तर", "उत्तर-पूर्व", "पूर्व", "दक्षिण-पूर्व", "दक्षिण", "दक्षिण-पश्चिम", "पश्चिम", "उत्तर-पश्चिम"];
-  const normalized = ((finiteNumber(degrees) % 360) + 360) % 360;
+  const normalized = ((number % 360) + 360) % 360;
   return labels[Math.round(normalized / 45) % labels.length];
 }
 
@@ -90,30 +125,64 @@ function setText(selector, value) {
   if (element) element.textContent = value;
 }
 
-function setStatus(message, type = "loading") {
+function setStatus(message, type = "loading", retry = false) {
   elements.status.hidden = false;
   elements.status.classList.toggle("is-error", type === "error");
-  const messageNode = elements.status.querySelector("strong");
-  if (messageNode) messageNode.textContent = message;
+  elements.status.classList.toggle("is-warning", type === "warning");
+  elements.status.replaceChildren();
+  if (type === "loading") {
+    const spinner = document.createElement("span");
+    spinner.className = "status-spinner";
+    spinner.setAttribute("aria-hidden", "true");
+    elements.status.append(spinner);
+  }
+  const messageNode = document.createElement("strong");
+  messageNode.textContent = message;
+  elements.status.append(messageNode);
+  if (retry && state.lastRequest) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "retry-weather";
+    button.className = "weather-retry";
+    button.textContent = "फिर कोशिश करें";
+    button.setAttribute("aria-label", "मौसम जानकारी फिर से लोड करें");
+    elements.status.append(button);
+  }
 }
 
 function hideStatus() {
   elements.status.hidden = true;
   elements.status.classList.remove("is-error");
+  elements.status.classList.remove("is-warning");
 }
 
-async function fetchJson(url, timeout = 14000) {
-  const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), timeout);
+async function fetchJson(url, timeout = WEATHER_TIMEOUT, signal = null) {
+  const controller = typeof AbortController === "function" ? new AbortController() : null;
+  let timeoutId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      controller?.abort();
+      const timeoutError = new Error("मौसम सेवा ने समय पर जवाब नहीं दिया।");
+      timeoutError.name = "TimeoutError";
+      reject(timeoutError);
+    }, timeout);
+  });
+  const abortRequest = () => controller?.abort();
+  if (signal?.aborted) abortRequest();
+  else signal?.addEventListener("abort", abortRequest, { once: true });
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
-    if (!response.ok) throw new Error(`Server error ${response.status}`);
+    const request = fetch(url, { ...(controller ? { signal: controller.signal } : {}), cache: "no-store" });
+    const response = await Promise.race([request, timeoutPromise]);
+    if (!response.ok) throw new Error(`Weather service returned HTTP ${response.status}`);
     const data = await response.json();
     if (data?.error) throw new Error(data.reason || "Weather service error");
     return data;
+  } catch (error) {
+    throw error;
   } finally {
     window.clearTimeout(timeoutId);
+    signal?.removeEventListener("abort", abortRequest);
   }
 }
 
@@ -156,15 +225,18 @@ function buildForecastUrl(location) {
       "sunset"
     ].join(","),
     timezone: "Asia/Kolkata",
-    forecast_days: "7"
+    forecast_days: "7",
+    temperature_unit: "celsius",
+    wind_speed_unit: "kmh",
+    precipitation_unit: "mm"
   });
 
   return `https://api.open-meteo.com/v1/forecast?${params}`;
 }
 
-async function searchLocation(query) {
-  const normalized = query.trim().toLowerCase();
-  if (["lagma", "lagma saharsa", "lagma, saharsa", "लगमा"].includes(normalized)) {
+async function searchLocation(query, signal = null) {
+  const normalized = query.trim().toLocaleLowerCase("hi").replace(/\s*,\s*/g, ", ").replace(/\s+/g, " ");
+  if (["lagma", "lagma saharsa", "lagma, saharsa", "lagma, saharsa, bihar", "लगमा"].includes(normalized)) {
     return DEFAULT_LOCATION;
   }
 
@@ -172,27 +244,38 @@ async function searchLocation(query) {
     name: query.trim(),
     count: "10",
     language: "hi",
-    format: "json"
+    format: "json",
+    countryCode: "IN"
   });
-  const data = await fetchJson(`https://geocoding-api.open-meteo.com/v1/search?${params}`);
-  const results = Array.isArray(data.results) ? data.results : [];
-  const result = results.find((item) => item.country_code === "IN") || results[0];
+  const data = await fetchJson(`https://geocoding-api.open-meteo.com/v1/search?${params}`, WEATHER_TIMEOUT, signal);
+  const results = Array.isArray(data.results) ? data.results.filter((item) => {
+    const latitude = LagmaWeather.numberOrNull(item.latitude);
+    const longitude = LagmaWeather.numberOrNull(item.longitude);
+    return item.country_code === "IN" && latitude !== null && longitude !== null && Math.abs(latitude) <= 90 && Math.abs(longitude) <= 180;
+  }) : [];
 
-  if (!result) throw new Error("यह जगह नहीं मिली। जिला या शहर का सही नाम लिखें।");
-
-  const area = [result.name, result.admin2 || result.admin1].filter(Boolean).join(", ");
-  return {
-    name: area,
-    latitude: result.latitude,
-    longitude: result.longitude
-  };
+  if (!results.length) throw new Error("यह जगह नहीं मिली। बिहार या जिले का नाम जोड़कर फिर खोजें।");
+  const clean = (value) => String(value || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").trim().toLocaleLowerCase("hi");
+  const exact = results.filter((item) => [item.name, item.admin2, item.admin1].some((value) => clean(value) === clean(query)));
+  const candidates = exact.length ? exact : results;
+  const toLocation = (item) => ({
+    name: [...new Set([item.name, item.admin2 || item.admin1, item.admin2 && item.admin1 !== item.admin2 ? item.admin1 : ""].filter(Boolean))].join(", "),
+    latitude: Number(item.latitude),
+    longitude: Number(item.longitude)
+  });
+  if (candidates.length === 1) return toLocation(candidates[0]);
+  return { choices: candidates.slice(0, 5).map(toLocation) };
 }
 
 function currentHourlyIndex(data) {
-  const times = data.hourly?.time || [];
-  const current = new Date(data.current?.time || Date.now()).getTime();
-  const nextIndex = times.findIndex((time) => new Date(time).getTime() >= current);
-  return nextIndex >= 0 ? nextIndex : 0;
+  const times = Array.isArray(data.hourly?.time) ? data.hourly.time : [];
+  if (!times.length) return -1;
+  const current = typeof data.current?.time === "string" ? data.current.time : "";
+  const nextIndex = current ? times.findIndex((time) => typeof time === "string" && time >= current) : -1;
+  if (nextIndex >= 0) return nextIndex;
+  if (!current) return 0;
+  for (let index = times.length - 1; index >= 0; index -= 1) if (times[index] <= current) return index;
+  return 0;
 }
 
 function renderCurrent(data, location) {
@@ -200,50 +283,55 @@ function renderCurrent(data, location) {
   const daily = data.daily || {};
   const info = weatherInfo(current.weather_code);
   const hourlyIndex = currentHourlyIndex(data);
-  const soil = data.hourly?.soil_moisture_9_to_27cm?.[hourlyIndex];
+  const soil = hourlyIndex >= 0 ? data.hourly?.soil_moisture_9_to_27cm?.[hourlyIndex] : null;
 
   setText("#current-location-name", location.name);
-  setText("#current-temperature", round(current.temperature_2m));
+  setText("#current-temperature", round(temperatureNumber(current.temperature_2m)));
   setText("#current-condition", info.label);
   setText("#condition-mark", info.symbol);
-  setText("#weather-updated", `अपडेट ${formatHour(current.time || new Date())} • Asia/Kolkata`);
-  setText("#today-high", `${round(daily.temperature_2m_max?.[0])}°`);
-  setText("#today-low", `${round(daily.temperature_2m_min?.[0])}°`);
-  setText("#today-rain", `${round(daily.precipitation_probability_max?.[0])}%`);
-  setText("#feels-like", `${round(current.apparent_temperature)}°C`);
-  setText("#humidity", `${round(current.relative_humidity_2m)}%`);
-  setText("#wind-speed", `${round(current.wind_speed_10m)} km/h`);
+  setText("#weather-updated", current.time ? `पूर्वानुमान ${formatHour(current.time)} • Asia/Kolkata` : "पूर्वानुमान का समय उपलब्ध नहीं");
+  setText("#today-high", formatted(daily.temperature_2m_max?.[0], "°", 0, temperatureNumber));
+  setText("#today-low", formatted(daily.temperature_2m_min?.[0], "°", 0, temperatureNumber));
+  setText("#today-rain", formatted(daily.precipitation_probability_max?.[0], "%", 0, percentNumber));
+  setText("#feels-like", formatted(current.apparent_temperature, "°C", 0, temperatureNumber));
+  setText("#humidity", formatted(current.relative_humidity_2m, "%", 0, percentNumber));
+  setText("#wind-speed", formatted(current.wind_speed_10m, " km/h", 0, windNumber));
   setText("#wind-direction", windDirection(current.wind_direction_10m));
-  setText("#wind-gust", `${round(current.wind_gusts_10m)} km/h`);
-  setText("#rain-sum", `${finiteNumber(daily.precipitation_sum?.[0]).toFixed(1)} mm`);
-  setText("#soil-moisture", Number.isFinite(Number(soil)) ? `${Math.round(Number(soil) * 100)}%` : "उपलब्ध नहीं");
+  setText("#wind-gust", formatted(current.wind_gusts_10m, " km/h", 0, windNumber));
+  setText("#rain-sum", formatted(daily.precipitation_sum?.[0], " mm", 1, amountNumber));
+  const soilValue = soilNumber(soil);
+  setText("#soil-moisture", soilValue === null ? "उपलब्ध नहीं" : `${Math.round(soilValue * 100)}%`);
 }
 
 function buildAlerts(data) {
   const daily = data.daily || {};
-  const todayCode = finiteNumber(daily.weather_code?.[0]);
-  const rainProbability = finiteNumber(daily.precipitation_probability_max?.[0]);
-  const rainSum = finiteNumber(daily.precipitation_sum?.[0]);
-  const maxTemperature = finiteNumber(daily.temperature_2m_max?.[0]);
-  const gust = finiteNumber(daily.wind_gusts_10m_max?.[0]);
-  const uv = finiteNumber(daily.uv_index_max?.[0]);
+  const todayCode = daily.weather_code?.[0];
+  const rainProbability = percentNumber(daily.precipitation_probability_max?.[0]);
+  const rainSum = amountNumber(daily.precipitation_sum?.[0]);
+  const maxTemperature = temperatureNumber(daily.temperature_2m_max?.[0]);
+  const gust = windNumber(daily.wind_gusts_10m_max?.[0]);
+  const uv = rangedNumber(daily.uv_index_max?.[0], 0, 25);
   const alerts = [];
 
-  if (todayCode >= 95) {
+  if (LagmaWeather.isWeatherCode(todayCode) && todayCode >= 95) {
     alerts.push({ level: "danger", title: "आंधी या बिजली की संभावना", text: "खुले खेत, पेड़ और बिजली के खंभों से दूर सुरक्षित जगह लें।" });
   }
-  if (rainSum >= 20 || rainProbability >= 80) {
-    alerts.push({ level: rainSum >= 35 ? "danger" : "warn", title: "भारी बारिश पर नजर", text: `${rainProbability}% संभावना और लगभग ${rainSum.toFixed(1)} mm वर्षा का forecast है। निकास देखें।` });
+  if ((rainSum !== null && rainSum >= 20) || (rainProbability !== null && rainProbability >= 80)) {
+    const level = rainSum !== null && rainSum >= 35 ? "danger" : "warn";
+    alerts.push({ level, title: "भारी बारिश पर नजर", text: `आज की संभावना ${formatted(rainProbability, "%")} और वर्षा ${formatted(rainSum, " mm", 1)} का forecast है। खेत का निकास देखें।` });
   }
-  if (gust >= 40) {
+  if (gust !== null && gust >= 40) {
     alerts.push({ level: gust >= 55 ? "danger" : "warn", title: "तेज हवा", text: `हवा के झोंके ${round(gust)} km/h तक जा सकते हैं। spray और खुले ढांचे रोकें।` });
   }
-  if (maxTemperature >= 39) {
+  if (maxTemperature !== null && maxTemperature >= 39) {
     alerts.push({ level: maxTemperature >= 42 ? "danger" : "warn", title: "गर्मी का दबाव", text: `अधिकतम तापमान ${round(maxTemperature)}°C है। दोपहर का खेत काम कम रखें।` });
   }
-  if (uv >= 8) {
+  if (uv !== null && uv >= 8) {
     alerts.push({ level: "warn", title: "तेज धूप", text: `UV index ${round(uv)} तक है। सुबह या शाम का समय चुनें और पानी साथ रखें।` });
   }
+
+  const incomplete = !LagmaWeather.isWeatherCode(todayCode) || rainProbability === null || rainSum === null || maxTemperature === null || gust === null;
+  if (incomplete) alerts.push({ level: "warn", title: "जोखिम जांच अधूरी", text: "कुछ पूर्वानुमान आंकड़े उपलब्ध नहीं हैं; सभी मौसम जोखिमों की जांच नहीं हो सकी। खेत देखकर और आधिकारिक सलाह लेकर निर्णय लें।" });
 
   return alerts;
 }
@@ -252,7 +340,7 @@ function renderAlerts(data) {
   const alerts = buildAlerts(data);
   const section = document.querySelector("#weather-alerts");
   const list = document.querySelector("#alert-list");
-  section.hidden = alerts.length === 0;
+  section.hidden = !alerts.length;
   list.innerHTML = alerts.map((alert) => `
     <article class="alert-item ${alert.level}">
       <strong>${alert.title}</strong>
@@ -264,86 +352,106 @@ function renderAlerts(data) {
 function renderHourly(data) {
   const hourly = data.hourly || {};
   const start = currentHourlyIndex(data);
-  const end = Math.min(start + 12, hourly.time?.length || 0);
+  const times = Array.isArray(hourly.time) ? hourly.time : [];
+  const end = Math.min((start < 0 ? 0 : start) + 12, times.length);
   const items = [];
 
-  for (let index = start; index < end; index += 1) {
+  for (let index = Math.max(0, start); index < end; index += 1) {
     const info = weatherInfo(hourly.weather_code?.[index]);
     items.push(`
       <article class="hour-card">
-        <time datetime="${hourly.time[index]}">${index === start ? "अब" : formatHour(hourly.time[index])}</time>
-        <span class="weather-symbol" aria-hidden="true">${info.symbol}</span>
-        <strong>${round(hourly.temperature_2m?.[index])}°C</strong>
-        <span class="rain-value">बारिश ${round(hourly.precipitation_probability?.[index])}%</span>
-        <small>झोंका ${round(hourly.wind_gusts_10m?.[index])} km/h</small>
+        <time datetime="${escapeAttribute(times[index])}">${index === start ? "अब" : formatHour(times[index])}</time>
+        <span class="weather-symbol weather-${info.mood}" aria-hidden="true">${info.symbol}</span>
+        <strong>${formatted(hourly.temperature_2m?.[index], "°C", 0, temperatureNumber)}</strong>
+        <span class="rain-value">बारिश ${formatted(hourly.precipitation_probability?.[index], "%", 0, percentNumber)}</span>
+        <small>झोंका ${formatted(hourly.wind_gusts_10m?.[index], " km/h", 0, windNumber)}</small>
       </article>
     `);
   }
 
-  document.querySelector("#hourly-strip").innerHTML = items.join("");
+  document.querySelector("#hourly-strip").innerHTML = items.length ? items.join("") : '<p class="forecast-unavailable">घंटेवार पूर्वानुमान उपलब्ध नहीं है।</p>';
 }
 
 function renderDaily(data) {
   const daily = data.daily || {};
-  const cards = (daily.time || []).map((date, index) => {
+  const dates = Array.isArray(daily.time) ? daily.time : [];
+  const cards = dates.map((date, index) => {
     const info = weatherInfo(daily.weather_code?.[index]);
     return `
       <article class="day-card${index === 0 ? " is-today" : ""}">
-        <time datetime="${date}">${formatDay(date, index)}</time>
-        <span class="weather-symbol" aria-hidden="true">${info.symbol}</span>
-        <strong>${round(daily.temperature_2m_max?.[index])}° / ${round(daily.temperature_2m_min?.[index])}°</strong>
-        <span class="rain-value">बारिश ${round(daily.precipitation_probability_max?.[index])}%</span>
-        <small>${finiteNumber(daily.precipitation_sum?.[index]).toFixed(1)} mm • हवा ${round(daily.wind_speed_10m_max?.[index])} km/h</small>
+        <time datetime="${escapeAttribute(date)}">${formatDay(date, index)}</time>
+        <span class="weather-symbol weather-${info.mood}" aria-hidden="true">${info.symbol}</span>
+        <strong>${formatted(daily.temperature_2m_max?.[index], "°", 0, temperatureNumber)} / ${formatted(daily.temperature_2m_min?.[index], "°", 0, temperatureNumber)}</strong>
+        <span class="rain-value">बारिश ${formatted(daily.precipitation_probability_max?.[index], "%", 0, percentNumber)}</span>
+        <small>${formatted(daily.precipitation_sum?.[index], " mm", 1, amountNumber)} • हवा ${formatted(daily.wind_speed_10m_max?.[index], " km/h", 0, windNumber)}</small>
       </article>
     `;
   });
-  document.querySelector("#daily-grid").innerHTML = cards.join("");
+  document.querySelector("#daily-grid").innerHTML = cards.length ? cards.join("") : '<p class="forecast-unavailable">सात दिन का पूर्वानुमान उपलब्ध नहीं है।</p>';
+}
+
+function escapeAttribute(value) {
+  return String(value || "").replace(/[&"<>']/g, (character) => ({ "&": "&amp;", "\"": "&quot;", "<": "&lt;", ">": "&gt;", "'": "&#39;" })[character]);
 }
 
 function advisoryCards(data, crop) {
   const daily = data.daily || {};
   const hourly = data.hourly || {};
   const start = currentHourlyIndex(data);
-  const end = Math.min(start + 6, hourly.time?.length || 0);
-  const nextRain = (hourly.precipitation_probability || []).slice(start, end).map(finiteNumber);
-  const nextGusts = (hourly.wind_gusts_10m || []).slice(start, end).map(finiteNumber);
-  const nextCodes = (hourly.weather_code || []).slice(start, end).map(finiteNumber);
-  const maxRainSoon = Math.max(0, ...nextRain);
-  const maxGustSoon = Math.max(0, ...nextGusts);
-  const thunderSoon = nextCodes.some((code) => code >= 95);
-  const rainToday = finiteNumber(daily.precipitation_sum?.[0]);
-  const rainChance = finiteNumber(daily.precipitation_probability_max?.[0]);
-  const maxTemperature = finiteNumber(daily.temperature_2m_max?.[0]);
-  const hourlyIndex = currentHourlyIndex(data);
-  const soil = Number(hourly.soil_moisture_9_to_27cm?.[hourlyIndex]);
+  const times = Array.isArray(hourly.time) ? hourly.time : [];
+  const windowStart = Math.max(0, start);
+  const end = Math.min(windowStart + 6, times.length);
+  const indexes = start >= 0 ? Array.from({ length: end - windowStart }, (_, index) => windowStart + index) : [];
+  const nextRain = indexes.map((index) => percentNumber(hourly.precipitation_probability?.[index]));
+  const nextGusts = indexes.map((index) => windNumber(hourly.wind_gusts_10m?.[index]));
+  const nextCodes = indexes.map((index) => hourly.weather_code?.[index]);
+  const completeWindow = indexes.length === 6 && nextRain.every((value) => value !== null) &&
+    nextGusts.every((value) => value !== null) && nextCodes.every(LagmaWeather.isWeatherCode);
+  const maxRainSoon = completeWindow ? Math.max(...nextRain) : null;
+  const maxGustSoon = completeWindow ? Math.max(...nextGusts) : null;
+  const thunderSoon = completeWindow && nextCodes.some((code) => Number(code) >= 95);
+  const rainToday = amountNumber(daily.precipitation_sum?.[0]);
+  const rainChance = percentNumber(daily.precipitation_probability_max?.[0]);
+  const maxTemperature = temperatureNumber(daily.temperature_2m_max?.[0]);
+  const hourlyIndex = start;
+  const soil = hourlyIndex >= 0 ? soilNumber(hourly.soil_moisture_9_to_27cm?.[hourlyIndex]) : null;
+  const humidity = percentNumber(data.current?.relative_humidity_2m);
 
   let spray;
-  if (thunderSoon || maxRainSoon >= 45 || maxGustSoon >= 25) {
-    spray = { type: "stop", label: "अभी रोकें", title: "छिड़काव का समय ठीक नहीं", text: `अगले 6 घंटे में बारिश ${round(maxRainSoon)}% और झोंका ${round(maxGustSoon)} km/h तक है।` };
+  if (!completeWindow) {
+    spray = { type: "warn", label: "डेटा अधूरा", title: "छिड़काव सलाह उपलब्ध नहीं", text: "अगले 6 घंटे के बारिश, हवा और गरज-चमक के सभी आंकड़े नहीं मिले। खेत, दवा का label और कृषि अधिकारी की सलाह देखें।" };
+  } else if (thunderSoon || maxRainSoon >= 45 || maxGustSoon >= 25) {
+    spray = { type: "stop", label: "सावधानी", title: "छिड़काव की स्थिति प्रतिकूल हो सकती है", text: `अगले 6 घंटों में बारिश की संभावना ${round(maxRainSoon)}% और झोंका ${round(maxGustSoon)} km/h तक forecast है। दवा का label और स्थानीय हालात जांचें।` };
   } else if (maxRainSoon >= 25 || maxGustSoon >= 18) {
     spray = { type: "warn", label: "सावधानी", title: "छोटी सुरक्षित window चुनें", text: "दवा label का rain-free और wind limit देखें; हवा बढ़े तो spray बंद करें।" };
   } else {
-    spray = { type: "good", label: "Field check", title: "मौसम अपेक्षाकृत अनुकूल", text: "पत्ती सूखी, हवा शांत और अगले घंटों में बारिश कम हो तभी label के अनुसार spray करें।" };
+    spray = { type: "good", label: "Field check", title: "पूर्वानुमान में जोखिम कम", text: "यह model forecast है, गारंटी नहीं। पत्ती सूखी और हवा कम होने की पुष्टि करके ही label/KVK सलाह मानें।" };
   }
 
   let irrigation;
-  if (rainToday >= 5 || rainChance >= 65) {
-    irrigation = { type: "good", label: "प्रतीक्षा", title: "सिंचाई टालकर बारिश देखें", text: `${rainChance}% बारिश की संभावना है। खेत का निकास और वास्तविक नमी जांचें।` };
+  if (rainToday !== null && rainChance !== null && (rainToday >= 5 || rainChance >= 65)) {
+    irrigation = { type: "good", label: "खेत जांचें", title: "बारिश के forecast को ध्यान में रखें", text: `${formatted(rainChance, "%")} संभावना और ${formatted(rainToday, " mm", 1)} वर्षा forecast है। जलनिकास और असली मिट्टी की नमी देखकर फैसला करें।` };
   } else if (Number.isFinite(soil) && soil < 0.2) {
-    irrigation = { type: "warn", label: "नमी जांचें", title: "मिट्टी सूखी दिख सकती है", text: "Model में जड़ क्षेत्र की नमी कम है। 5-10 cm मिट्टी हाथ से देखकर जरूरत अनुसार सिंचाई करें।" };
+    irrigation = { type: "warn", label: "नमी जांचें", title: "मॉडल में जड़ क्षेत्र की नमी कम", text: "यह मिट्टी की model estimate है, खेत का माप नहीं। हाथ से नमी जांचें और स्थानीय सलाह के अनुसार फैसला करें।" };
+  } else if (rainToday === null || rainChance === null || soil === null) {
+    irrigation = { type: "warn", label: "डेटा अधूरा", title: "सिंचाई सलाह उपलब्ध नहीं", text: "बारिश या मिट्टी की नमी के जरूरी आंकड़े नहीं मिले। खेत की असली नमी और कृषि सलाह देखें।" };
   } else {
-    irrigation = { type: "good", label: "Field check", title: "पहले खेत की नमी देखें", text: "Forecast अकेले सिंचाई तय नहीं करता। जड़ क्षेत्र और फसल stage देखकर पानी दें।" };
+    irrigation = { type: "good", label: "Field check", title: "पहले खेत की नमी देखें", text: "Forecast अकेले सिंचाई तय नहीं करता। जड़ क्षेत्र और फसल stage देखकर कृषि सलाह अनुसार फैसला करें।" };
   }
 
-  const heat = maxTemperature >= 39
+  const heat = maxTemperature === null
+    ? { type: "warn", label: "डेटा अधूरा", title: "तापमान सलाह उपलब्ध नहीं", text: "आज का अधिकतम तापमान नहीं मिला। स्थानीय मौसम और खेत की स्थिति देखकर काम तय करें।" }
+    : maxTemperature >= 39
     ? { type: "stop", label: "गर्मी", title: "दोपहर का काम कम रखें", text: `${round(maxTemperature)}°C तक तापमान है। सुबह/शाम काम करें और पौधों में stress देखें।` }
     : maxTemperature >= 35
       ? { type: "warn", label: "धूप", title: "गर्मी पर नजर रखें", text: "नर्सरी और नई रोपाई में नमी व पत्तियों का झुलसाव देखें।" }
       : { type: "good", label: "तापमान", title: "तापमान सामान्य दायरे में", text: "फिर भी फसल stage और खेत की स्थानीय स्थिति देखकर काम करें।" };
 
-  const disease = finiteNumber(data.current?.relative_humidity_2m) >= 80 && rainChance >= 45
+  const disease = humidity !== null && rainChance !== null && humidity >= 80 && rainChance >= 45
     ? { type: "warn", label: crop, title: "रोग की निगरानी बढ़ाएं", text: `${crop} में अधिक नमी के बाद पत्ती, तना और जड़ पर शुरुआती लक्षण देखें।` }
-    : { type: "good", label: crop, title: "फसल की नियमित निगरानी", text: CROP_NOTES[crop] || CROP_NOTES["धान"] };
+    : humidity === null || rainChance === null
+      ? { type: "warn", label: "डेटा अधूरा", title: `${crop} रोग-जोखिम की जांच अधूरी`, text: "नमी और बारिश की जरूरी जानकारी नहीं मिली। फसल के लक्षण देखें और KVK/कृषि अधिकारी से सलाह लें।" }
+      : { type: "good", label: crop, title: "फसल की नियमित निगरानी", text: `${CROP_NOTES[crop] || CROP_NOTES["धान"]} Forecast गारंटी नहीं है।` };
 
   return [irrigation, spray, heat, disease];
 }
@@ -360,7 +468,8 @@ function renderAdvisory() {
   `).join("");
 }
 
-function renderWeather(data, location) {
+function renderWeather(data, location, freshness = "fresh") {
+  if (!validForecast(data)) throw new Error("मौसम के जरूरी आंकड़े अधूरे हैं।");
   state.weather = data;
   state.location = location;
   renderCurrent(data, location);
@@ -369,22 +478,50 @@ function renderWeather(data, location) {
   renderDaily(data);
   renderAdvisory();
   elements.content.hidden = false;
-  hideStatus();
+  if (freshness === "stale") {
+    setStatus("पुराना forecast दिख रहा है; नेटवर्क नहीं मिला। ताज़ा जानकारी के लिए फिर कोशिश करें।", "error", true);
+  } else if (!Array.isArray(data.hourly?.time) || !Array.isArray(data.daily?.time)) {
+    setStatus("कुछ पूर्वानुमान उपलब्ध नहीं हैं; अधूरे आंकड़े अलग से दिखाए गए हैं।", "warning");
+  } else {
+    hideStatus();
+  }
 }
 
-async function loadWeather(location) {
-  setStatus(`${location.name} का मौसम लाया जा रहा है...`);
-  elements.content.hidden = true;
-
+async function loadWeather(location, { force = false } = {}) {
+  const requestId = ++state.requestId;
+  state.weatherController?.abort();
+  state.weatherController = typeof AbortController === "function" ? new AbortController() : null;
+  state.lastRequest = () => loadWeather(location, { force: true });
+  const cached = readWeatherCache(location);
+  if (cached && cached.fresh && !force) {
+    renderWeather(cached.data, location);
+    return;
+  }
+  if (cached && !state.weather) renderWeather(cached.data, location, "stale");
+  setStatus(`${location.name} का forecast लाया जा रहा है...`);
   try {
-    const data = await fetchJson(buildForecastUrl(location));
-    if (!data.current || !data.hourly || !data.daily) throw new Error("मौसम डेटा पूरा नहीं मिला।");
+    const data = await fetchJson(buildForecastUrl(location), WEATHER_TIMEOUT, state.weatherController?.signal);
+    if (requestId !== state.requestId) return;
+    if (!validForecast(data)) throw new Error("मौसम के जरूरी आंकड़े नहीं मिले।");
+    saveWeatherCache(location, data);
     renderWeather(data, location);
   } catch (error) {
-    const message = error.name === "AbortError"
-      ? "मौसम सेवा ने समय पर जवाब नहीं दिया। दोबारा कोशिश करें।"
-      : error.message || "मौसम जानकारी नहीं मिल सकी।";
-    setStatus(message, "error");
+    if (requestId !== state.requestId || error.name === "AbortError") return;
+    const stale = cached && !cached.fresh ? cached : readWeatherCache(location);
+    if (stale && validForecast(stale.data)) {
+      renderWeather(stale.data, location, "stale");
+      return;
+    }
+    const message = error.name === "TimeoutError"
+      ? "मौसम सेवा ने समय पर जवाब नहीं दिया।"
+      : error instanceof SyntaxError
+        ? "मौसम सेवा से अधूरा जवाब मिला।"
+        : error.message?.startsWith("मौसम के जरूरी")
+          ? error.message
+          : "मौसम जानकारी नहीं मिल सकी। इंटरनेट जांचकर फिर कोशिश करें।";
+    setStatus(message, "error", true);
+  } finally {
+    if (requestId === state.requestId) state.weatherController = null;
   }
 }
 
@@ -399,41 +536,120 @@ elements.nav?.addEventListener("click", (event) => {
   elements.menu?.setAttribute("aria-expanded", "false");
 });
 
+function clearLocationChoices() {
+  if (!elements.results) return;
+  elements.results.hidden = true;
+  elements.results.replaceChildren();
+  state.locationChoices = [];
+}
+
+function showLocationChoices(choices) {
+  state.locationChoices = choices;
+  elements.results.replaceChildren();
+  const prompt = document.createElement("p");
+  prompt.className = "location-results-prompt";
+  prompt.textContent = "एक से अधिक मिलती-जुलती जगहें मिलीं। सही जिला चुनें:";
+  elements.results.append(prompt);
+  choices.forEach((location, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "location-choice";
+    button.setAttribute("role", "option");
+    button.dataset.locationIndex = String(index);
+    button.textContent = location.name;
+    elements.results.append(button);
+  });
+  elements.results.hidden = false;
+}
+
+elements.results?.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-location-index]");
+  if (!button) return;
+  const location = state.locationChoices?.[Number(button.dataset.locationIndex)];
+  if (!location) return;
+  clearLocationChoices();
+  elements.input.value = location.name;
+  loadWeather(location);
+});
+
+elements.status?.addEventListener("click", (event) => {
+  if (event.target.closest("#retry-weather")) state.lastRequest?.();
+});
+
 elements.form?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const query = elements.input.value.trim();
-  if (!query) return;
+  if (!query) {
+    clearLocationChoices();
+    state.lastRequest = () => elements.input.focus();
+    setStatus("जगह का नाम लिखकर खोजें।", "error", false);
+    elements.input.focus();
+    return;
+  }
+  const searchId = ++state.searchId;
+  state.searchController?.abort();
+  state.weatherController?.abort();
+  state.requestId += 1;
+  state.searchController = typeof AbortController === "function" ? new AbortController() : null;
+  clearLocationChoices();
   setStatus("जगह खोजी जा रही है...");
-  elements.content.hidden = true;
 
   try {
-    const location = await searchLocation(query);
-    elements.input.value = location.name;
-    await loadWeather(location);
+    const result = await searchLocation(query, state.searchController?.signal);
+    if (searchId !== state.searchId) return;
+    if (result.choices) {
+      showLocationChoices(result.choices);
+      setStatus("कई जगहें मिलीं। सूची से सही जगह चुनें।", "warning");
+      return;
+    }
+    elements.input.value = result.name;
+    await loadWeather(result);
   } catch (error) {
-    setStatus(error.message || "जगह नहीं मिली।", "error");
+    if (searchId !== state.searchId || error.name === "AbortError") return;
+    state.lastRequest = () => elements.form.requestSubmit();
+    setStatus(error.name === "TimeoutError" ? "जगह खोजने में समय लगा।" : error.message?.includes("जगह नहीं मिली") ? error.message : "जगह खोजी नहीं जा सकी। इंटरनेट जांचकर फिर कोशिश करें।", "error", true);
+  } finally {
+    if (searchId === state.searchId) state.searchController = null;
   }
 });
 
 elements.locate?.addEventListener("click", () => {
+  const searchId = ++state.searchId;
+  state.searchController?.abort();
+  state.weatherController?.abort();
+  state.requestId += 1;
+  clearLocationChoices();
   if (!navigator.geolocation) {
     setStatus("इस browser में location सुविधा उपलब्ध नहीं है।", "error");
     return;
   }
 
+  state.lastRequest = () => elements.locate.click();
   setStatus("आपकी जगह ली जा रही है...");
-  elements.content.hidden = true;
   navigator.geolocation.getCurrentPosition(
     (position) => {
+      if (searchId !== state.searchId) return;
       const location = {
         name: "मेरी वर्तमान जगह",
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
       };
+      if (!Number.isFinite(location.latitude) || !Number.isFinite(location.longitude) || Math.abs(location.latitude) > 90 || Math.abs(location.longitude) > 180) {
+        setStatus("आपकी जगह का मान्य निर्देशांक नहीं मिला।", "error", true);
+        return;
+      }
       elements.input.value = location.name;
       loadWeather(location);
     },
-    () => setStatus("Location अनुमति नहीं मिली। जगह का नाम लिखकर खोजें।", "error"),
+    (error) => {
+      if (searchId !== state.searchId) return;
+      const message = error.code === 1
+        ? "Location अनुमति नहीं मिली। या तो अनुमति दें या जगह का नाम खोजें।"
+        : error.code === 3
+          ? "आपकी जगह ढूंढने में समय लगा। फिर कोशिश करें या जगह का नाम खोजें।"
+          : "वर्तमान जगह नहीं मिल सकी। जगह का नाम खोजें।";
+      setStatus(message, "error", true);
+    },
     { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
   );
 });

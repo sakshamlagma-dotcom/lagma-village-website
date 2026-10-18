@@ -18,7 +18,7 @@
     <link rel="icon" href="../icons/lagma-icon-192.png?v=2" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="../icons/lagma-icon-192.png?v=2" sizes="192x192" />
     <title>किसान मौसम | Lagma Saharsa</title>
-    <link rel="stylesheet" href="mausam.css?v=1" />
+    <link rel="stylesheet" href="mausam.css?v=2" />
     <script src="../analytics.js?v=3" defer></script>
   </head>
   <body>
@@ -45,21 +45,22 @@
     <main>
       <section class="weather-toolbar" aria-labelledby="page-title">
         <div>
-          <p class="weather-eyebrow">LIVE FARM WEATHER</p>
+          <p class="weather-eyebrow">FARM WEATHER FORECAST</p>
           <h1 id="page-title">खेत के काम से पहले मौसम देखें</h1>
         </div>
 
         <form class="location-search" id="location-form" role="search">
           <label for="location-input">जगह खोजें</label>
           <div class="search-row">
-            <input id="location-input" name="location" type="search" value="Lagma, Saharsa" autocomplete="address-level2" required />
+            <input id="location-input" name="location" type="search" value="Lagma, Saharsa" autocomplete="address-level2" aria-controls="location-results" />
             <button class="action-button" type="submit">मौसम देखें</button>
             <button class="secondary-button" id="current-location" type="button">मेरी जगह</button>
           </div>
         </form>
+        <div class="location-results" id="location-results" role="listbox" aria-label="मिलती-जुलती जगहें" hidden></div>
       </section>
 
-      <div class="weather-status" id="weather-status" role="status" aria-live="polite">
+      <div class="weather-status" id="weather-status" role="status" aria-live="polite" aria-atomic="true">
         <span class="status-spinner" aria-hidden="true"></span>
         <strong>मौसम की ताजा जानकारी आ रही है...</strong>
       </div>
@@ -72,7 +73,7 @@
               <strong id="current-temperature">--</strong><span>°C</span>
             </div>
             <h2 id="current-condition">मौसम</h2>
-            <p id="weather-updated">अपडेट समय --</p>
+            <p id="weather-updated">पूर्वानुमान का अपडेट समय उपलब्ध नहीं</p>
           </div>
           <div class="condition-mark" id="condition-mark" aria-hidden="true">☀</div>
           <dl class="current-highlights">
@@ -96,7 +97,7 @@
           <article><span>हवा</span><strong id="wind-speed">-- km/h</strong><small id="wind-direction">Wind</small></article>
           <article><span>तेज झोंका</span><strong id="wind-gust">-- km/h</strong><small>Wind gust</small></article>
           <article><span>आज की वर्षा</span><strong id="rain-sum">-- mm</strong><small>Forecast total</small></article>
-          <article><span>मिट्टी नमी</span><strong id="soil-moisture">--</strong><small>9-27 cm model estimate</small></article>
+          <article><span>मिट्टी नमी</span><strong id="soil-moisture">--</strong><small>9–27 cm model estimate</small></article>
         </section>
 
         <section class="forecast-section" aria-labelledby="hourly-title">
@@ -146,6 +147,7 @@
       <a href="index.html">पूरी कृषि गाइड देखें</a>
     </footer>
 
-    <script src="mausam.js?v=2"></script>
+    <script src="../weather-utils.js?v=1"></script>
+    <script src="mausam.js?v=3"></script>
   </body>
 </html>
