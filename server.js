@@ -148,9 +148,13 @@ app.post("/api/chat", async (req, res) => {
     }
 
     const status = upstreamStatus === 401 || upstreamStatus === 403 || invalidApiKey ? 503 : upstreamStatus === 429 ? 429 : timedOut ? 504 : 502;
+    const diagnostic = upstreamStatus === 400 && !invalidApiKey
+      ? (error.providerMessage || "Gemini returned an invalid-request response.").replace(/AIza[\w-]{20,}/g, "[redacted]").slice(0, 240)
+      : undefined;
     res.status(status).json({
       error: message,
       code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 || invalidApiKey ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : upstreamStatus === 400 ? "AI_REQUEST_ERROR" : "AI_UNAVAILABLE",
+      ...(diagnostic ? { diagnostic } : {}),
     });
   } finally {
     clearTimeout(timeout);
