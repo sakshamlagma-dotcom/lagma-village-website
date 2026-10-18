@@ -17,6 +17,7 @@ const mockProvider = `
 const encoder = new TextEncoder();
 globalThis.fetch = async (url, options = {}) => {
   const payload = JSON.parse(options.body || '{}');
+  if (payload.generationConfig?.temperature !== undefined) throw new Error('Gemini temperature override must be omitted.');
   const prompt = payload.contents?.at(-1)?.parts?.[0]?.text || '';
   if (!String(url).includes('gemini-3.5-flash-lite')) return new Response('{}', { status: 404 });
   if (prompt === 'provider-401') return new Response('{"error":{"message":"private provider detail"}}', { status: 401 });
