@@ -1,13 +1,31 @@
 (function exposeHomeWeather(root) {
   "use strict";
 
-  const CACHE_KEY = "lagma-home-weather-v2";
+  const CACHE_KEY = "lagma-home-weather-v3";
   const CACHE_MAX_AGE = 15 * 60 * 1000;
   const REQUEST_TIMEOUT = 12000;
   const LOCATION = Object.freeze({ latitude: 25.7489959, longitude: 86.6731798 });
 
   function validWeather(weather) {
     return weather && LagmaWeather.numberOrNull(weather.temperature) !== null && LagmaWeather.isWeatherCode(weather.code);
+  }
+
+  function localHour(weatherTime, now = new Date()) {
+    const apiHour = typeof weatherTime === "string" ? weatherTime.match(/T(\d{2}):\d{2}/) : null;
+    if (apiHour) return Number(apiHour[1]);
+    try {
+      return Number(new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Kolkata", hour: "2-digit", hourCycle: "h23"
+      }).formatToParts(now).find((part) => part.type === "hour")?.value);
+    } catch {
+      return null;
+    }
+  }
+
+  function isDaytime(weather, now = new Date()) {
+    if (weather?.isDay === 0 || weather?.isDay === 1) return weather.isDay === 1;
+    const hour = localHour(weather?.time, now);
+    return !Number.isFinite(hour) ? true : hour >= 6 && hour < 18;
   }
 
   function readCache(storage, now) {
@@ -26,6 +44,7 @@
     const conditionNode = badge.querySelector("#home-weather-condition");
     const weatherIconNode = badge.querySelector("[data-weather-icon]");
     let currentIcon = weatherIconNode;
+    let currentIconName = null;
 
     const setState = (name, label) => {
       badge.dataset.weatherState = name;
@@ -36,10 +55,13 @@
     const render = (weather, freshness = "live") => {
       if (!validWeather(weather)) return false;
       const info = LagmaWeather.weatherInfo(weather.code);
+      const day = isDaytime(weather);
+      const icon = !day && ["clear", "partly"].includes(info.mood) ? "moon" : info.icon;
       const temperature = Math.round(Number(weather.temperature));
-      if (currentIcon) {
-        currentIcon.outerHTML = `<i class="home-weather-icon" data-lucide="${info.icon}" data-weather-icon aria-hidden="true"></i>`;
+      if (currentIcon && currentIconName !== icon) {
+        currentIcon.outerHTML = `<i class="home-weather-icon" data-lucide="${icon}" data-weather-icon aria-hidden="true"></i>`;
         currentIcon = badge.querySelector("[data-weather-icon]");
+        currentIconName = icon;
         root.lucide?.createIcons({ attrs: { "stroke-width": 1.9 } });
       }
       let scene = badge.querySelector(".weather-scene");
@@ -49,13 +71,17 @@
         scene.setAttribute("aria-hidden", "true");
         badge.prepend(scene);
       }
-      scene.innerHTML = `
+      if (!scene.dataset?.initialized) scene.innerHTML = `
         <i class="weather-sun"></i><i class="weather-cloud cloud-a"></i><i class="weather-cloud cloud-b"></i>
         <i class="weather-fog-line fog-a"></i><i class="weather-fog-line fog-b"></i><i class="weather-bolt"></i>
-        ${Array.from({ length: 12 }, (_, index) => `<i class="weather-drop drop-${index + 1}"></i>`).join("")}
-        ${Array.from({ length: 9 }, (_, index) => `<i class="weather-flake flake-${index + 1}"></i>`).join("")}`;
-      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown");
+        ${Array.from({ length: 5 }, (_, index) => `<i class="weather-drop drop-${index + 1}"></i>`).join("")}
+        ${Array.from({ length: 5 }, (_, index) => `<i class="weather-flake flake-${index + 1}"></i>`).join("")}
+        <i class="weather-star star-a"></i><i class="weather-star star-b"></i><i class="weather-star star-c"></i>`;
+      if (scene.dataset) scene.dataset.initialized = "true";
+      badge.dataset.dayPeriod = day ? "day" : "night";
+      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown", "weather-day", "weather-night");
       badge.classList.add(`weather-${info.mood}`);
+      badge.classList.add(day ? "weather-day" : "weather-night");
       temperatureNode.textContent = `${temperature}°C`;
       setState(freshness === "stale" ? "stale" : "loaded", freshness === "stale" ? `${info.label} · पुराना डेटा` : info.label);
       return true;
@@ -67,7 +93,7 @@
       const params = new URLSearchParams({
         latitude: String(LOCATION.latitude),
         longitude: String(LOCATION.longitude),
-        current: "temperature_2m,weather_code",
+        current: "temperature_2m,weather_code,is_day",
         timezone: "Asia/Kolkata",
         temperature_unit: "celsius"
       });
@@ -75,7 +101,12 @@
         const response = await root.fetch(`https://api.open-meteo.com/v1/forecast?${params}`, controller ? { signal: controller.signal, cache: "no-store" } : { cache: "no-store" });
         if (!response.ok) throw new Error("Weather request failed");
         const data = await response.json();
-        const weather = { temperature: LagmaWeather.numberOrNull(data?.current?.temperature_2m), code: data?.current?.weather_code };
+        const weather = {
+          temperature: LagmaWeather.numberOrNull(data?.current?.temperature_2m),
+          code: data?.current?.weather_code,
+          isDay: data?.current?.is_day === 0 || data?.current?.is_day === 1 ? data.current.is_day : null,
+          time: typeof data?.current?.time === "string" ? data.current.time : null
+        };
         if (!validWeather(weather)) throw new Error("Weather response is incomplete");
         return weather;
       } finally {
@@ -113,5 +144,5 @@
     });
   }
 
-  root.LagmaHomeWeather = Object.freeze({ init, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
+  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
 })(typeof window === "undefined" ? globalThis : window);

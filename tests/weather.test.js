@@ -49,7 +49,7 @@ function validCurrent(overrides = {}) {
   return { current: { temperature_2m: 21, weather_code: 1, time: "2026-10-18T09:00" }, ...overrides };
 }
 
-function homeHarness({ fetch = async () => ({ ok: true, json: async () => ({ current: { temperature_2m: 16, weather_code: 3 } }) }), storage = new Map(), timerScale = 4 } = {}) {
+function homeHarness({ fetch = async () => ({ ok: true, json: async () => ({ current: { temperature_2m: 16, weather_code: 3, is_day: 1, time: "2026-10-18T10:00" } }) }), storage = new Map(), timerScale = 4 } = {}) {
   const badge = { dataset: {}, attributes: {}, children: [], states: new Set(), iconMarkup: "", scene: null };
   const temperature = { textContent: "—" };
   const condition = { textContent: "मौसम लोड हो रहा है…" };
@@ -235,7 +235,41 @@ test("homepage weather succeeds, maps icons, and saves a valid cache record", as
   assert.match(app.condition.textContent, /बादल/);
   assert.match(app.badge.iconMarkup, /data-lucide="cloud"/);
   assert.equal(app.badge.dataset.weatherState, "loaded");
-  assert.ok(app.storage.has("lagma-home-weather-v2"));
+  assert.equal(app.badge.dataset.dayPeriod, "day");
+  assert.ok(app.badge.states.has("weather-day"));
+  assert.ok(app.storage.has("lagma-home-weather-v3"));
+});
+
+test("homepage animation state uses API day status and Lagma-local fallback", async () => {
+  const { context } = homeHarness();
+  assert.equal(context.LagmaHomeWeather.isDaytime({ isDay: 0, time: "2026-10-18T12:00" }), false);
+  assert.equal(context.LagmaHomeWeather.isDaytime({ isDay: 1, time: "2026-10-18T00:00" }), true);
+  assert.equal(context.LagmaHomeWeather.isDaytime({ isDay: null, time: "2026-10-18T05:30" }), false);
+  assert.equal(context.LagmaHomeWeather.isDaytime({ isDay: null, time: "2026-10-18T06:00" }), true);
+  assert.equal(context.LagmaHomeWeather.isDaytime({ isDay: null, time: "2026-10-18T17:59" }), true);
+  assert.equal(context.LagmaHomeWeather.isDaytime({ isDay: null, time: "2026-10-18T18:00" }), false);
+});
+
+test("homepage renders day/night icons and condition-only scene states from real WMO codes", async (t) => {
+  const cases = [
+    ["clear day", 0, 1, "weather-clear", "sun"],
+    ["clear night", 0, 0, "weather-clear", "moon"],
+    ["partly cloudy night", 2, 0, "weather-partly", "moon"],
+    ["cloudy", 3, 1, "weather-cloudy", "cloud"],
+    ["rain", 63, 1, "weather-rain", "cloud-rain"],
+    ["thunderstorm", 95, 1, "weather-storm", "cloud-lightning"],
+    ["fog", 45, 1, "weather-fog", "cloud-fog"]
+  ];
+  for (const [name, code, isDay, mood, icon] of cases) await t.test(name, async () => {
+    const app = homeHarness({ fetch: async () => ({ ok: true, json: async () => ({
+      current: { temperature_2m: 20, weather_code: code, is_day: isDay, time: "2026-10-18T12:00" }
+    }) }) });
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    assert.ok(app.badge.states.has(mood));
+    assert.ok(app.badge.states.has(isDay ? "weather-day" : "weather-night"));
+    assert.match(app.badge.iconMarkup, new RegExp(`data-lucide="${icon}"`));
+    assert.match(app.badge.scene.innerHTML, /weather-star/);
+  });
 });
 
 test("homepage weather failure, HTTP error, malformed JSON, missing fields, and timeout show a usable fallback", async (t) => {
@@ -251,6 +285,7 @@ test("homepage weather failure, HTTP error, malformed JSON, missing fields, and 
     await new Promise((resolve) => setTimeout(resolve, 10));
     assert.equal(app.temperature.textContent, "—");
     assert.equal(app.badge.dataset.weatherState, "error");
+    assert.equal(app.badge.scene, null);
     assert.match(app.condition.textContent, /फिर से खोलें/);
     assert.match(app.badge.attributes["aria-label"], /फिर से खोलें/);
   });
@@ -273,7 +308,7 @@ test("homepage cache validates freshness, expiry, future dates, and malformed st
   ];
   for (const [name, record, expectedState, shouldFetch] of cases) await t.test(name, async () => {
     let requests = 0;
-    const cache = new Map([["lagma-home-weather-v2", record]]);
+    const cache = new Map([["lagma-home-weather-v3", record]]);
     const fetch = async () => { requests += 1; throw new Error("offline"); };
     const app = homeHarness({ fetch, storage: cache });
     await new Promise((resolve) => setTimeout(resolve, 10));
@@ -291,6 +326,14 @@ test("weather page CSS retains narrow layouts, visible focus, and reduced-motion
   assert.match(css, /\.location-choice:focus-visible/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(homeCss, /\.home-weather-badge:focus-visible/);
+  assert.match(homeCss, /\.weather-night \.weather-star/);
+  assert.match(homeCss, /realLightning 13s/);
+  assert.match(homeCss, /grid-template-columns: 24px auto auto minmax\(0, 1fr\)/);
+  assert.match(homeCss, /prefers-reduced-motion:\s*reduce/);
+  const home = await readFile(path.join(root, "index.html"), "utf8");
+  assert.match(home, /weather-home\.js\?v=2/);
+  const worker = await readFile(path.join(root, "sw.js"), "utf8");
+  assert.match(worker, /lagma-village-v53/);
   const page = await readFile(path.join(root, "kissan-help", "mausam.html"), "utf8");
   const script = await readFile(path.join(root, "kissan-help", "mausam.js"), "utf8");
   assert.match(script, /id = "retry-weather"/);
