@@ -182,7 +182,7 @@ async function streamReply(apiKey, messages, signal, res) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemPrompt }] },
         contents: messages.map(({ role, text }) => ({ role: role === "assistant" ? "model" : "user", parts: [{ text }] })),
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1600 },
+        generationConfig: { maxOutputTokens: 1600 },
       }),
       signal,
     },
@@ -243,7 +243,7 @@ async function generateReply(apiKey, messages, signal) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemPrompt }] },
         contents: messages.map(({ role, text }) => ({ role: role === "assistant" ? "model" : "user", parts: [{ text }] })),
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1600 },
+        generationConfig: { maxOutputTokens: 1600 },
       }),
       signal,
     },
