@@ -19,6 +19,10 @@
   box-sizing: border-box;
 }
 
+@property --sky-top { syntax: "<color>"; inherits: false; initial-value: #10203a; }
+@property --sky-middle { syntax: "<color>"; inherits: false; initial-value: #527c9b; }
+@property --sky-horizon-color { syntax: "<color>"; inherits: false; initial-value: #e5a275; }
+
 html {
   scroll-behavior: smooth;
 }
@@ -321,8 +325,21 @@ h2 {
   to { transform: rotate(360deg); }
 }
 
+.sky-visualization {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(270px, 38vw, 430px);
+  margin: 0 0 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 18px;
+  background: #122440;
+  box-shadow: var(--shadow);
+}
+
 .current-weather {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   min-height: 360px;
@@ -331,18 +348,217 @@ h2 {
   border-radius: 8px;
   padding: clamp(26px, 5vw, 58px);
   color: var(--white);
-  background:
-    linear-gradient(90deg, rgba(12, 42, 24, 0.94), rgba(14, 49, 67, 0.72)),
-    url("../a.webp") center / cover;
+  background: #102746;
   box-shadow: var(--shadow);
 }
+
+.sky-animation {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(180deg, var(--sky-top, #10203a) 0%, var(--sky-middle, #527c9b) 58%, var(--sky-horizon-color, #e5a275) 100%);
+  transition: --sky-top 4s ease, --sky-middle 4s ease, --sky-horizon-color 4s ease;
+  pointer-events: none;
+}
+
+.sky-animation::before {
+  content: "";
+  position: absolute;
+  inset: 34% -10% 18%;
+  background: radial-gradient(ellipse at 50% 100%, var(--sky-horizon-color, #e5a275) 0, transparent 67%);
+  opacity: var(--sky-haze, 0.3);
+  transition: opacity 4s ease, background 4s ease;
+}
+
+.sky-stars {
+  position: absolute;
+  inset: 0;
+  opacity: var(--sky-stars-opacity, 0.9);
+  background-image:
+    radial-gradient(2px 2px at 8% 18%, #fff 48%, transparent 60%),
+    radial-gradient(1px 1px at 18% 34%, #fff 48%, transparent 60%),
+    radial-gradient(2px 2px at 28% 12%, #fff 48%, transparent 60%),
+    radial-gradient(1px 1px at 39% 26%, #fff 48%, transparent 60%),
+    radial-gradient(2px 2px at 51% 16%, #fff 48%, transparent 60%),
+    radial-gradient(1px 1px at 62% 32%, #fff 48%, transparent 60%),
+    radial-gradient(2px 2px at 73% 12%, #fff 48%, transparent 60%),
+    radial-gradient(1px 1px at 84% 25%, #fff 48%, transparent 60%),
+    radial-gradient(2px 2px at 93% 15%, #fff 48%, transparent 60%),
+    radial-gradient(1px 1px at 14% 46%, #fff 48%, transparent 60%),
+    radial-gradient(1px 1px at 46% 41%, #fff 48%, transparent 60%),
+    radial-gradient(1px 1px at 77% 43%, #fff 48%, transparent 60%);
+  transition: opacity 4s ease;
+  animation: skyStarTwinkle 5s ease-in-out infinite alternate;
+}
+
+.sky-sun,
+.sky-moon {
+  position: absolute;
+  z-index: 1;
+  left: var(--sky-sun-x, 50%);
+  top: var(--sky-sun-y, 50%);
+  width: clamp(52px, 7vw, 88px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: var(--sky-sun-opacity, 0);
+  transform: translate(-50%, -50%);
+  transition: left 32s linear, top 32s linear, opacity 3s ease, filter 4s ease;
+}
+
+.sky-sun {
+  background: radial-gradient(circle, #fff8c8 0 22%, #ffe175 44%, rgba(255, 190, 73, 0.62) 61%, transparent 74%);
+  filter: drop-shadow(0 0 28px rgba(255, 211, 104, 0.85));
+}
+
+.sky-moon {
+  z-index: 2;
+  left: var(--sky-moon-x, 50%);
+  top: var(--sky-moon-y, 50%);
+  width: clamp(44px, 5.6vw, 70px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: var(--sky-moon-opacity, 0);
+  filter: drop-shadow(0 0 20px rgba(220, 235, 255, 0.88));
+}
+
+.sky-horizon {
+  position: absolute;
+  inset: auto 0 0;
+  height: 40%;
+  background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--sky-horizon-color, #e5a275) 36%, transparent) 30%, rgba(10, 35, 45, 0.26) 100%);
+  transition: background 4s ease;
+}
+
+.sky-horizon::after {
+  content: "";
+  position: absolute;
+  inset: 55% -4% -2%;
+  background: linear-gradient(180deg, rgba(25, 57, 57, 0.52), rgba(16, 43, 44, 0.94));
+  clip-path: polygon(0 54%, 8% 40%, 17% 48%, 26% 20%, 36% 52%, 47% 35%, 58% 48%, 70% 22%, 80% 46%, 90% 31%, 100% 44%, 100% 100%, 0 100%);
+}
+
+.sky-cloud {
+  position: absolute;
+  z-index: 2;
+  left: -25%;
+  top: 34%;
+  width: clamp(140px, 25vw, 300px);
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 242, 229, 0.65);
+  filter: blur(12px);
+  opacity: 0.2;
+  animation: skyCloudDrift 68s linear infinite;
+  transition: opacity 3s ease, background 3s ease;
+}
+
+.sky-cloud::before,
+.sky-cloud::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.sky-cloud::before { left: 18%; width: 34%; height: 58px; }
+.sky-cloud::after { right: 17%; width: 42%; height: 50px; }
+.sky-cloud-b { top: 49%; animation-duration: 92s; animation-delay: -39s; transform: scale(0.78); }
+.sky-cloud-c { top: 25%; animation-duration: 112s; animation-delay: -75s; transform: scale(0.58); }
+.sky-animation[data-mood="partly"] .sky-cloud { opacity: 0.46; }
+.sky-animation[data-mood="cloudy"] .sky-cloud,
+.sky-animation[data-mood="fog"] .sky-cloud { opacity: 0.82; }
+.sky-animation[data-mood="rain"] .sky-cloud,
+.sky-animation[data-mood="storm"] .sky-cloud { opacity: 0.94; background: rgba(63, 75, 91, 0.84); filter: blur(9px); }
+.sky-animation[data-mood="fog"] .sky-cloud { filter: blur(20px); }
+.sky-animation[data-period="night"] .sky-cloud,
+.sky-animation[data-period="dawn"] .sky-cloud,
+.sky-animation[data-period="dusk"] .sky-cloud { background-color: rgba(239, 199, 205, 0.54); }
+
+.sky-rain {
+  position: absolute;
+  z-index: 3;
+  inset: -30% 0 0;
+  opacity: 0;
+  background-image: repeating-linear-gradient(105deg, transparent 0 22px, rgba(220, 238, 255, 0.5) 23px, transparent 24px 39px);
+  background-size: 120px 180px;
+  animation: skyRainFall 1.2s linear infinite;
+  transition: opacity 1.5s ease;
+}
+
+.sky-animation[data-mood="rain"] .sky-rain,
+.sky-animation[data-mood="storm"] .sky-rain { opacity: 0.22; }
+.sky-animation[data-mood="storm"] .sky-rain { opacity: 0.3; }
+
+.sky-lightning {
+  position: absolute;
+  z-index: 3;
+  top: 22%;
+  left: 60%;
+  width: 32px;
+  height: 76px;
+  opacity: 0;
+  clip-path: polygon(54% 0, 10% 55%, 43% 55%, 28% 100%, 88% 39%, 57% 39%);
+  background: #fff5bb;
+  filter: drop-shadow(0 0 14px #fff1a5);
+}
+
+.sky-animation[data-mood="storm"] .sky-lightning { animation: skyLightning 12s infinite; }
+.sky-animation[data-mood="fog"]::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 45% -10% 0;
+  background: linear-gradient(180deg, transparent, rgba(225, 236, 239, 0.52));
+}
+
+.sky-clock {
+  position: absolute;
+  z-index: 3;
+  top: 18px;
+  right: 20px;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(8, 22, 40, 0.28);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(8px);
+}
+
+.sky-heading {
+  position: absolute;
+  z-index: 4;
+  left: clamp(22px, 5vw, 58px);
+  bottom: 24px;
+  max-width: min(580px, calc(100% - 42px));
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(5, 16, 31, 0.55);
+}
+
+.sky-heading .weather-eyebrow { margin-bottom: 8px; color: #ffe09a; }
+.sky-heading h2 { margin: 0; font-size: clamp(28px, 5vw, 52px); line-height: 1.08; }
+.sky-heading > p:last-child { margin: 10px 0 0; color: rgba(255, 255, 255, 0.86); }
+
+@keyframes skyCloudDrift { from { translate: -8vw 0; } to { translate: 135vw 0; } }
+@keyframes skyStarTwinkle { from { filter: brightness(0.8); } to { filter: brightness(1.25); } }
+@keyframes skyRainFall { to { background-position: -34px 180px; } }
+@keyframes skyLightning { 0%, 88%, 100% { opacity: 0; } 89%, 90% { opacity: 0.42; } 91%, 93% { opacity: 0; } 94% { opacity: 0.22; } }
 
 .current-copy,
 .condition-mark,
 .current-highlights {
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
+
+.current-weather[data-mood="clear"] .condition-mark,
+.current-weather[data-mood="partly"] .condition-mark { opacity: 0; }
 
 .current-copy > p:first-child {
   margin: 0 0 8px;
@@ -859,4 +1075,10 @@ h2 {
   }
 
   .status-spinner { animation: none; }
+  .sky-stars,
+  .sky-cloud,
+  .sky-rain,
+  .sky-lightning { animation: none !important; }
+  .sky-animation,
+  .sky-animation * { transition: none !important; }
 }

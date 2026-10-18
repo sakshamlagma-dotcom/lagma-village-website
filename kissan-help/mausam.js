@@ -7,6 +7,23 @@ const DEFAULT_LOCATION = {
 const WEATHER_CODES = LagmaWeather.WEATHER_CODES;
 const WEATHER_CACHE_MAX_AGE = 15 * 60 * 1000;
 const WEATHER_TIMEOUT = 14000;
+const SKY_FRAMES = Object.freeze([
+  ["#061126", "#101d38", "#23324a", 0.96], ["#07152d", "#132342", "#29394f", 0.94],
+  ["#091831", "#162943", "#2c3c50", 0.92], ["#101c37", "#202f48", "#414354", 0.88],
+  ["#1c2947", "#3e4560", "#795367", 0.78], ["#344362", "#79748b", "#d27c69", 0.52],
+  ["#557da5", "#d79b83", "#f2a15c", 0.18], ["#4b91c9", "#97c7e6", "#edc17f", 0.02],
+  ["#328bca", "#87c4e7", "#eed5a0", 0], ["#2585c5", "#7dc0e5", "#c4ddeb", 0],
+  ["#1d80c1", "#72b9e1", "#e8dfc4", 0], ["#1979bc", "#6bb5df", "#c9e0e9", 0],
+  ["#167bc1", "#76bfe4", "#f0dfaf", 0], ["#1b81c2", "#80c1e2", "#ebd7a7", 0],
+  ["#2785bd", "#88bbd7", "#e2c89e", 0], ["#3f83b2", "#9bb9cf", "#efc18c", 0],
+  ["#687da0", "#bea1ad", "#f1ad75", 0.02], ["#9b5e70", "#dc916b", "#f28d4e", 0.12],
+  ["#884c69", "#d57863", "#ed9561", 0.24], ["#58456d", "#986b7c", "#d18e72", 0.43],
+  ["#293e65", "#555975", "#a17476", 0.62], ["#142b50", "#2a4269", "#686980", 0.79],
+  ["#0c2146", "#1d365f", "#414f6c", 0.9], ["#081832", "#152b4b", "#293b54", 0.95],
+  ["#061126", "#101d38", "#23324a", 0.96]
+]);
+const SKY_PHASE_MS = 29.530588853 * 86400000;
+const SKY_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14);
 
 const CROP_NOTES = {
   "धान": "धान के खेत में पानी का स्तर और निकास दोनों देखें; केवल forecast देखकर खेत न भरें।",
@@ -35,6 +52,7 @@ const state = {
   crop: "धान",
   requestId: 0,
   searchId: 0,
+  skyTimer: null,
   weatherController: null,
   searchController: null,
   lastRequest: null
@@ -110,6 +128,99 @@ function parseWeatherTime(value) {
   const zoned = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value) ? value : `${value}+05:30`;
   const date = new Date(zoned);
   return Number.isFinite(date.getTime()) ? date : null;
+}
+
+function skyLocalClock(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+  }).formatToParts(now);
+  const hour = Number(parts.find((part) => part.type === "hour")?.value);
+  const minute = Number(parts.find((part) => part.type === "minute")?.value);
+  return { hour, minute, total: hour * 60 + minute };
+}
+
+function blendSkyColor(left, right, amount) {
+  const t = Math.max(0, Math.min(1, amount));
+  const a = left.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16));
+  const b = right.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16));
+  return `#${a.map((channel, index) => Math.round(channel + (b[index] - channel) * t).toString(16).padStart(2, "0")).join("")}`;
+}
+
+function renderSky(data = state.weather, now = new Date()) {
+  const sky = document.querySelector("#sky-animation");
+  if (!sky) return;
+  const skyData = data || { current: {}, daily: {} };
+  const clock = skyLocalClock(now);
+  const hour = clock.hour + clock.minute / 60;
+  const frameIndex = Math.floor(hour);
+  const nextIndex = (frameIndex + 1) % SKY_FRAMES.length;
+  const blend = hour - frameIndex;
+  const frame = SKY_FRAMES[frameIndex];
+  const next = SKY_FRAMES[nextIndex];
+  const mood = data ? weatherInfo(skyData.current?.weather_code).mood : "unknown";
+  const weatherTint = mood === "storm" ? ["#263449", 0.65]
+    : mood === "rain" ? ["#43566c", 0.48]
+      : mood === "cloudy" ? ["#8292a0", 0.28]
+        : mood === "fog" ? ["#bac8cc", 0.36] : null;
+  const interpolate = (index) => {
+    const color = blendSkyColor(frame[index], next[index], blend);
+    return weatherTint ? blendSkyColor(color, weatherTint[0], weatherTint[1]) : color;
+  };
+  const stars = frame[3] + (next[3] - frame[3]) * blend;
+  const sunrise = minutesOfDay(skyData.daily?.sunrise?.[0]) ?? 345;
+  const sunset = minutesOfDay(skyData.daily?.sunset?.[0]) ?? 1040;
+  const current = clock.total;
+  const clamp = (value) => Math.max(0, Math.min(1, value));
+  let sunProgress = sunrise !== null && sunset !== null ? (current - sunrise) / Math.max(1, sunset - sunrise) : (hour - 6) / 12;
+  const sunArc = clamp(sunProgress);
+  const sunX = 7 + sunArc * 86;
+  const sunY = 70 - Math.sin(Math.PI * sunArc) * 48;
+  let sunOpacity = sunrise !== null && sunset !== null
+    ? clamp(Math.min((current - (sunrise - 32)) / 32, ((sunset + 24) - current) / 24))
+    : clamp(Math.min((hour - 5.5) / 0.5, (18.5 - hour) / 0.5));
+  const nightLength = sunrise !== null && sunset !== null ? 1440 - (sunset - sunrise) : 12 * 60;
+  let nightProgress = sunrise !== null && sunset !== null
+    ? (current < sunrise ? (current + 1440 - sunset) / nightLength : (current - sunset) / nightLength)
+    : ((hour + 6) % 24) / 12;
+  const moonArc = clamp(nightProgress);
+  const moonX = 8 + moonArc * 84;
+  const moonY = 68 - Math.sin(Math.PI * moonArc) * 43;
+  let moonOpacity = sunrise !== null && sunset !== null
+    ? (current >= sunset - 22 || current <= sunrise + 25 ? clamp(current >= sunset ? (current - sunset + 1) / 20 : (sunrise + 25 - current) / 25) : current < sunrise ? 1 : 0)
+    : (hour >= 19 || hour < 6 ? 1 : 0);
+  if (sunOpacity > 0.65) moonOpacity = 0;
+  const phase = ((now.getTime() - SKY_NEW_MOON) % SKY_PHASE_MS + SKY_PHASE_MS) % SKY_PHASE_MS / SKY_PHASE_MS;
+  const illumination = phase < 0.5 ? phase * 2 : (1 - phase) * 2;
+  const moonFrame = Math.max(0, Math.min(4, Math.round(illumination * 4)));
+  const period = sunrise !== null && sunset !== null
+    ? current >= sunrise - 45 && current <= sunrise + 50 ? "dawn"
+      : current >= sunset - 55 && current <= sunset + 80 ? "dusk"
+        : current >= sunrise && current < sunset ? "day" : "night"
+    : hour >= 5.5 && hour < 7 ? "dawn" : hour >= 17.5 && hour < 19 ? "dusk" : hour >= 6 && hour < 18 ? "day" : "night";
+
+  sky.dataset.frame = String(frameIndex + 1);
+  sky.dataset.nextFrame = String(nextIndex + 1);
+  sky.dataset.period = period;
+  sky.dataset.mood = mood;
+  sky.style.setProperty("--sky-top", interpolate(0));
+  sky.style.setProperty("--sky-middle", interpolate(1));
+  sky.style.setProperty("--sky-horizon-color", interpolate(2));
+  sky.style.setProperty("--sky-stars-opacity", stars.toFixed(3));
+  sky.style.setProperty("--sky-sun-x", `${sunX.toFixed(2)}%`);
+  sky.style.setProperty("--sky-sun-y", `${sunY.toFixed(2)}%`);
+  sky.style.setProperty("--sky-sun-opacity", sunOpacity.toFixed(3));
+  sky.style.setProperty("--sky-moon-x", `${moonX.toFixed(2)}%`);
+  sky.style.setProperty("--sky-moon-y", `${moonY.toFixed(2)}%`);
+  sky.style.setProperty("--sky-moon-opacity", moonOpacity.toFixed(3));
+  sky.style.setProperty("--sky-haze", period === "dawn" || period === "dusk" ? "0.72" : "0.22");
+  sky.querySelector(".sky-moon")?.style.setProperty("background-image", `url("../assets/weather/moon-phase-${moonFrame}.webp")`);
+  const clockNode = sky.querySelector(".sky-clock");
+  if (clockNode) clockNode.textContent = `लगमा का आसमान · ${String(clock.hour).padStart(2, "0")}:${String(clock.minute).padStart(2, "0")} IST · ${frameIndex + 1}/25`;
+}
+
+function minutesOfDay(value) {
+  const match = typeof value === "string" ? value.match(/T(\d{2}):(\d{2})/) : null;
+  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
 }
 
 function windDirection(degrees) {
@@ -284,6 +395,7 @@ function renderCurrent(data, location) {
   const info = weatherInfo(current.weather_code);
   const hourlyIndex = currentHourlyIndex(data);
   const soil = hourlyIndex >= 0 ? data.hourly?.soil_moisture_9_to_27cm?.[hourlyIndex] : null;
+  document.querySelector(".current-weather")?.setAttribute("data-mood", info.mood);
 
   setText("#current-location-name", location.name);
   setText("#current-temperature", round(temperatureNumber(current.temperature_2m)));
@@ -472,6 +584,7 @@ function renderWeather(data, location, freshness = "fresh") {
   if (!validForecast(data)) throw new Error("मौसम के जरूरी आंकड़े अधूरे हैं।");
   state.weather = data;
   state.location = location;
+  renderSky(data);
   renderCurrent(data, location);
   renderAlerts(data);
   renderHourly(data);
@@ -668,4 +781,9 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("../sw.js"));
 }
 
+renderSky();
+state.skyTimer = window.setInterval(() => renderSky(), 30 * 1000);
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) renderSky();
+});
 loadWeather(DEFAULT_LOCATION);
