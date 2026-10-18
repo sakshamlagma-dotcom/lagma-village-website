@@ -1,7 +1,7 @@
 (function exposeHomeWeather(root) {
   "use strict";
 
-  const CACHE_KEY = "lagma-home-weather-v5";
+  const CACHE_KEY = "lagma-home-weather-v7";
   const CACHE_MAX_AGE = 15 * 60 * 1000;
   const REQUEST_TIMEOUT = 12000;
   const LOCATION = Object.freeze({ latitude: 25.7489959, longitude: 86.6731798 });
@@ -84,8 +84,8 @@
 
   function skyPeriod(weather, now = new Date()) {
     const current = minutesOfDay(weather?.time);
-    const sunrise = minutesOfDay(weather?.sunrise);
-    const sunset = minutesOfDay(weather?.sunset);
+    let sunrise = minutesOfDay(weather?.sunrise);
+    let sunset = minutesOfDay(weather?.sunset);
     if (current !== null && sunrise !== null && current >= sunrise - 45 && current <= sunrise + 75) return "dawn";
     if (current !== null && sunset !== null && current >= sunset - 75 && current <= sunset + 75) return "dusk";
     if (current === null) {
@@ -104,6 +104,19 @@
     } catch {
       return null;
     }
+  }
+
+  function refreshedWeatherTime(weather, now = new Date()) {
+    const time = currentLocalTime(now);
+    const currentDay = time.slice(0, 10);
+    const sourceDay = weather?.time?.slice(0, 10);
+    if (!sourceDay || sourceDay === currentDay) return { ...weather, time };
+    return {
+      ...weather,
+      time,
+      sunrise: weather.sunrise ? `${currentDay}${weather.sunrise.slice(10)}` : weather.sunrise,
+      sunset: weather.sunset ? `${currentDay}${weather.sunset.slice(10)}` : weather.sunset
+    };
   }
 
   function init(badge) {
@@ -126,13 +139,14 @@
       if (!validWeather(weather)) return false;
       lastWeather = weather;
       lastFreshness = freshness;
-      weather = { ...weather, time: currentLocalTime() };
+      weather = refreshedWeatherTime(weather);
       const info = LagmaWeather.weatherInfo(weather.code);
       const day = isDaytime(weather);
       const period = skyPeriod(weather);
       const goldenHour = ["dawn", "dusk"].includes(period) && ["clear", "partly", "cloudy"].includes(info.mood);
       const moon = lunarAppearance();
-      const icon = period === "night" && ["clear", "partly"].includes(info.mood) ? "moon" : info.icon;
+      const moonVisible = period === "night" && ["clear", "partly", "cloudy", "fog"].includes(info.mood);
+      const icon = moonVisible ? "moon" : info.icon;
       const temperature = Math.round(Number(weather.temperature));
       if (currentIcon && currentIconName !== icon) {
         currentIcon.outerHTML = `<i class="home-weather-icon" data-lucide="${icon}" data-weather-icon aria-hidden="true"></i>`;
@@ -167,12 +181,14 @@
         moonPhoto.style.setProperty("--sky-body-y", `${positions.moon[1]}%`);
         moonPhoto.style.backgroundImage = `url("assets/weather/moon-phase-${moon.index}.webp")`;
         moonPhoto.dataset.direction = moon.waxing ? "waxing" : "waning";
+        moonPhoto.dataset.visible = String(moonVisible);
       }
       badge.dataset.dayPeriod = day ? "day" : "night";
-      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown", "weather-day", "weather-night", "weather-golden-hour", "weather-sky-dawn", "weather-sky-day", "weather-sky-dusk", "weather-sky-night");
+      badge.classList.remove("weather-clear", "weather-partly", "weather-cloudy", "weather-fog", "weather-rain", "weather-snow", "weather-storm", "weather-unknown", "weather-day", "weather-night", "weather-golden-hour", "weather-sky-dawn", "weather-sky-day", "weather-sky-dusk", "weather-sky-night", "weather-show-moon");
       badge.classList.add(`weather-${info.mood}`);
       badge.classList.add(day ? "weather-day" : "weather-night");
       badge.classList.add(`weather-sky-${period}`);
+      if (moonVisible) badge.classList.add("weather-show-moon");
       if (goldenHour) badge.classList.add("weather-golden-hour");
       temperatureNode.textContent = `${temperature}°C`;
       setState(freshness === "stale" ? "stale" : "loaded", freshness === "stale" ? `${info.label} · पुराना डेटा` : info.label);
@@ -241,9 +257,9 @@
 
     root.setInterval(() => {
       if (!lastWeather) return;
-      render({ ...lastWeather, time: currentLocalTime() }, lastFreshness);
+      render(refreshedWeatherTime(lastWeather), lastFreshness);
     }, 60 * 1000);
   }
 
-  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, minutesOfDay, skyPeriod, skyPosition, currentLocalTime, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
+  root.LagmaHomeWeather = Object.freeze({ init, isDaytime, localHour, minutesOfDay, skyPeriod, skyPosition, currentLocalTime, refreshedWeatherTime, lunarAppearance, CACHE_KEY, CACHE_MAX_AGE, REQUEST_TIMEOUT });
 })(typeof window === "undefined" ? globalThis : window);
