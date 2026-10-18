@@ -4,14 +4,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const app = express();
+app.set("trust proxy", 1);
 const port = Number(process.env.PORT) || 3000;
-const primaryModel = process.env.GEMINI_MODEL || "gemini-2.0-flash-lite";
-const fallbackModels = [
-  primaryModel,
-  "gemini-2.5-flash-lite",
-  "gemini-2.0-flash-lite",
-  "gemini-flash-lite-latest",
-].filter((item, index, list) => item && list.indexOf(item) === index);
+const primaryModel = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const todoPublic = path.join(__dirname, "todo-ai");
 const lagmaPublic = __dirname;
@@ -28,7 +23,7 @@ Identity rules:
 
 Website knowledge:
 - Website name: Lagma Village Official website.
-- Website link: https://lagma.online/
+- Website link: https://lagma-village-ai.onrender.com/
 - TODO AI link: https://lagma-village-ai.onrender.com/todo-ai/
 - The website is about Lagma Village, Saharsa, Bihar.
 - Lagma Village is known for agriculture, fertile fields, fish farming ponds, mango orchards, bamboo clusters, temples, community life, Maithili/Hindi language, festivals, education, and local progress.
@@ -49,7 +44,6 @@ app.disable("x-powered-by");
 app.use((req, res, next) => {
   const allowedOrigins = new Set([
     "https://sakshamlagma-dotcom.github.io",
-    "https://lagma.online",
     "https://lagma-village-ai.onrender.com",
   ]);
   const origin = req.headers.origin;
@@ -59,6 +53,11 @@ app.use((req, res, next) => {
   }
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.path.startsWith("/todo-ai") || req.path.startsWith("/api/")) {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  }
   if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
 });
@@ -71,13 +70,21 @@ app.get(["/todo-ai", "/todo-ai/"], (_req, res) => {
 app.use("/todo-ai", express.static(todoPublic));
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, configured: Boolean(process.env.GEMINI_API_KEY), model: primaryModel, fallbackModels });
+  res.json({ ok: true, configured: Boolean(process.env.GEMINI_API_KEY) });
 });
+
+const rateBuckets = new Map();
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 10;
+setInterval(() => {
+  const cutoff = Date.now() - RATE_WINDOW_MS;
+  for (const [ip, bucket] of rateBuckets) if (bucket.started < cutoff) rateBuckets.delete(ip);
+}, RATE_WINDOW_MS).unref();
 
 app.post("/api/chat", async (req, res) => {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(503).json({ error: "GEMINI_API_KEY abhi configure nahi hui hai." });
+    return res.status(503).json({ error: "AI is not configured on the server yet. Please try again later.", code: "NOT_CONFIGURED" });
   }
 
   const messages = sanitizeMessages(req.body?.messages);
@@ -85,73 +92,65 @@ app.post("/api/chat", async (req, res) => {
     return res.status(400).json({ error: "Kripya ek message likhiye." });
   }
 
+  const now = Date.now();
+  const client = req.ip || req.socket.remoteAddress || "unknown";
+  let bucket = rateBuckets.get(client);
+  if (!bucket || now - bucket.started >= RATE_WINDOW_MS) {
+    bucket = { started: now, count: 0 };
+    rateBuckets.set(client, bucket);
+  }
+  if (++bucket.count > RATE_MAX) {
+    res.setHeader("Retry-After", "60");
+    return res.status(429).json({ error: "Too many requests. Please wait a minute and try again.", code: "RATE_LIMITED" });
+  }
+
+  const abortController = new AbortController();
+  const timeout = setTimeout(() => abortController.abort(new Error("timeout")), 45_000);
+  req.on("aborted", () => abortController.abort());
+  res.on("close", () => { if (!res.writableEnded) abortController.abort(); });
   try {
-    if (req.body?.stream === true) {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => {
-        const error = new Error("Gemini streaming request timed out");
-        error.name = "TimeoutError";
-        controller.abort(error);
-      }, 45_000);
-      const abortWhenDisconnected = () => {
-        if (!res.writableEnded) controller.abort();
-      };
-      req.once("aborted", abortWhenDisconnected);
-      res.once("close", abortWhenDisconnected);
-
-      try {
-        const { response, model } = await openGeminiStream(apiKey, messages, controller.signal);
-        res.status(200);
-        res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-        res.setHeader("Cache-Control", "no-cache, no-transform");
-        res.setHeader("Connection", "keep-alive");
-        res.setHeader("X-Accel-Buffering", "no");
-        res.flushHeaders();
-
-        const reply = await forwardGeminiStream(response.body, res);
-        if (!reply.trim()) {
-          const error = new Error("AI ne khaali response diya. Dobara try karein.");
-          error.status = 502;
-          error.model = model;
-          throw error;
-        }
-        res.write(`data: ${JSON.stringify({ done: true, model })}\n\n`);
-        res.end();
-      } finally {
-        clearTimeout(timeout);
-        req.off("aborted", abortWhenDisconnected);
-        res.off("close", abortWhenDisconnected);
-      }
-      return;
+    if (req.body?.stream === true || req.get("accept")?.includes("text/event-stream")) {
+      await streamReply(apiKey, messages, abortController.signal, res);
+    } else {
+      const reply = await generateReply(apiKey, messages, abortController.signal);
+      res.json({ reply, model: primaryModel });
     }
-
-    const { data, model } = await generateWithFallback(apiKey, messages);
-
-    const reply = data?.candidates?.[0]?.content?.parts
-      ?.map((part) => part.text || "")
-      .join("")
-      .trim();
-
-    if (!reply) {
-      return res.status(502).json({ error: "AI ne khaali response diya. Dobara try karein." });
-    }
-
-    res.json({ reply, model });
   } catch (error) {
-    console.error("Chat request failed:", {
-      message: error.message,
-      status: error.status || null,
-      model: error.model || null,
-    });
-    const details = chatErrorDetails(error);
+    if (abortController.signal.aborted && !res.headersSent) {
+      const timedOut = error.name === "TimeoutError" || abortController.signal.reason?.message === "timeout";
+      return res.status(timedOut ? 504 : 499).json({ error: timedOut ? "The response took too long. Please retry." : "Request cancelled.", code: timedOut ? "TIMEOUT" : "CANCELLED" });
+    }
+    console.error("Chat request failed", { status: error.status || null });
     if (res.headersSent) {
       if (!res.destroyed && !res.writableEnded) {
-        res.write(`data: ${JSON.stringify({ error: details.error, code: details.code })}\n\n`);
+        res.write(`data: ${JSON.stringify({ error: "Gemini abhi busy hai. Thodi der baad dobara try karein.", code: "AI_UNAVAILABLE" })}\n\n`);
         res.end();
       }
       return;
     }
-    res.status(502).json(details);
+    const timedOut = error.name === "TimeoutError" || error.name === "AbortError";
+    const upstreamStatus = Number(error.status) || 0;
+    let message = "Gemini abhi busy hai. Thodi der baad dobara try karein.";
+
+    if ([401, 403].includes(upstreamStatus)) {
+      message = "AI service authorization needs attention. Please check the server-side Gemini configuration.";
+    } else if (upstreamStatus === 404) {
+      message = "The configured AI model is unavailable. Please update GEMINI_MODEL on the server.";
+    } else if (upstreamStatus === 429) {
+      message = "AI usage limit reached temporarily. Please wait a moment and try again.";
+    } else if ([400, 413].includes(upstreamStatus)) {
+      message = "That request could not be processed. Please shorten it and try again.";
+    } else if (timedOut) {
+      message = "AI response mein zyada samay laga. Dobara try karein.";
+    }
+
+    const status = upstreamStatus === 401 || upstreamStatus === 403 ? 503 : upstreamStatus === 429 ? 429 : timedOut ? 504 : 502;
+    res.status(status).json({
+      error: message,
+      code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : "AI_UNAVAILABLE",
+    });
+  } finally {
+    clearTimeout(timeout);
   }
 });
 
@@ -162,203 +161,107 @@ app.use((_req, res) => {
 });
 
 function sanitizeMessages(input) {
-  if (!Array.isArray(input)) return [];
-
-  return input
+  if (!Array.isArray(input) || input.length > 20) return [];
+  const messages = input
     .slice(-20)
     .map((message) => ({
       role: message?.role === "assistant" ? "assistant" : "user",
       text: typeof message?.text === "string" ? message.text.trim().slice(0, 6000) : "",
     }))
     .filter((message) => message.text);
+  const totalLength = messages.reduce((sum, message) => sum + message.text.length, 0);
+  return totalLength <= 24_000 ? messages : [];
 }
 
-async function generateWithFallback(apiKey, messages) {
-  let lastError;
-
-  for (const model of fallbackModels) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": apiKey,
-          },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: systemPrompt }],
-            },
-            contents: messages.map(({ role, text }) => ({
-              role: role === "assistant" ? "model" : "user",
-              parts: [{ text }],
-            })),
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 1200,
-            },
-          }),
-          signal: AbortSignal.timeout(12_000),
-        },
-      );
-
-      const data = await response.json();
-      if (response.ok) return { data, model };
-
-      const error = new Error(data?.error?.message || `Gemini API error ${response.status}`);
-      error.status = response.status;
-      error.model = model;
-      lastError = error;
-      console.error("Gemini API error:", response.status, model, data?.error?.message);
-
-      if (![400, 429, 503].includes(response.status)) break;
-    } catch (error) {
-      error.model = model;
-      lastError = error;
-      console.error("Gemini request failed:", model, error.message);
-    }
+async function streamReply(apiKey, messages, signal, res) {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(primaryModel)}:streamGenerateContent?alt=sse`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: messages.map(({ role, text }) => ({ role: role === "assistant" ? "model" : "user", parts: [{ text }] })),
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1600 },
+      }),
+      signal,
+    },
+  );
+  if (!response.ok) {
+    const error = new Error("Gemini request failed");
+    error.status = response.status;
+    throw error;
   }
+  if (!response.body) throw new Error("Streaming response unavailable");
 
-  throw lastError || new Error("Gemini request failed");
-}
-
-async function openGeminiStream(apiKey, messages, signal) {
-  let lastError;
-
-  for (const model of fallbackModels) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": apiKey,
-          },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: systemPrompt }],
-            },
-            contents: messages.map(({ role, text }) => ({
-              role: role === "assistant" ? "model" : "user",
-              parts: [{ text }],
-            })),
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 1200,
-            },
-          }),
-          signal,
-        },
-      );
-
-      if (response.ok) {
-        if (!response.body) throw new Error("Gemini stream returned an empty body");
-        return { response, model };
-      }
-
-      const data = await response.json().catch(() => ({}));
-      const error = new Error(data?.error?.message || `Gemini API error ${response.status}`);
-      error.status = response.status;
-      error.model = model;
-      lastError = error;
-      console.error("Gemini streaming API error:", response.status, model);
-
-      if (![400, 429, 503].includes(response.status)) break;
-    } catch (error) {
-      error.model = model;
-      lastError = error;
-      console.error("Gemini streaming request failed:", model, error.message);
-      if (signal.aborted) break;
-    }
-  }
-
-  throw lastError || new Error("Gemini streaming request failed");
-}
-
-async function forwardGeminiStream(body, res) {
-  const reader = body.getReader();
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders?.();
+  const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
-  let dataLines = [];
-  let reply = "";
-
-  function dispatchEvent() {
-    if (!dataLines.length) return;
-    const data = dataLines.join("\n");
-    dataLines = [];
-    if (data === "[DONE]") return;
-
-    const chunk = JSON.parse(data);
-    const text = chunk?.candidates?.[0]?.content?.parts
-      ?.map((part) => part.text || "")
-      .join("");
-    if (!text) return;
-
-    reply += text;
-    res.write(`data: ${JSON.stringify({ text })}\n\n`);
-  }
-
-  function consumeLine(line) {
-    if (line === "") {
-      dispatchEvent();
-    } else if (line.startsWith("data:")) {
-      dataLines.push(line.slice(5).replace(/^ /, ""));
-    }
-  }
-
   try {
     while (true) {
-      const { value, done } = await reader.read();
-      buffer += decoder.decode(value, { stream: !done });
-
-      let newline = buffer.indexOf("\n");
-      while (newline !== -1) {
-        consumeLine(buffer.slice(0, newline).replace(/\r$/, ""));
-        buffer = buffer.slice(newline + 1);
-        newline = buffer.indexOf("\n");
+      const { done, value } = await reader.read();
+      buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+      const events = buffer.split(/\r?\n\r?\n/);
+      buffer = events.pop() || "";
+      for (const event of events) {
+        const line = event.split(/\r?\n/).find((item) => item.startsWith("data:"));
+        if (!line) continue;
+        try {
+          const data = JSON.parse(line.slice(5).trim());
+          const text = data?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("") || "";
+          if (text && !res.writableEnded) res.write(`data: ${JSON.stringify({ text })}\n\n`);
+        } catch { /* Ignore malformed provider event; continue reading the stream. */ }
       }
-
-      if (done) {
-        if (buffer) consumeLine(buffer.replace(/\r$/, ""));
-        dispatchEvent();
-        break;
+      if (done) break;
+    }
+    if (buffer.trim()) {
+      const line = buffer.split(/\r?\n/).find((item) => item.startsWith("data:"));
+      if (line) {
+        try {
+          const data = JSON.parse(line.slice(5).trim());
+          const text = data?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("") || "";
+          if (text && !res.writableEnded) res.write(`data: ${JSON.stringify({ text })}\n\n`);
+        } catch { /* Ignore malformed final provider event. */ }
       }
     }
-  } catch (error) {
-    await reader.cancel(error).catch(() => {});
-    throw error;
+    if (!res.writableEnded) res.end("data: {\"done\":true}\n\n");
   } finally {
     reader.releaseLock();
   }
-
-  return reply;
 }
 
-function chatErrorDetails(error) {
-  const timedOut = error.name === "TimeoutError" || error.name === "AbortError";
-  const upstreamStatus = Number(error.status) || 0;
-  let message = "Gemini abhi busy hai. Thodi der baad dobara try karein.";
-
-  if ([401, 403].includes(upstreamStatus)) {
-    message = "AI service authorization needs attention. Please check the server-side Gemini configuration.";
-  } else if (upstreamStatus === 404) {
-    message = "The configured AI model is unavailable. Please update GEMINI_MODEL on the server.";
-  } else if (upstreamStatus === 429) {
-    message = "AI usage limit reached temporarily. Please wait a moment and try again.";
-  } else if ([400, 413].includes(upstreamStatus)) {
-    message = "That request could not be processed. Please shorten it and try again.";
-  } else if (timedOut) {
-    message = "AI response mein zyada samay laga. Dobara try karein.";
-  } else if (error.message === "AI ne khaali response diya. Dobara try karein.") {
-    message = error.message;
+async function generateReply(apiKey, messages, signal) {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(primaryModel)}:generateContent`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: messages.map(({ role, text }) => ({ role: role === "assistant" ? "model" : "user", parts: [{ text }] })),
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1600 },
+      }),
+      signal,
+    },
+  );
+  if (!response.ok) {
+    const error = new Error("Gemini request failed");
+    error.status = response.status;
+    await response.body?.cancel();
+    throw error;
   }
-
-  return {
-    error: message,
-    code: upstreamStatus === 429 ? "RATE_LIMITED" : upstreamStatus === 404 ? "MODEL_UNAVAILABLE" : upstreamStatus === 401 || upstreamStatus === 403 ? "AI_AUTH_ERROR" : timedOut ? "TIMEOUT" : "AI_UNAVAILABLE",
-  };
+  const data = await response.json();
+  const reply = data?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("").trim();
+  if (!reply) {
+    const error = new Error("Gemini returned an empty response");
+    error.status = 502;
+    throw error;
+  }
+  return reply;
 }
 
 export { app };

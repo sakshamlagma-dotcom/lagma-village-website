@@ -135,7 +135,7 @@ test("keeps the existing JSON chat response for non-streaming callers", async ()
     body: JSON.stringify({ messages: [{ role: "user", text: "Test" }] }),
   });
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), { reply: "Legacy reply", model: "gemini-2.0-flash-lite" });
+  assert.deepEqual(await response.json(), { reply: "Legacy reply", model: "gemini-3.5-flash-lite" });
 });
 
 test("maps pre-stream rate limits to safe JSON errors", async () => {
@@ -146,7 +146,7 @@ test("maps pre-stream rate limits to safe JSON errors", async () => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ stream: true, messages: [{ role: "user", text: "Test" }] }),
   });
-  assert.equal(response.status, 502);
+  assert.equal(response.status, 429);
   const body = await response.json();
   assert.match(body.error, /AI usage limit reached temporarily/);
   assert.equal(body.code, "RATE_LIMITED");

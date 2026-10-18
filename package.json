@@ -7,7 +7,7 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test",
-    "check": "node --check server.js && node --check todo-ai/js/app.js && node --check todo-ai/sw.js"
+    "check": "node --check server.js && node --check todo-ai/js/app.js && node --check todo-ai/js/chat-experience.js && node --check todo-ai/sw.js"
   },
   "engines": {
     "node": ">=20"
