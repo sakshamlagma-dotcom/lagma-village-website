@@ -1606,3 +1606,6 @@ html[data-theme=dark] .message-notice {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+.message-avatar:has(img) { overflow: hidden; padding: 0; }
+
