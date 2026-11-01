@@ -2,493 +2,854 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Lagma Village Saharsa Bihar official website with village history, services, gallery, notices, online services, location, and contact details.">
-  <meta name="keywords" content="Lagma, Lagma Village, Lagma Saharsa, Lagma Bihar, Lagma official website">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Saksham Kumar Jha | Creator &amp; Web Developer | Lagma Village Website</title>
+  <meta name="description" content="Saksham Kumar Jha is the creator and web developer behind the Lagma Village Official Website, built to share village information, services, notices, and community resources.">
+  <link rel="canonical" href="https://lagma.online/creator.html">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#1f4f37">
-  <meta name="google-analytics-id" content="G-PZQ45J2B8G">
-  <link rel="canonical" href="https://lagma.online/">
-  <meta property="og:title" content="Lagma Village Saharsa Bihar | Official Website">
-  <meta property="og:description" content="Lagma Village Saharsa Bihar official website with village history, services, gallery, notices, online services, location, and contact details.">
-  <meta property="og:site_name" content="Lagma Village Official">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://lagma.online/">
-  <meta property="og:image" content="https://lagma.online/a.jpeg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Lagma Village Saharsa Bihar | Official Website">
-  <meta name="twitter:description" content="Lagma Village Saharsa Bihar official website with village history, services, gallery, notices, online services, location, and contact details.">
-  <meta name="twitter:image" content="https://lagma.online/a.jpeg">
+  <meta name="theme-color" content="#0f3d2b">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Saksham Kumar Jha | Creator &amp; Web Developer of Lagma Village Official Website">
+  <meta property="og:description" content="Creator and web developer of the Lagma Village Official Website, lagma.online.">
+  <meta property="og:url" content="https://lagma.online/creator.html">
+  <meta property="og:image" content="https://lagma.online/sj-logo.webp">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Saksham Kumar Jha | Creator &amp; Web Developer">
+  <meta property="twitter:description" content="Creator and web developer of the Lagma Village Official Website.">
+  <meta property="twitter:image" content="https://lagma.online/sj-logo.webp">
+  <link rel="manifest" href="manifest.webmanifest?v=8">
+  <link rel="icon" href="favicon.ico?v=1" type="image/x-icon">
+  <link rel="icon" href="icons/lagma-icon-192.png?v=2" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="icons/lagma-icon-192.png?v=2" sizes="192x192">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Lagma Village Official",
-    "alternateName": "Lagma Village Saharsa Bihar",
-    "url": "https://lagma.online/"
+    "@type": "ProfilePage",
+    "url": "https://lagma.online/creator.html",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "Saksham Kumar Jha",
+      "jobTitle": "Creator & Web Developer",
+      "description": "Saksham Kumar Jha is the creator and web developer of the Lagma Village Official Website, lagma.online.",
+      "url": "https://lagma.online/creator.html",
+      "mainEntityOfPage": "https://lagma.online/creator.html",
+      "image": "https://lagma.online/sj-logo.webp",
+      "sameAs": [
+        "https://www.facebook.com/saksham.jha.9041/",
+        "https://www.instagram.com/saksham_6147/",
+        "https://github.com/sakshamlagma-dotcom",
+        "https://lagma.online/"
+      ]
+    }
   }
   </script>
-  <title>Lagma Village Saharsa Bihar | Official Website</title>
-  <link rel="manifest" href="manifest.webmanifest?v=8">
-  <link rel="icon" href="favicon.ico?v=1" type="image/x-icon">
-  <link rel="icon" href="icons/lagma-icon-512.png?v=2" type="image/png" sizes="512x512">
-  <link rel="icon" href="icons/lagma-icon-192.png?v=2" type="image/png" sizes="192x192">
-  <link rel="apple-touch-icon" href="icons/lagma-icon-192.png?v=2" sizes="192x192">
-  <link rel="stylesheet" href="style.css?v=27">
-  <script src="firebase-config.js?v=8"></script>
-  <script src="analytics.js?v=3" defer></script>
+  <style>
+    :root {
+      --forest: #0f3d2b;
+      --forest-2: #0a2a1e;
+      --forest-soft: #123f2d;
+      --gold: #c8a24a;
+      --gold-soft: #e6cf94;
+      --gold-deep: #a98324;
+      --bg: #f7f4ec;
+      --surface: #ffffff;
+      --surface-alt: #edf4ef;
+      --text: #17251d;
+      --muted: #5a6a60;
+      --line: #e3ddcc;
+      --shadow: 0 18px 48px rgba(15, 61, 43, 0.12);
+      --serif: "Georgia", "Times New Roman", serif;
+      --sans: Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top left, rgba(200, 162, 74, 0.08), transparent 28%),
+        linear-gradient(180deg, rgba(247,244,236,0.96), rgba(247,244,236,1));
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(15,61,43,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,61,43,0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: radial-gradient(circle at center, black 25%, transparent 100%);
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+    .wrap {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(15,61,43,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(230,207,148,0.2);
+    }
+    .topbar .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 72px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      color: #f7f4ec;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      box-shadow: inset 0 0 0 1px rgba(20, 17, 8, 0.2);
+      overflow: hidden;
+    }
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+    .brand-copy strong {
+      font-size: 0.97rem;
+      letter-spacing: 0.03em;
+    }
+    .brand-copy span {
+      font-size: 0.68rem;
+      opacity: 0.8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .nav a {
+      color: rgba(247,244,236,0.84);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .nav a:hover,
+    .nav a:focus-visible,
+    .nav a[aria-current="page"] {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      outline: none;
+    }
+
+    .hero {
+      position: relative;
+      background: linear-gradient(150deg, var(--forest) 0%, var(--forest-2) 100%);
+      color: var(--bg);
+      overflow: hidden;
+      padding: 78px 0 90px;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 26px), repeating-linear-gradient(-45deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 26px);
+      opacity: 0.5;
+    }
+    .hero .wrap {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-items: center;
+      gap: 34px;
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+    .eyebrow {
+      display: inline-block;
+      margin: 0 0 18px;
+      padding: 7px 14px;
+      border: 1px solid rgba(230,207,148,0.42);
+      border-radius: 999px;
+      color: var(--gold-soft);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      line-height: 1.05;
+      font-size: clamp(2.5rem, 5vw, 4.2rem);
+      letter-spacing: -0.04em;
+    }
+    .hero .name {
+      margin: 0 0 10px;
+      color: var(--gold-soft);
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 2vw, 1.95rem);
+    }
+    .hero .role {
+      margin: 0 0 16px;
+      font-size: 1.12rem;
+      color: rgba(247,244,236,0.9);
+    }
+    .hero .intro {
+      max-width: 60ch;
+      margin: 0 0 28px;
+      color: rgba(247,244,236,0.85);
+      font-size: 1.04rem;
+    }
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .button.primary {
+      background: var(--gold);
+      color: #1d160a;
+      box-shadow: 0 10px 32px rgba(200,162,74,0.28);
+    }
+    .button.secondary {
+      border: 1.5px solid rgba(247,244,236,0.45);
+      color: var(--bg);
+      background: rgba(247,244,236,0.04);
+    }
+
+    .id-card {
+      position: relative;
+      min-height: 450px;
+      overflow: hidden;
+      border-radius: 20px;
+      border: 1px solid rgba(230,207,148,0.45);
+      background: linear-gradient(180deg, rgba(18, 36, 29, 0.82), rgba(7, 19, 15, 0.98));
+      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    }
+    .id-card .panel-scan {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent 14%, transparent 86%, rgba(255,255,255,0.08));
+      pointer-events: none;
+    }
+    .id-card .cover {
+      position: absolute;
+      inset: 0;
+      background-image: url("sj-logo.webp");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      filter: saturate(1.15) contrast(1.08);
+      opacity: 0.96;
+      transform: scale(1.04);
+    }
+    .id-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(8, 30, 21, 0.12) 0%, rgba(8,30,21,0.15) 30%, rgba(8,30,21,0.82) 100%);
+    }
+    .id-card .header-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(8,30,21,0.5);
+      border-bottom: 1px solid rgba(230,207,148,0.18);
+    }
+    .id-card .header-bar i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: block;
+      opacity: 0.82;
+    }
+    .id-card .header-bar i:nth-child(2) { opacity: 0.52; }
+    .id-card .header-bar i:nth-child(3) { opacity: 0.3; }
+    .id-card .header-bar span {
+      margin-left: 8px;
+      font-size: 0.75rem;
+      color: var(--gold-soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.04em;
+    }
+    .id-card .content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 100%;
+      padding: 24px;
+    }
+    .tag {
+      font-size: 0.74rem;
+      color: var(--gold-soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .id-card h2 {
+      margin: 8px 0 8px;
+      font-family: var(--serif);
+      font-size: clamp(1.9rem, 2.4vw, 2.6rem);
+      line-height: 1.08;
+      color: #fff;
+    }
+    .id-card .desc {
+      margin: 0 0 18px;
+      color: rgba(247,244,236,0.82);
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .chip {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(247,244,236,0.08);
+      border: 1px solid rgba(230,207,148,0.3);
+      color: #fff;
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .chip:hover,
+    .chip:focus-visible {
+      transform: translateY(-2px);
+      background: var(--gold);
+      color: #1d160a;
+      outline: none;
+    }
+
+    .section {
+      padding: 82px 0 0;
+    }
+    .section-header {
+      margin-bottom: 24px;
+    }
+    .section-header h2 {
+      margin: 0 0 10px;
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.15;
+    }
+    .section-header h2::after {
+      content: "";
+      display: block;
+      width: 58px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--gold);
+      margin-top: 12px;
+    }
+    .section-header p {
+      margin: 0;
+      max-width: 72ch;
+      color: var(--muted);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+    .about-grid p,
+    .about-grid li {
+      color: var(--muted);
+    }
+    .detail-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+    .detail-list strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .detail-list a {
+      color: var(--forest);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .projects-grid,
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+    .project-card,
+    .social-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .project-card:hover,
+    .social-card:hover,
+    .project-card:focus-within,
+    .social-card:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 46px rgba(15,61,43,0.12);
+      border-color: rgba(200,162,74,0.55);
+    }
+    .project-card .meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15,61,43,0.06);
+      color: var(--forest);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    .project-card h3 {
+      margin: 0 0 10px;
+      font-family: var(--serif);
+      font-size: 1.6rem;
+    }
+    .project-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .project-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(15,61,43,0.18);
+      text-decoration: none;
+      font-weight: 700;
+      color: var(--forest);
+      background: rgba(15,61,43,0.02);
+    }
+    .project-links a:hover,
+    .project-links a:focus-visible {
+      background: var(--forest);
+      color: #fff;
+      outline: none;
+    }
+
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .skill-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: var(--surface-alt);
+      border: 1px solid rgba(15,61,43,0.08);
+      color: var(--forest);
+      font-weight: 700;
+    }
+
+    .social-card {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .social-icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(15,61,43,0.1), rgba(200,162,74,0.22));
+      color: var(--forest);
+      flex-shrink: 0;
+    }
+    .social-card strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      margin-bottom: 2px;
+    }
+    .social-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .contact-block h3 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+    }
+    .contact-block p,
+    .contact-block a {
+      margin: 0;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .contact-block a:hover,
+    .contact-block a:focus-visible {
+      color: var(--forest);
+      outline: none;
+    }
+
+    footer {
+      margin-top: 82px;
+      background: var(--forest-2);
+      color: var(--bg);
+      padding: 38px 0 52px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .footer-brand strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--gold-soft);
+      margin-bottom: 10px;
+    }
+    .footer-brand p,
+    .footer-links a,
+    .footer-links p {
+      color: rgba(247,244,236,0.82);
+      text-decoration: none;
+      margin: 0;
+    }
+    .footer-links {
+      display: grid;
+      gap: 8px;
+    }
+    .footer-links a:hover,
+    .footer-links a:focus-visible {
+      color: #fff;
+      outline: none;
+    }
+
+    @media (max-width: 820px) {
+      .hero .wrap,
+      .about-grid,
+      .projects-grid,
+      .social-grid,
+      .contact-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav {
+        display: none;
+      }
+      .topbar .wrap {
+        justify-content: center;
+      }
+    }
+    @media (max-width: 560px) {
+      .hero {
+        padding-top: 56px;
+        padding-bottom: 66px;
+      }
+      .card, .project-card, .social-card, .contact-block {
+        padding: 20px;
+      }
+      .cta {
+        flex-direction: column;
+      }
+      .button {
+        width: 100%;
+      }
+      .chip {
+        width: 42px;
+        height: 42px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
-  <header class="site-header">
-    <a class="brand" href="index.html" aria-label="Lagma Village home">
-      <img src="assets/images/lagma-logo.png" alt="Lagma Village Official Logo" class="site-logo">
-      <span class="brand-copy">
-        <strong>Lagma Village</strong>
-        <small>Sito ufficiale • Dal 2026</small>
-      </span>
-    </a>
-    <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
-    <nav class="site-nav" aria-label="Main navigation">
-      <a href="index.html" aria-current="page">Home</a>
-      <a href="about.html">About</a>
-      <a href="services.html">Services</a>
-      <a href="kissan-help/index.html">Kissan Help</a>
-      <a href="online-services.html">Online Services</a>
-      <a href="https://lagma-village-ai.onrender.com/todo-ai/">TODO AI</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="notification.html">Notices</a>
-      <a href="#contact">Contact</a>
-    </nav>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="https://lagma.online/" aria-label="Lagma Village home">
+        <span class="brand-mark" aria-hidden="true"><img src="sj-logo.webp" alt=""></span>
+        <span class="brand-copy"><strong>Lagma Village</strong><span>Official Website</span></span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="https://lagma.online/">Home</a>
+        <a href="https://lagma.online/about.html">About</a>
+        <a href="https://lagma.online/online-services.html">Services</a>
+        <a href="https://lagma.online/gallery.html">Gallery</a>
+        <a href="creator.html" aria-current="page">Creator</a>
+      </nav>
+    </div>
   </header>
 
-  <main id="main-content">
-    <section class="announcement-bar" aria-label="Latest announcement">
-      <span>Latest Update</span>
-      <p>Village information, facilities, photos, and notices are now available in one place.</p>
-      <a href="notification.html">View notices</a>
-      <a class="home-weather-badge" href="kissan-help/mausam.html" aria-label="Lagma weather à¤–à¥‹à¤²à¥‡à¤‚">
-        <i class="home-weather-icon" data-lucide="cloud-sun" data-weather-icon aria-hidden="true"></i>
-        <span>Lagma</span>
-        <strong id="home-weather-temp">--Â°C</strong>
-        <small id="home-weather-condition">à¤®à¥Œà¤¸à¤®</small>
-      </a>
-    </section>
-
+  <main>
     <section class="hero">
-      <div class="hero-slider" aria-hidden="true">
-        <img src="a.webp" alt="">
-        <img src="b.webp" alt="">
-        <img src="c.webp" alt="">
-      </div>
-      <div class="hero-content">
-        <p class="eyebrow" data-i18n="hero_location">Saharsa, Bihar</p>
-        <h1 data-i18n="hero_title">Welcome to Lagma Village</h1>
-        <p data-i18n="hero_text">A historic and vibrant village shaped by agriculture, education, temples, ponds, and community spirit.</p>
-        <div class="hero-actions">
-          <a class="btn" href="about.html" data-i18n="hero_primary">Explore Lagma</a>
-          <a class="btn btn-secondary" href="services.html" data-i18n="hero_secondary">Village Services</a>
-        </div>
-        <div class="hero-meta" aria-label="Village highlights">
-          <span>Koshi region</span>
-          <span>Maithili culture</span>
-          <span>Community first</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section identity-band" aria-label="Village identity">
-      <div>
-        <span>Farming</span>
-        <strong>Fertile fields and seasonal crops</strong>
-      </div>
-      <div>
-        <span>Culture</span>
-        <strong>Festivals, temples, and family bonds</strong>
-      </div>
-      <div>
-        <span>Progress</span>
-        <strong>Education, services, and local development</strong>
-      </div>
-    </section>
-
-    <section class="section express-promo-section" aria-label="Digital Lagma promo">
-      <div class="express-promo-copy">
-        <p class="eyebrow">Digital Lagma</p>
-        <h2>Gaon ki har zaroori jankari, ek smart digital jagah par.</h2>
-        <p>Lagma Village website par services, notices, gallery, location, aur contacts ko clean poster-style layout mein explore karein.</p>
-        <div class="express-promo-actions">
-          <a class="btn" href="online-services.html">Online Services</a>
-          <a class="btn btn-secondary" href="gallery.html">View Gallery</a>
-        </div>
-      </div>
-      <div class="express-promo-art" aria-hidden="true">
-        <img class="express-photo express-photo-main" src="a.webp" alt="" loading="lazy">
-        <img class="express-photo express-photo-small" src="school-service.webp" alt="" loading="lazy">
-        <img class="express-photo express-photo-wide" src="temple.webp" alt="" loading="lazy">
-        <div class="express-promo-stamp">
-          <strong>2026</strong>
-          <span>Village Portal</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="stats" aria-label="Village facts">
-      <article class="stat-card">
-        <strong>12,500+</strong>
-        <span>Total Population</span>
-      </article>
-      <article class="stat-card">
-        <strong>6,000+</strong>
-        <span>Male Residents</span>
-      </article>
-      <article class="stat-card">
-        <strong>6,500+</strong>
-        <span>Female Residents</span>
-      </article>
-      <article class="stat-card">
-        <strong>1956</strong>
-        <span>School Established</span>
-      </article>
-    </section>
-
-    <section class="section split-section">
-      <div>
-        <p class="eyebrow">About the village</p>
-        <h2>Rooted in tradition, moving with progress</h2>
-      </div>
-      <div>
-        <p>
-          Lagma is known for fertile fields, fish farming ponds, mango orchards, bamboo clusters, temples, and a close-knit social life. Families remain deeply connected to the village even when education and work take them to cities.
-        </p>
-        <a class="text-link" href="about.html">Read the full story</a>
-      </div>
-    </section>
-
-    <section class="section quick-links-section">
-      <div class="section-heading">
-        <p class="eyebrow">Quick access</p>
-        <h2>Find what you need faster</h2>
-      </div>
-      <div class="quick-grid">
-        <a class="quick-card" href="services.html">
-          <span>01</span>
-          <h3>Public Services</h3>
-          <p>School, Panchayat, health, market, banking, and local support details.</p>
-        </a>
-        <a class="quick-card" href="gallery.html">
-          <span>02</span>
-          <h3>Village Gallery</h3>
-          <p>Photos from village places, facilities, community moments, and events.</p>
-        </a>
-        <a class="quick-card" href="notification.html">
-          <span>03</span>
-          <h3>Notice Board</h3>
-          <p>Latest announcements, meetings, development updates, and public messages.</p>
-        </a>
-        <a class="quick-card" href="#contact">
-          <span>04</span>
-          <h3>Contact Info</h3>
-          <p>Village location, phone, email, and key local information in one place.</p>
-        </a>
-        <a class="quick-card" href="online-services.html">
-          <span>05</span>
-          <h3>Online Services</h3>
-          <p>Aadhaar, certificates, banking support, bill payment, and digital service details.</p>
-        </a>
-        <a class="quick-card" href="kissan-help/index.html">
-          <span>06</span>
-          <h3>Kissan Help</h3>
-          <p>Crop disease, dairy farming, makhana subsidy, DBT registration, and Bihar scheme links.</p>
-        </a>
-        <a class="quick-card" href="https://lagma-village-ai.onrender.com/todo-ai/">
-          <span>07</span>
-          <h3>TODO AI Sahayak</h3>
-          <p>Hindi ya English mein sawaal poochhein, writing, padhai aur roz ke kaam mein AI madad paayein.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="section service-finder-section" aria-labelledby="service-finder-title">
-      <div class="section-heading">
-        <p class="eyebrow">Service finder</p>
-        <h2 id="service-finder-title">Search village services</h2>
-        <p>School, Panchayat, Vasudha Kendra, farming, health, banking, and market details quickly find karein.</p>
-      </div>
-      <div class="service-finder">
-        <label class="search-box">
-          <span>Search</span>
-          <input id="service-search" type="search" placeholder="Type: Aadhaar, school, bank, panchayat..." autocomplete="off">
-        </label>
-        <div class="service-results" id="service-results" aria-live="polite"></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-heading">
-        <p class="eyebrow">Facilities</p>
-        <h2>Important village services</h2>
-      </div>
-      <div class="card-grid">
-        <article class="feature-card">
-          <img src="school-service.webp" alt="Lagma middle school building" loading="lazy">
-          <div>
-            <h3>Middle School</h3>
-            <p>Established in 1956 and serving generations of students.</p>
-          </div>
-        </article>
-        <article class="feature-card">
-          <img src="pond-service.webp" alt="Fish farming pond in Lagma" loading="lazy">
-          <div>
-            <h3>Fish Farming Ponds</h3>
-            <p>Ponds support livelihoods, irrigation, and local ecology.</p>
-          </div>
-        </article>
-        <article class="feature-card">
-          <img src="panchayat-service.webp" alt="Panchayat related village service" loading="lazy">
-          <div>
-            <h3>Panchayat Services</h3>
-            <p>Local support for governance, certificates, and schemes.</p>
-          </div>
-        </article>
-        <article class="feature-card service-tab-card">
-          <img src="kissan-help/assets/bihar-agri-poster-optimized.webp" alt="Kissan Help agriculture support poster" loading="lazy">
-          <div>
-            <span class="service-badge">Kissan Help</span>
-            <h3>Farmer Scheme Guide</h3>
-            <p>Fasal, dairy, makhana, subsidy, disease control, and official Bihar agriculture links.</p>
-            <a class="text-link" href="kissan-help/index.html">Open Kissan Help</a>
-          </div>
-        </article>
-      </div>
-      <div class="center">
-        <a class="btn" href="services.html">View All Services</a>
-      </div>
-    </section>
-
-    <section class="section muted-section">
-      <div class="section-heading">
-        <p class="eyebrow">Gallery</p>
-        <h2>Village highlights</h2>
-      </div>
-      <div class="gallery-grid gallery-preview">
-        <img src="3.jpeg" alt="Village view in Lagma" loading="lazy">
-        <img src="7.webp" alt="Community place in Lagma" loading="lazy">
-        <img src="10.webp" alt="Village scene in Lagma" loading="lazy">
-      </div>
-      <div class="center">
-        <a class="btn" href="gallery.html">Open Gallery</a>
-      </div>
-    </section>
-
-    <section class="section showcase-section">
-      <div class="showcase-image">
-        <img src="achievement.webp" alt="Achievement and community moment in Lagma" loading="lazy">
-        <div class="medal-badge" data-i18n="gold_badge">Gold Medal | Sruti Kumari | Weightlifting</div>
-      </div>
-      <div class="showcase-content">
-        <p class="eyebrow" data-i18n="achievements_label">Achievements</p>
-        <h2 data-i18n="achievements_title">Proud stories from the village</h2>
-        <p data-i18n="achievements_text">
-          Lagma's strength is visible in its students, public service, farming families, and residents who continue to contribute to village life from near and far.
-        </p>
-        <div class="mini-list">
-          <p class="medal-highlight" data-i18n-html="achievement_medal"><strong>Weightlifting:</strong> Sruti Kumari won a gold medal and made Lagma proud.</p>
-          <p data-i18n-html="achievement_education"><strong>Education:</strong> Students continue to perform well in exams and careers.</p>
-          <p data-i18n-html="achievement_service"><strong>Service:</strong> Many villagers contribute through government and private work.</p>
-          <p data-i18n-html="achievement_community"><strong>Community:</strong> People come together for festivals, development, and support.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section timeline-section">
-      <div class="section-heading">
-        <p class="eyebrow">Journey</p>
-        <h2>Lagma through the years</h2>
-      </div>
-      <div class="timeline">
-        <article>
-          <span>1956</span>
-          <h3>School established</h3>
-          <p>The village school began shaping generations of students and future professionals.</p>
-        </article>
-        <article>
-          <span>Present</span>
-          <h3>Services expanding</h3>
-          <p>Roads, electricity, connectivity, health access, and Panchayat services continue improving.</p>
-        </article>
-        <article>
-          <span>Future</span>
-          <h3>Digital village vision</h3>
-          <p>Better information access, education, agriculture support, and community coordination.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-heading">
-        <p class="eyebrow">Updates</p>
-        <h2>News and announcements</h2>
-      </div>
-      <div class="notice-list">
-        <article class="notice-card">
-          <span>May 2026</span>
-          <h3>Village development meeting</h3>
-          <p>Community discussion on roads, drainage, education, and public facilities.</p>
-        </article>
-        <article class="notice-card">
-          <span>April 2026</span>
-          <h3>Festival preparations</h3>
-          <p>Cleaning, decoration, and coordination work completed with community participation.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section leadership-section">
-      <div class="leadership-panel">
+      <div class="wrap">
         <div>
-          <p class="eyebrow">Help desk</p>
-          <h2>Important contacts</h2>
-          <p>For certificates, schemes, local development updates, and village coordination, residents can connect with the concerned local representatives.</p>
-        </div>
-        <div class="leader-cards">
-          <article>
-            <span>Panchayat</span>
-            <h3>Panchayat help desk</h3>
-            <p>Personal contact details are hidden for privacy.</p>
-            <p>Please connect through the official Panchayat office for local work.</p>
-          </article>
-          <article>
-            <span>Local Market</span>
-            <h3>Daily essentials and gas service</h3>
-            <p>Phone: 8877109792</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section map-section">
-      <div class="section-heading">
-        <p class="eyebrow">Location</p>
-        <h2>Find Lagma on map</h2>
-        <p>Use the map to view the village location or open directions on your device.</p>
-      </div>
-      <iframe class="map-frame" title="Map showing Lagma Bihar" src="https://www.google.com/maps?q=Lagma%20Bihar&output=embed" loading="lazy"></iframe>
-      <div class="center">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Lagma%2C%20Saharsa%2C%20Bihar" target="_blank" rel="noopener">Get Directions</a>
-      </div>
-    </section>
-
-    <section class="section contact-section" id="contact">
-      <div class="section-heading">
-        <p class="eyebrow">Contact</p>
-        <h2>Village information</h2>
-      </div>
-      <div class="contact-grid">
-        <p><strong>Village</strong><span>Lagma</span></p>
-        <p><strong>District</strong><span>Saharsa, Bihar</span></p>
-        <p><strong>Contact</strong><span>Hidden for privacy</span></p>
-        <p><strong>Help</strong><span>Use official local office channels</span></p>
-      </div>
-      <div class="contact-actions" aria-label="Quick contact actions">
-        <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&amp;query=Lagma%2C%20Saharsa%2C%20Bihar" target="_blank" rel="noopener">Open map</a>
-        <button class="btn btn-outline share-site-btn" type="button">Share website</button>
-      </div>
-    </section>
-
-    <section class="section connect-section" aria-labelledby="connect-title">
-      <div class="section-heading">
-        <p class="eyebrow">Free integrations demo</p>
-        <h2 id="connect-title">Connect with Lagma online</h2>
-        <p>Website ko free tools se link karke residents photo, notice, contact aur social updates easily access kar sakte hain.</p>
-      </div>
-      <div class="connect-grid">
-        <article class="connect-card">
-          <span>Photo form</span>
-          <h3>Gallery submission</h3>
-          <p>Google Form link yahan add karke log photo title, category aur image bhej sakte hain.</p>
-          <a class="btn btn-outline" href="gallery.html">Open gallery upload</a>
-        </article>
-        <article class="connect-card">
-          <span>Notice form</span>
-          <h3>Public note request</h3>
-          <p>Residents village notice ya suggestion submit kar sakte hain, review ke baad publish hoga.</p>
-          <a class="btn btn-outline" href="notification.html">Send note</a>
-        </article>
-        <article class="connect-card">
-          <span>Digital services</span>
-          <h3>Online services aur directions</h3>
-          <p>Certificate, recharge, bill payment aur digital services ki jankari dekhein ya service location tak directions kholen.</p>
-          <div class="contact-actions">
-            <a class="btn btn-outline" href="online-services.html">View services</a>
-            <a class="btn btn-outline" href="https://www.google.com/maps/dir/?api=1&amp;destination=25.7489959%2C86.6731798&amp;travelmode=driving" target="_blank" rel="noopener">Directions</a>
+          <p class="eyebrow">Developer profile</p>
+          <h1>Meet the Creator</h1>
+          <p class="name">Saksham Kumar Jha</p>
+          <p class="role">Creator &amp; Web Developer</p>
+          <p class="intro">I designed and built the Lagma Village Official Website to make village information, public services, notices, and community updates easier to discover online.</p>
+          <div class="cta">
+            <a class="button primary" href="https://lagma.online/">Explore Lagma Website</a>
+            <a class="button secondary" href="#connect">Connect</a>
           </div>
-        </article>
-        <article class="connect-card qr-card">
-          <span>QR code</span>
-          <h3>Share website offline</h3>
-          <p>Poster, shop, school aur Panchayat notice board par website QR lagaya ja sakta hai.</p>
-          <a class="qr-link" href="https://lagma.online/" target="_blank" rel="noopener" aria-label="Open Lagma Village website">
-            <img src="lagma-website-qr.png" alt="QR code for Lagma Village website" width="742" height="742" loading="lazy">
+        </div>
+
+        <aside class="id-card" aria-label="Developer identity card">
+          <div class="cover" aria-hidden="true"></div>
+          <div class="header-bar" aria-hidden="true">
+            <i></i><i></i><i></i>
+            <span>developer.profile</span>
+          </div>
+          <div class="content">
+            <span class="tag">Profile</span>
+            <h2>Saksham Kumar Jha</h2>
+            <p class="desc">Creator &amp; Web Developer for the Lagma Village Official Website.</p>
+            <div class="chip-row" aria-label="Developer links">
+              <a class="chip" href="https://www.facebook.com/saksham.jha.9041/" target="_blank" rel="noopener" aria-label="Facebook profile">f</a>
+              <a class="chip" href="https://www.instagram.com/saksham_6147/" target="_blank" rel="noopener" aria-label="Instagram profile">◎</a>
+              <a class="chip" href="https://github.com/sakshamlagma-dotcom" target="_blank" rel="noopener" aria-label="GitHub profile">gh</a>
+              <a class="chip" href="https://lagma.online/" target="_blank" rel="noopener" aria-label="Official website">↗</a>
+            </div>
+          </div>
+          <div class="panel-scan" aria-hidden="true"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-header">
+          <h2>About the Developer</h2>
+          <p>Saksham Kumar Jha created the Lagma Village Official Website as a digital place for village information, public services, local notices, gallery content, and useful online resources.</p>
+        </div>
+        <div class="about-grid">
+          <article class="card">
+            <p>I focus on building accessible, lightweight, and user-friendly web experiences that help communities find information quickly and clearly. The website brings together village identity, local resources, and public service details in one polished platform.</p>
+            <p>The project is built around the Lagma Village community and is designed to remain simple, fast, and useful across desktop, mobile, and tablet devices.</p>
+          </article>
+          <aside class="card">
+            <ul class="detail-list">
+              <li><strong>Name</strong> Saksham Kumar Jha</li>
+              <li><strong>Role</strong> Creator &amp; Web Developer</li>
+              <li><strong>Project</strong> Lagma Village Official Website</li>
+              <li><strong>Website</strong> <a href="https://lagma.online/">lagma.online</a></li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="wrap">
+        <div class="section-header">
+          <h2>Featured Project</h2>
+        </div>
+        <div class="projects-grid">
+          <article class="project-card">
+            <span class="meta">Featured</span>
+            <h3>Lagma Village Official Website</h3>
+            <p>A complete village information website featuring local history, online services, notices, community resources, gallery content, and a modern public-facing experience.</p>
+            <div class="project-links">
+              <a href="https://lagma.online/" target="_blank" rel="noopener">Live Website</a>
+              <a href="https://github.com/sakshamlagma-dotcom/lagma-village-website" target="_blank" rel="noopener">Source Code</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="wrap">
+        <div class="section-header">
+          <h2>Technical Skills</h2>
+        </div>
+        <div class="skills-wrap" aria-label="Skills">
+          <span class="skill-pill">HTML5</span>
+          <span class="skill-pill">CSS3</span>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">Responsive Design</span>
+          <span class="skill-pill">SEO</span>
+          <span class="skill-pill">Structured Data</span>
+          <span class="skill-pill">Open Graph</span>
+          <span class="skill-pill">Web Performance</span>
+          <span class="skill-pill">Static Site Deployment</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="socials">
+      <div class="wrap">
+        <div class="section-header">
+          <h2>Social Profiles</h2>
+        </div>
+        <div class="social-grid">
+          <a class="social-card" href="https://www.facebook.com/saksham.jha.9041/" target="_blank" rel="noopener" aria-label="Facebook profile for Saksham Kumar Jha">
+            <span class="social-icon" aria-hidden="true">f</span>
+            <span>
+              <strong>Facebook</strong>
+              <span>sakhsham.jha.9041</span>
+            </span>
           </a>
-          <p class="qr-url">lagma.online</p>
-          <button class="btn btn-outline copy-site-link-btn" type="button">Copy website link</button>
-          <p class="copy-status" id="copy-site-link-status" aria-live="polite"></p>
-        </article>
+          <a class="social-card" href="https://www.instagram.com/saksham_6147/" target="_blank" rel="noopener" aria-label="Instagram profile for Saksham Kumar Jha">
+            <span class="social-icon" aria-hidden="true">◎</span>
+            <span>
+              <strong>Instagram</strong>
+              <span>@saksham_6147</span>
+            </span>
+          </a>
+          <a class="social-card" href="https://github.com/sakshamlagma-dotcom" target="_blank" rel="noopener" aria-label="GitHub profile for Saksham Kumar Jha">
+            <span class="social-icon" aria-hidden="true">gh</span>
+            <span>
+              <strong>GitHub</strong>
+              <span>@sakshamlagma-dotcom</span>
+            </span>
+          </a>
+          <a class="social-card" href="https://lagma.online/" target="_blank" rel="noopener" aria-label="Official Lagma Village website">
+            <span class="social-icon" aria-hidden="true">↗</span>
+            <span>
+              <strong>Website</strong>
+              <span>lagma.online</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="connect">
+      <div class="wrap">
+        <div class="section-header">
+          <h2>Contact &amp; Connect</h2>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-block">
+            <h3>Official Website</h3>
+            <a href="https://lagma.online/" target="_blank" rel="noopener">lagma.online</a>
+          </div>
+          <div class="contact-block">
+            <h3>GitHub</h3>
+            <a href="https://github.com/sakshamlagma-dotcom" target="_blank" rel="noopener">sakshamlagma-dotcom</a>
+          </div>
+          <div class="contact-block">
+            <h3>Location</h3>
+            <p>Lagma Village, Saharsa, Bihar</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-grid">
-      <div>
-        <h2>Lagma Village</h2>
-        <p>A digital home for village history, services, photos, notices, and community information.</p>
+  <footer>
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <strong>Saksham Kumar Jha</strong>
+        <p>Creator &amp; Web Developer of the Lagma Village Official Website.</p>
       </div>
-      <div>
-        <h3>Explore</h3>
-        <a href="about.html">About</a>
-        <a href="services.html">Services</a>
-        <a href="kissan-help/index.html">Kissan Help</a>
-        <a href="online-services.html">Online Services</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="notification.html">Notices</a>
+      <div class="footer-links">
+        <a href="https://lagma.online/">Official Website</a>
+        <a href="https://github.com/sakshamlagma-dotcom/lagma-village-website">Project Repository</a>
+        <a href="https://github.com/sakshamlagma-dotcom">GitHub Profile</a>
       </div>
-      <div>
-        <h3>Location</h3>
-        <p>Lagma, Saharsa, Bihar</p>
-        <p>India</p>
-      </div>
-    </div>
-    <div class="site-like-panel" aria-label="Like this website">
-      <div>
-        <span class="like-eyebrow">Aapka feedback</span>
-        <strong>Website pasand aayi?</strong>
-        <p>Like dabane par hume analytics me pata chalega ki logon ko website pasand aa rahi hai.</p>
-      </div>
-      <button class="site-like-button" type="button" data-like-key="lagma-website-like">
-        <span aria-hidden="true">Like</span>
-        <span class="site-like-text">Like Website</span>
-      </button>
-    </div>
-    <div class="footer-bottom">
-      <p class="copyright">&copy; <span id="year">2026</span> Lagma Village. All rights reserved.</p>
-      <p class="developer-credit" aria-label="Developed by SJ">
-        <img class="developer-logo" src="sj-logo.webp" alt="" aria-hidden="true" loading="lazy">
-        <span>Developed by <strong>SJ</strong></span>
-      </p>
     </div>
   </footer>
-
-  <a class="todo-ai-fab" href="https://lagma-village-ai.onrender.com/todo-ai/" aria-label="TODO AI Sahayak se baat karein">
-    <span class="todo-ai-fab-face" aria-hidden="true"><img src="todo-ai-face.webp" alt="" width="48" height="48"></span>
-    <span class="todo-ai-fab-copy"><strong>TODO AI</strong><small>Mujhse poochhein</small></span>
-    <span class="todo-ai-fab-online" aria-hidden="true"></span>
-  </a>
-  <script src="weather-utils.js?v=1"></script>
-  <script src="weather-home.js?v=8"></script>
-  <script src="web.js?v=28"></script>
-  <script src="assets/lucide.min.js?v=1"></script>
-  <script src="lagma-icons.js?v=1"></script>
 </body>
 </html>
